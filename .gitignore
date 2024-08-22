@@ -1,0 +1,55 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Saídas do build
+/dist
+/build
+
+# Configurações de ambiente
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Dados temporários
+/tmp
+/temp
+
+# Configurações do Editor/IDE
+.vscode/
+
+
+# Configurações do Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Test coverage
+/coverage
+
+# Ignore outras saídas específicas de testes ou builds
+/coverage/
