@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "./serviceSchema";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CurrencyInput } from "react-currency-mask";
+import InputMask from "react-input-mask";
 
 import { FormDataService } from "../../interface/FormDataService";
 
@@ -26,7 +27,6 @@ export default function ServicePage() {
 		handleSubmit,
 		register,
 		control,
-
 		formState: { errors },
 	} = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
@@ -86,7 +86,9 @@ export default function ServicePage() {
 									<Grid>
 										<FormLabel>Duração</FormLabel>
 										<Input
-											placeholder="45 min"
+											as={InputMask}
+											mask="99:99"
+											placeholder="45:00"
 											type="text"
 											id="duration"
 											{...register("duration")}

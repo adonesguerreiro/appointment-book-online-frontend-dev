@@ -4,6 +4,8 @@ import LoginPage from "./pages/Login";
 import UserPage from "./pages/User";
 import CompanyPage from "./pages/Company";
 import ServicePage from "./pages/Service";
+import AvaliableTimePage from "./pages/AvaliableTime";
+import UnavaliableTimePage from "./pages/UnavaliableTime";
 
 export default function App() {
 	return (
@@ -26,6 +28,14 @@ export default function App() {
 					<Route
 						path="/service"
 						element={<ServicePage />}
+					/>
+					<Route
+						path="/avaliable-time"
+						element={<AvaliableTimePage />}
+					/>
+					<Route
+						path="/unavaliable-time"
+						element={<UnavaliableTimePage />}
 					/>
 				</Routes>
 			</Router>

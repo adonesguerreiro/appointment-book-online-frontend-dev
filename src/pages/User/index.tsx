@@ -59,90 +59,88 @@ export default function UserPage() {
 						width="52.5625rem"
 						height="40.6875rem">
 						<Box
+							as="form"
 							display="grid"
-							placeItems="center">
-							<form onSubmit={handleSubmit(onSubmit)}>
-								<FormControl
-									display="grid"
-									alignItems="center"
-									width="25.0625rem"
-									padding="0.625rem"
-									isInvalid={!!errors}>
-									<FormLabel>Nome</FormLabel>
-									<Input
-										type="name"
-										placeholder="Informe seu nome"
-										id="name"
-										{...register("name")}
-										isInvalid={!!errors.name}
-									/>
-									{errors.name && (
-										<FormErrorMessage>{errors.name.message}</FormErrorMessage>
-									)}
+							placeItems="center"
+							onSubmit={handleSubmit(onSubmit)}>
+							<FormControl
+								display="grid"
+								alignItems="center"
+								width="25.0625rem"
+								padding="0.625rem"
+								isInvalid={!!errors}>
+								<FormLabel>Nome</FormLabel>
+								<Input
+									type="name"
+									placeholder="Informe seu nome"
+									id="name"
+									{...register("name")}
+									isInvalid={!!errors.name}
+								/>
+								{errors.name && (
+									<FormErrorMessage>{errors.name.message}</FormErrorMessage>
+								)}
 
-									<FormLabel>Email</FormLabel>
-									<Input
-										type="email"
-										placeholder="adones@example.com"
-										id="email"
-										{...register("email")}
-										isInvalid={!!errors.email}
-									/>
-									{errors.email && (
-										<FormErrorMessage>{errors.email.message}</FormErrorMessage>
-									)}
+								<FormLabel>Email</FormLabel>
+								<Input
+									type="email"
+									placeholder="adones@example.com"
+									id="email"
+									{...register("email")}
+									isInvalid={!!errors.email}
+								/>
+								{errors.email && (
+									<FormErrorMessage>{errors.email.message}</FormErrorMessage>
+								)}
 
-									<FormLabel>Senha atual</FormLabel>
-									<Input
-										type="password"
-										placeholder="Senha atual"
-										id="password"
-										{...register("password")}
-										isInvalid={!!errors.password}
-									/>
-									{errors.password && (
-										<FormErrorMessage>
-											{errors.password.message}
-										</FormErrorMessage>
-									)}
+								<FormLabel>Senha atual</FormLabel>
+								<Input
+									type="password"
+									placeholder="Senha atual"
+									id="password"
+									{...register("password")}
+									isInvalid={!!errors.password}
+								/>
+								{errors.password && (
+									<FormErrorMessage>{errors.password.message}</FormErrorMessage>
+								)}
 
-									<FormLabel>Nova senha</FormLabel>
-									<Input
-										type="password"
-										placeholder="Nova senha"
-										id="newPassword"
-										{...register("newPassword")}
-										isInvalid={!!errors.newPassword}
-									/>
-									{errors.newPassword && (
-										<FormErrorMessage>
-											{errors.newPassword.message}
-										</FormErrorMessage>
-									)}
+								<FormLabel>Nova senha</FormLabel>
+								<Input
+									type="password"
+									placeholder="Nova senha"
+									id="newPassword"
+									{...register("newPassword")}
+									isInvalid={!!errors.newPassword}
+								/>
+								{errors.newPassword && (
+									<FormErrorMessage>
+										{errors.newPassword.message}
+									</FormErrorMessage>
+								)}
 
-									<FormLabel>Confirmar nova senha</FormLabel>
-									<Input
-										type="password"
-										placeholder="Confirmar nova senha"
-										id="confirmPassword"
-										{...register("confirmPassword")}
-										isInvalid={!!errors.confirmPassword}
-									/>
-									{errors.confirmPassword && (
-										<FormErrorMessage>
-											{errors.confirmPassword.message}
-										</FormErrorMessage>
-									)}
-								</FormControl>
+								<FormLabel>Confirmar nova senha</FormLabel>
+								<Input
+									type="password"
+									placeholder="Confirmar nova senha"
+									id="confirmPassword"
+									{...register("confirmPassword")}
+									isInvalid={!!errors.confirmPassword}
+								/>
+								{errors.confirmPassword && (
+									<FormErrorMessage>
+										{errors.confirmPassword.message}
+									</FormErrorMessage>
+								)}
+							</FormControl>
 
-								<Button
-									colorScheme="blue"
-									size="lg"
-									type="submit"
-									rightIcon={<MdSave />}>
-									Salvar
-								</Button>
-							</form>
+							<Button
+								colorScheme="blue"
+								size="lg"
+								type="submit"
+								rightIcon={<MdSave />}>
+								Salvar
+							</Button>
 						</Box>
 					</CardBody>
 				</Card>
