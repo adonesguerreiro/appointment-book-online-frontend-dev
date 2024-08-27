@@ -1,0 +1,80 @@
+{
+	"service": [
+		{
+			"id": 1,
+			"name": "Limpeza nos pés",
+			"price": "R$ 150,00",
+			"duration": "45 minutos"
+		},
+		{
+			"id": 2,
+			"name": "Retorno unha encravada",
+			"price": "R$ 80,00",
+			"duration": "60 minutos"
+		},
+		{
+			"id": 3,
+			"name": "Remoção de calos",
+			"price": "R$ 100,00",
+			"duration": "30 minutos"
+		}
+	],
+
+	"avaliable": [
+		{
+			"id": 1,
+			"day": "Segunda-feira",
+			"startTime": "08:00",
+			"endTime": "19:00",
+			"interval": "40"
+		},
+		{
+			"id": 2,
+			"day": "Terça-feira",
+			"startTime": "08:00",
+			"endTime": "19:00",
+			"interval": "40"
+		},
+		{
+			"id": 3,
+			"day": "Quarta-feira",
+			"startTime": "08:00",
+			"endTime": "19:00",
+			"interval": "40"
+		},
+		{
+			"id": 4,
+			"day": "Quinta-feira",
+			"startTime": "08:00",
+			"endTime": "19:00",
+			"interval": "40"
+		},
+		{
+			"id": 5,
+			"day": "Sexta-feira",
+			"startTime": "08:00",
+			"endTime": "19:00",
+			"interval": "40"
+		}
+	],
+	"unavailable": [
+		{
+			"id": 1,
+			"date": "25/05/2024",
+			"startTime": "14:00",
+			"endTime": "17:00"
+		},
+		{
+			"id": 2,
+			"date": "26/05/2024",
+			"startTime": "10:00",
+			"endTime": "12:00"
+		},
+		{
+			"id": 3,
+			"date": "27/05/2024",
+			"startTime": "14:00",
+			"endTime": "17:00"
+		}
+	]
+}

@@ -16,21 +16,27 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "./serviceSchema";
-import { AiOutlinePlus } from "react-icons/ai";
+import { MdCancel } from "react-icons/md";
+import { LuPlusCircle } from "react-icons/lu";
 import { CurrencyInput } from "react-currency-mask";
 import InputMask from "react-input-mask";
 
 import { FormDataService } from "../../interface/FormDataService";
+import TableService from "../../components/TableService";
+import { useState } from "react";
 
 export default function ServicePage() {
 	const {
 		handleSubmit,
 		register,
 		control,
+		reset,
 		formState: { errors },
 	} = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
 	});
+
+	const [showForm, setShowForm] = useState(false);
 
 	const toast = useToast();
 
@@ -42,12 +48,18 @@ export default function ServicePage() {
 			isClosable: true,
 			position: "top-right",
 		});
+		reset();
+		setShowForm(false);
+	};
+
+	const onCancel = () => {
+		reset();
+		setShowForm(false);
 	};
 
 	return (
 		<Container>
 			<Flex
-				display="flex"
 				direction="column"
 				align="center"
 				justify="center"
@@ -59,93 +71,113 @@ export default function ServicePage() {
 					fontWeight="semibold">
 					Serviço
 				</Heading>
-				<Card>
-					<CardBody
-						width="60.5625rem"
-						height="40.6875rem">
-						<Box
-							as="form"
-							onSubmit={handleSubmit(onSubmit)}>
-							<Flex gap="0.625rem">
-								<FormControl isInvalid={!!errors.name}>
-									<Grid>
-										<FormLabel>Nome</FormLabel>
-										<Input
-											type="text"
-											placeholder="Nome do serviço"
-											id="name"
-											{...register("name")}
-										/>
-										{errors.name && (
-											<FormErrorMessage>{errors.name.message}</FormErrorMessage>
-										)}
-									</Grid>
-								</FormControl>
 
-								<FormControl isInvalid={!!errors.duration}>
-									<Grid>
-										<FormLabel>Duração</FormLabel>
-										<Input
-											as={InputMask}
-											mask="99:99"
-											placeholder="45:00"
-											type="text"
-											id="duration"
-											{...register("duration")}
-										/>
-										{errors.duration && (
-											<FormErrorMessage>
-												{errors.duration.message}
-											</FormErrorMessage>
-										)}
-									</Grid>
-								</FormControl>
-
-								<FormControl isInvalid={!!errors.price}>
-									<Grid>
-										<FormLabel>Preço</FormLabel>
-										<Controller
-											name="price"
-											control={control}
-											render={({ field }) => (
-												<CurrencyInput
-													value={field.value}
-													onChangeValue={(_, value) => {
-														field.onChange(value);
-													}}
-													InputElement={
-														<Input
-															type="text"
-															placeholder="R$ 100,00"
-															id="price"
-															maxLength={10}
-															{...register("price")}
-														/>
-													}
-												/>
+				{showForm ? (
+					<Card>
+						<CardBody
+							width="60.5625rem"
+							height="40.6875rem">
+							<Box
+								as="form"
+								onSubmit={handleSubmit(onSubmit)}>
+								<Flex gap="0.625rem">
+									<FormControl isInvalid={!!errors.name}>
+										<Grid>
+											<FormLabel>Nome</FormLabel>
+											<Input
+												type="text"
+												placeholder="Nome do serviço"
+												id="name"
+												{...register("name")}
+											/>
+											{errors.name && (
+												<FormErrorMessage>
+													{errors.name.message}
+												</FormErrorMessage>
 											)}
-										/>
+										</Grid>
+									</FormControl>
 
-										{errors.price && (
-											<FormErrorMessage>
-												{errors.price.message}
-											</FormErrorMessage>
-										)}
-									</Grid>
-								</FormControl>
-							</Flex>
+									<FormControl isInvalid={!!errors.duration}>
+										<Grid>
+											<FormLabel>Duração</FormLabel>
+											<Input
+												as={InputMask}
+												mask="99:99"
+												placeholder="45:00"
+												type="text"
+												id="duration"
+												{...register("duration")}
+											/>
+											{errors.duration && (
+												<FormErrorMessage>
+													{errors.duration.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
 
-							<Button
-								colorScheme="green"
-								size="lg"
-								type="submit"
-								margin="0.625rem"
-								rightIcon={<AiOutlinePlus />}>
-								Cadastrar
-							</Button>
-						</Box>
-					</CardBody>
-				</Card>
+									<FormControl isInvalid={!!errors.price}>
+										<Grid>
+											<FormLabel>Preço</FormLabel>
+											<Controller
+												name="price"
+												control={control}
+												render={({ field }) => (
+													<CurrencyInput
+														value={field.value}
+														onChangeValue={(_, value) => {
+															field.onChange(value);
+														}}
+														InputElement={
+															<Input
+																type="text"
+																placeholder="R$ 100,00"
+																id="price"
+																maxLength={10}
+																{...register("price")}
+															/>
+														}
+													/>
+												)}
+											/>
+
+											{errors.price && (
+												<FormErrorMessage>
+													{errors.price.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
+								</Flex>
+								<Flex justifyContent="flex-end">
+									<Button
+										colorScheme="green"
+										size="lg"
+										type="submit"
+										margin="0.625rem"
+										rightIcon={<LuPlusCircle />}>
+										Cadastrar
+									</Button>
+									<Button
+										colorScheme="gray"
+										size="lg"
+										margin="0.625rem"
+										rightIcon={<MdCancel />}
+										onClick={onCancel}>
+										Cancelar
+									</Button>
+								</Flex>
+							</Box>
+						</CardBody>
+					</Card>
+				) : (
+					<TableService
+						onNewClick={function (): void {
+							setShowForm(true);
+						}}
+					/>
+				)}
 			</Flex>
 		</Container>
 	);
