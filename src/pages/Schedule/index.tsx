@@ -11,31 +11,29 @@ import {
 	Grid,
 	Heading,
 	Input,
+	Select,
 	useToast,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { unavaliableTimeSchema } from "./unavaliableTimeSchema";
 
 import InputMask from "react-input-mask";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
-import { FormDataUnavaliable } from "../../interface/FormDataUnavaliable";
-import { useState } from "react";
-import TableUnavaliable from "../../components/TableUnavaliable";
 import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
+import { useState } from "react";
+import TableSchedule from "../../components/TableSchedule";
+import { scheduleSchema } from "./scheduleSchema";
+import { FormDataSchedule } from "../../interface/FormDataSchedule";
 
-export default function UnavaliableTimePage() {
+export default function SchedulePage() {
 	const {
 		handleSubmit,
 		register,
-		control,
 		reset,
 		formState: { errors },
-	} = useForm<FormDataUnavaliable>({
-		resolver: yupResolver(unavaliableTimeSchema),
+	} = useForm<FormDataSchedule>({
+		resolver: yupResolver(scheduleSchema),
 	});
 
 	const [showForm, setShowForm] = useState(false);
@@ -44,7 +42,7 @@ export default function UnavaliableTimePage() {
 
 	const onSubmit = async () => {
 		toast({
-			title: "Horário indisponível registrado com sucesso.",
+			title: "Horário disponível registrado com sucesso.",
 			status: "success",
 			duration: 3000,
 			isClosable: true,
@@ -72,7 +70,7 @@ export default function UnavaliableTimePage() {
 					as="h1"
 					size="lg"
 					fontWeight="semibold">
-					Horário indisponível
+					Agenda
 				</Heading>
 				{showForm ? (
 					<Card>
@@ -84,32 +82,52 @@ export default function UnavaliableTimePage() {
 								as="form"
 								onSubmit={handleSubmit(onSubmit)}>
 								<Grid gap="0.625rem">
+									<FormControl isInvalid={!!errors.customerId}>
+										<Grid>
+											<FormLabel>Cliente</FormLabel>
+											<Input
+												placeholder="ex: José Silva"
+												type="text"
+												id="customerId"
+												{...register("customerId")}
+											/>
+											{errors.customerId && (
+												<FormErrorMessage>
+													{errors.customerId.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
+
+									<FormControl isInvalid={!!errors.serviceId}>
+										<Grid>
+											<FormLabel>Serviço</FormLabel>
+											<Input
+												as={InputMask}
+												mask="99:99"
+												placeholder="19:00"
+												type="text"
+												id="serviceId"
+												{...register("serviceId")}
+											/>
+											{errors.serviceId && (
+												<FormErrorMessage>
+													{errors.serviceId.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
+
 									<FormControl isInvalid={!!errors.date}>
 										<Grid>
 											<FormLabel>Data</FormLabel>
-
-											<Controller
-												name="date"
-												control={control}
-												render={({ field }) => (
-													<DatePicker
-														id="date"
-														selected={
-															field.value ? new Date(field.value) : null
-														}
-														onChange={(date) => field.onChange(date)}
-														customInput={
-															<Input
-																as={InputMask}
-																mask="99/99/9999"
-																placeholder="Selecione uma data"
-															/>
-														}
-														dateFormat="dd/MM/yyyy"
-													/>
-												)}
+											<Input
+												placeholder="45"
+												type="text"
+												id="date"
+												maxLength={5}
+												{...register("date")}
 											/>
-
 											{errors.date && (
 												<FormErrorMessage>
 													{errors.date.message}
@@ -118,39 +136,21 @@ export default function UnavaliableTimePage() {
 										</Grid>
 									</FormControl>
 
-									<FormControl isInvalid={!!errors.startTime}>
+									<FormControl isInvalid={!!errors.status}>
 										<Grid>
-											<FormLabel>Horário de início</FormLabel>
-											<Input
-												as={InputMask}
-												mask="99:99"
-												placeholder="08:00"
-												type="text"
-												id="startTime"
-												{...register("startTime")}
-											/>
-											{errors.startTime && (
-												<FormErrorMessage>
-													{errors.startTime.message}
-												</FormErrorMessage>
-											)}
-										</Grid>
-									</FormControl>
+											<FormLabel>Dia da semana</FormLabel>
+											<Select
+												id="status"
+												placeholder="Selecione o status"
+												{...register("status")}>
+												<option value="SCHEDULED">Agendado</option>
+												<option value="CANCELLED">Cancelado</option>
+												<option value="ATTENDED">Atendido</option>
+											</Select>
 
-									<FormControl isInvalid={!!errors.endTime}>
-										<Grid>
-											<FormLabel>Horário final</FormLabel>
-											<Input
-												as={InputMask}
-												mask="99:99"
-												placeholder="19:00"
-												type="text"
-												id="endTime"
-												{...register("endTime")}
-											/>
-											{errors.endTime && (
+											{errors.status && (
 												<FormErrorMessage>
-													{errors.endTime.message}
+													{errors.status.message}
 												</FormErrorMessage>
 											)}
 										</Grid>
@@ -179,7 +179,7 @@ export default function UnavaliableTimePage() {
 						</CardBody>
 					</Card>
 				) : (
-					<TableUnavaliable
+					<TableSchedule
 						onNewClick={function (): void {
 							setShowForm(true);
 						}}

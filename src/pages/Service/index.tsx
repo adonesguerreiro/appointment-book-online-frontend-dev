@@ -75,12 +75,13 @@ export default function ServicePage() {
 				{showForm ? (
 					<Card>
 						<CardBody
-							width="60.5625rem"
-							height="40.6875rem">
+							width="25.0625rem"
+							height="40.6875rem"
+							padding="0.625rem">
 							<Box
 								as="form"
 								onSubmit={handleSubmit(onSubmit)}>
-								<Flex gap="0.625rem">
+								<Grid gap="0.625rem">
 									<FormControl isInvalid={!!errors.name}>
 										<Grid>
 											<FormLabel>Nome</FormLabel>
@@ -149,7 +150,7 @@ export default function ServicePage() {
 											)}
 										</Grid>
 									</FormControl>
-								</Flex>
+								</Grid>
 								<Flex justifyContent="flex-end">
 									<Button
 										colorScheme="green"

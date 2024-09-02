@@ -1,4 +1,5 @@
 import {
+	Avatar,
 	Box,
 	Button,
 	Card,
@@ -16,12 +17,14 @@ import { useForm } from "react-hook-form";
 import { FormDataUser } from "../../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "./userSchema";
-import { MdSave } from "react-icons/md";
+import { MdCancel, MdSave } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export default function UserPage() {
 	const {
 		handleSubmit,
 		register,
+		reset,
 		formState: { errors },
 	} = useForm<FormDataUser>({
 		resolver: yupResolver(userSchema),
@@ -37,6 +40,13 @@ export default function UserPage() {
 			isClosable: true,
 			position: "top-right",
 		});
+	};
+
+	const navigate = useNavigate();
+
+	const onCancel = () => {
+		reset();
+		navigate("/");
 	};
 
 	return (
@@ -63,6 +73,11 @@ export default function UserPage() {
 							display="grid"
 							placeItems="center"
 							onSubmit={handleSubmit(onSubmit)}>
+							<Avatar
+								size="lg"
+								name="Adones"
+								src="https://avatars.githubusercontent.com/u/60514105?v=4"
+							/>
 							<FormControl
 								display="grid"
 								alignItems="center"
@@ -134,13 +149,25 @@ export default function UserPage() {
 								)}
 							</FormControl>
 
-							<Button
-								colorScheme="blue"
-								size="lg"
-								type="submit"
-								rightIcon={<MdSave />}>
-								Salvar
-							</Button>
+							<Flex
+								alignItems="center"
+								justifyContent="flex-end">
+								<Button
+									colorScheme="blue"
+									size="lg"
+									type="submit"
+									rightIcon={<MdSave />}>
+									Salvar
+								</Button>
+								<Button
+									colorScheme="gray"
+									size="lg"
+									margin="0.625rem"
+									rightIcon={<MdCancel />}
+									onClick={onCancel}>
+									Cancelar
+								</Button>
+							</Flex>
 						</Box>
 					</CardBody>
 				</Card>

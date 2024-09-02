@@ -12,26 +12,26 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
-import { FormDataUnavaliable } from "../../interface/FormDataUnavaliable";
 
-interface TableServiceProps {
+interface TableScheduleProps {
 	onNewClick: () => void;
 }
 
-export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
-	const [unavaliables, setUnavaliable] = useState<FormDataUnavaliable[]>([]);
+export default function TableService({ onNewClick }: TableScheduleProps) {
+	const [schedules, setSchedules] = useState<FormDataSchedule[]>([]);
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3000/unavailable")
+			.get("http://localhost:3000/schedule")
 			.then((response) => {
-				setUnavaliable(response.data);
+				setSchedules(response.data);
 			})
 			.catch((error) => {
-				console.error("Error fetching unavaliables:", error);
+				console.error("Error fetching schedules:", error);
 			});
 	});
 
@@ -45,10 +45,9 @@ export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
 					size="lg"
 					rightIcon={<FaPlus />}
 					onClick={onNewClick}>
-					Nova indisponibilidade
+					Nova agenda
 				</Button>
 			</Box>
-
 			<Flex
 				direction="column"
 				align="center"
@@ -62,18 +61,19 @@ export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
 							colorScheme="gray">
 							<Thead>
 								<Tr>
+									<Th>Cliente</Th>
+									<Th>Serviço</Th>
 									<Th>Data</Th>
-									<Th>Horário ínicio</Th>
-									<Th>Horário fim</Th>
-									<Th>Ações</Th>
+									<Th>Horário</Th>
 								</Tr>
 							</Thead>
 							<Tbody>
-								{unavaliables.map((unavaliable, index) => (
+								{schedules.map((schedule, index) => (
 									<Tr key={index}>
-										<Td>{unavaliable.date}</Td>
-										<Td>{unavaliable.startTime}</Td>
-										<Td>{unavaliable.endTime}</Td>
+										<Td>{schedule.customerId}</Td>
+										<Td>{schedule.serviceId}</Td>
+										<Td>{schedule.status}</Td>
+										<Td>{schedule.date}</Td>
 										<Td>
 											<Flex>
 												<MdEdit />

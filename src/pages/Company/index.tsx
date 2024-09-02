@@ -17,12 +17,13 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { companySchema } from "./companySchema";
-import { MdSave } from "react-icons/md";
+import { MdCancel, MdSave } from "react-icons/md";
 
 import InputMask from "react-input-mask";
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { viaCep } from "../../services/viaCep";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CompanyPage() {
 	const [loading, setLoading] = useState(false);
@@ -31,6 +32,7 @@ export default function CompanyPage() {
 		register,
 		setError,
 		setValue,
+		reset,
 		formState: { errors },
 	} = useForm<FormDataCompany>({
 		resolver: yupResolver(companySchema),
@@ -65,6 +67,13 @@ export default function CompanyPage() {
 				message: existingCep as string,
 			});
 		}
+	};
+
+	const navigate = useNavigate();
+
+	const onCancel = () => {
+		reset();
+		navigate("/");
 	};
 
 	return (
@@ -283,21 +292,32 @@ export default function CompanyPage() {
 									)}
 								</FormControl>
 							</Flex>
-
-							<Button
-								colorScheme="blue"
-								size="lg"
-								type="submit"
-								isDisabled={loading}
-								rightIcon={<MdSave />}>
-								{loading ? (
-									<Spinner
-										size="sm"
-										mr="2"
-									/>
-								) : null}
-								{loading ? "Validando dados" : "Salvar"}
-							</Button>
+							<Flex
+								alignItems="center"
+								justifyContent="flex-end">
+								<Button
+									colorScheme="blue"
+									size="lg"
+									type="submit"
+									isDisabled={loading}
+									rightIcon={<MdSave />}>
+									{loading ? (
+										<Spinner
+											size="sm"
+											mr="2"
+										/>
+									) : null}
+									{loading ? "Validando dados" : "Salvar"}
+								</Button>
+								<Button
+									colorScheme="gray"
+									size="lg"
+									margin="0.625rem"
+									rightIcon={<MdCancel />}
+									onClick={onCancel}>
+									Cancelar
+								</Button>
+							</Flex>
 						</Box>
 					</CardBody>
 				</Card>

@@ -76,5 +76,28 @@
 			"startTime": "14:00",
 			"endTime": "17:00"
 		}
+	],
+	"schedule": [
+		{
+			"id": 1,
+			"customerId": "João",
+			"serviceId": "Limpeza dos pés",
+			"date": "25/05/2024",
+			"status": "Agendado"
+		},
+		{
+			"id": 2,
+			"customerId": "João",
+			"serviceId": "Limpeza dos pés",
+			"date": "26/05/2024",
+			"status": "Agendado"
+		},
+		{
+			"id": 3,
+			"customerId": "João",
+			"serviceId": "Limpeza dos pés",
+			"date": "27/05/2024",
+			"status": "Agendado"
+		}
 	]
 }
