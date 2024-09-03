@@ -23,7 +23,7 @@ import { FormDataAvaliable } from "../../interface/FormDataAvaliable";
 import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
 import { useState } from "react";
-import TableAvaliable from "../../components/TableAvaliable";
+import TableAvaliable from "./TableAvaliable";
 
 export default function AvaliableTimePage() {
 	const {
@@ -185,7 +185,7 @@ export default function AvaliableTimePage() {
 					</Card>
 				) : (
 					<TableAvaliable
-						onNewClick={function (): void {
+						onNewClick={() => {
 							setShowForm(true);
 						}}
 					/>

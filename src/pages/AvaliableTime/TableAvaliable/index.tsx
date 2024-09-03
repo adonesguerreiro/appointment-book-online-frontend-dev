@@ -12,26 +12,26 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FormDataAvaliable } from "../../../interface/FormDataAvaliable";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
-import { FormDataUnavaliable } from "../../interface/FormDataUnavaliable";
 
 interface TableServiceProps {
 	onNewClick: () => void;
 }
 
-export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
-	const [unavaliables, setUnavaliable] = useState<FormDataUnavaliable[]>([]);
+export default function TableAvaliable({ onNewClick }: TableServiceProps) {
+	const [avaliables, setAvaliable] = useState<FormDataAvaliable[]>([]);
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3000/unavailable")
+			.get("http://localhost:3000/avaliable")
 			.then((response) => {
-				setUnavaliable(response.data);
+				setAvaliable(response.data);
 			})
 			.catch((error) => {
-				console.error("Error fetching unavaliables:", error);
+				console.error("Error fetching avaliables:", error);
 			});
 	});
 
@@ -45,10 +45,9 @@ export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
 					size="lg"
 					rightIcon={<FaPlus />}
 					onClick={onNewClick}>
-					Nova indisponibilidade
+					Novo horário
 				</Button>
 			</Box>
-
 			<Flex
 				direction="column"
 				align="center"
@@ -62,18 +61,21 @@ export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
 							colorScheme="gray">
 							<Thead>
 								<Tr>
-									<Th>Data</Th>
+									<Th>Dia</Th>
 									<Th>Horário ínicio</Th>
 									<Th>Horário fim</Th>
+									<Th>Intervalo</Th>
 									<Th>Ações</Th>
 								</Tr>
 							</Thead>
 							<Tbody>
-								{unavaliables.map((unavaliable, index) => (
+								{avaliables.map((avaliable, index) => (
 									<Tr key={index}>
-										<Td>{unavaliable.date}</Td>
-										<Td>{unavaliable.startTime}</Td>
-										<Td>{unavaliable.endTime}</Td>
+										<Td>{avaliable.day}</Td>
+										<Td>{avaliable.startTime}</Td>
+										<Td>{avaliable.endTime}</Td>
+										<Td>{avaliable.interval} min</Td>
+
 										<Td>
 											<Flex>
 												<MdEdit />

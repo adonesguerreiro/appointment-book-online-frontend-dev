@@ -8,16 +8,6 @@ import { useState } from "react";
 export default function Sidebar() {
 	const navigate = useNavigate();
 
-	const goToDashboard = () => navigate("/");
-
-	const goToService = () => navigate("/service");
-
-	const goToSchedule = () => navigate("/schedule");
-
-	const goToAvaliableTime = () => navigate("/avaliable-time");
-
-	const goToUnavaliableTime = () => navigate("/unavaliable-time");
-
 	const [showSubmenu, setSubmenu] = useState(false);
 
 	const handleSubmenuToggle = () => setSubmenu(!showSubmenu);
@@ -53,12 +43,11 @@ export default function Sidebar() {
 						display="flex"
 						alignItems="center"
 						gap="0.625rem"
-						href="#"
 						_hover={{
 							textDecoration: "none",
 							color: "teal.300",
 						}}
-						onClick={goToDashboard}>
+						onClick={() => navigate("/")}>
 						<MdDashboard />
 						Dashboard
 					</Link>
@@ -80,7 +69,7 @@ export default function Sidebar() {
 							textDecoration: "none",
 							color: "teal.300",
 						}}
-						onClick={goToService}>
+						onClick={() => navigate("/service")}>
 						<FaWrench />
 						Serviços
 					</Link>
@@ -99,7 +88,7 @@ export default function Sidebar() {
 						alignItems="center"
 						gap="0.625rem"
 						_hover={{ textDecoration: "none", color: "teal.300" }}
-						onClick={goToSchedule}>
+						onClick={() => navigate("/schedule")}>
 						<GrSchedule />
 						Agenda
 					</Link>
@@ -134,7 +123,7 @@ export default function Sidebar() {
 								justifyContent="space-around"
 								href="#"
 								_hover={{ textDecoration: "none", color: "teal.300" }}
-								onClick={goToAvaliableTime}>
+								onClick={() => navigate("/avaliable-time")}>
 								<MdEventAvailable />
 								Horário disponíveis
 							</Link>
@@ -144,7 +133,7 @@ export default function Sidebar() {
 								justifyContent="space-between"
 								href="#"
 								_hover={{ textDecoration: "none", color: "teal.300" }}
-								onClick={goToUnavaliableTime}>
+								onClick={() => navigate("/unavaliable-time")}>
 								<MdEventBusy />
 								Horário indisponíveis
 							</Link>

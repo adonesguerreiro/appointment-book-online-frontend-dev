@@ -18,12 +18,6 @@ import { useNavigate } from "react-router-dom";
 export default function Header() {
 	const navigate = useNavigate();
 
-	const goToUser = () => navigate("/user");
-
-	const goToCompany = () => navigate("/company");
-
-	// const goToLogout = () => navigate("/login");
-
 	return (
 		<Box
 			as="header"
@@ -71,14 +65,14 @@ export default function Header() {
 							bg="blackAlpha.900"
 							_hover={{ bg: "blackAlpha.800" }}
 							_focus={{ bg: "blackAlpha.800" }}
-							onClick={goToUser}>
+							onClick={() => navigate("/user")}>
 							Perfil do usuário
 						</MenuItem>
 						<MenuItem
 							bg="blackAlpha.900"
 							_hover={{ bg: "blackAlpha.800" }}
 							_focus={{ bg: "blackAlpha.800" }}
-							onClick={goToCompany}>
+							onClick={() => navigate("/company")}>
 							Perfil da empresa
 						</MenuItem>
 						{/* <MenuItem

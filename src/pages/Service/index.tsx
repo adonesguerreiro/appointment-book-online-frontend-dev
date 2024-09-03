@@ -11,6 +11,7 @@ import {
 	Grid,
 	Heading,
 	Input,
+	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
@@ -22,8 +23,9 @@ import { CurrencyInput } from "react-currency-mask";
 import InputMask from "react-input-mask";
 
 import { FormDataService } from "../../interface/FormDataService";
-import TableService from "../../components/TableService";
+import TableService from "./TableService";
 import { useState } from "react";
+import ModalComponent from "../../components/Modal";
 
 export default function ServicePage() {
 	const {
@@ -37,6 +39,7 @@ export default function ServicePage() {
 	});
 
 	const [showForm, setShowForm] = useState(false);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
 
@@ -174,11 +177,19 @@ export default function ServicePage() {
 					</Card>
 				) : (
 					<TableService
-						onNewClick={function (): void {
+						onNewClick={() => {
 							setShowForm(true);
 						}}
+						onEditClick={() => {
+							return setShowForm(true);
+						}}
+						openModal={onOpen}
 					/>
 				)}
+				<ModalComponent
+					isOpen={isOpen}
+					onClose={onClose}
+				/>
 			</Flex>
 		</Container>
 	);

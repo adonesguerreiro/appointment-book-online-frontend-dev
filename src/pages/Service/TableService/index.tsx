@@ -12,16 +12,22 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FormDataService } from "../../interface/FormDataService";
+import { FormDataService } from "../../../interface/FormDataService";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 
 interface TableServiceProps {
 	onNewClick: () => void;
+	onEditClick: () => void;
+	openModal: () => void;
 }
 
-export default function TableService({ onNewClick }: TableServiceProps) {
+export default function TableService({
+	onNewClick,
+	onEditClick,
+	openModal,
+}: TableServiceProps) {
 	const [services, setServices] = useState<FormDataService[]>([]);
 
 	useEffect(() => {
@@ -75,8 +81,8 @@ export default function TableService({ onNewClick }: TableServiceProps) {
 										<Td isNumeric>{service.price}</Td>
 										<Td>
 											<Flex>
-												<MdEdit />
-												<MdDelete />
+												<MdEdit onClick={onEditClick} />
+												<MdDelete onClick={openModal} />
 											</Flex>
 										</Td>
 									</Tr>

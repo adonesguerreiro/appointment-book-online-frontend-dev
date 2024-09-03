@@ -23,7 +23,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { FormDataUnavaliable } from "../../interface/FormDataUnavaliable";
 import { useState } from "react";
-import TableUnavaliable from "../../components/TableUnavaliable";
+import TableUnavaliable from "./TableUnavaliable";
 import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
 
