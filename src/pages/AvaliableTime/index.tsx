@@ -12,6 +12,7 @@ import {
 	Heading,
 	Input,
 	Select,
+	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
 import { useState } from "react";
 import TableAvaliable from "./TableAvaliable";
+import ModalComponent from "../../components/Modal";
 
 export default function AvaliableTimePage() {
 	const {
@@ -36,6 +38,7 @@ export default function AvaliableTimePage() {
 	});
 
 	const [showForm, setShowForm] = useState(false);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
 
@@ -188,8 +191,16 @@ export default function AvaliableTimePage() {
 						onNewClick={() => {
 							setShowForm(true);
 						}}
+						onEditClick={() => {
+							return setShowForm(true);
+						}}
+						openModal={onOpen}
 					/>
 				)}
+				<ModalComponent
+					isOpen={isOpen}
+					onClose={onClose}
+				/>
 			</Flex>
 		</Container>
 	);

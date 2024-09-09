@@ -13,15 +13,20 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FormDataAvaliable } from "../../../interface/FormDataAvaliable";
-import { MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
-interface TableServiceProps {
+interface TableAvaliable {
 	onNewClick: () => void;
+	onEditClick: () => void;
+	openModal: () => void;
 }
 
-export default function TableAvaliable({ onNewClick }: TableServiceProps) {
+export default function TableAvaliable({
+	onNewClick,
+	onEditClick,
+	openModal,
+}: TableAvaliable) {
 	const [avaliables, setAvaliable] = useState<FormDataAvaliable[]>([]);
 
 	useEffect(() => {
@@ -78,8 +83,14 @@ export default function TableAvaliable({ onNewClick }: TableServiceProps) {
 
 										<Td>
 											<Flex>
-												<MdEdit />
-												<MdDelete />
+												<EditIcon
+													onClick={onEditClick}
+													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
+												<DeleteIcon
+													onClick={openModal}
+													_hover={{ color: "red", cursor: "pointer" }}
+												/>
 											</Flex>
 										</Td>
 									</Tr>

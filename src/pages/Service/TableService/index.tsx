@@ -10,12 +10,11 @@ import {
 	Box,
 	Button,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { FormDataService } from "../../../interface/FormDataService";
-import { MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { getServices } from "../../../services/api";
 
 interface TableServiceProps {
 	onNewClick: () => void;
@@ -31,16 +30,17 @@ export default function TableService({
 	const [services, setServices] = useState<FormDataService[]>([]);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3000/service")
-			.then((response) => {
+		const fetchData = async () => {
+			try {
+				const response = await getServices();
 				setServices(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching services:", error);
-			});
-	});
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		};
 
+		fetchData();
+	}, []);
 	return (
 		<>
 			<Box
@@ -81,8 +81,14 @@ export default function TableService({
 										<Td isNumeric>{service.price}</Td>
 										<Td>
 											<Flex>
-												<MdEdit onClick={onEditClick} />
-												<MdDelete onClick={openModal} />
+												<EditIcon
+													onClick={onEditClick}
+													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
+												<DeleteIcon
+													onClick={openModal}
+													_hover={{ color: "red", cursor: "pointer" }}
+												/>
 											</Flex>
 										</Td>
 									</Tr>

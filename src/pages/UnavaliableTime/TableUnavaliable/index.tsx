@@ -12,16 +12,21 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 import { FormDataUnavaliable } from "../../../interface/FormDataUnavaliable";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
-interface TableServiceProps {
+interface TableUnavaliable {
 	onNewClick: () => void;
+	onEditClick: () => void;
+	openModal: () => void;
 }
 
-export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
+export default function TableUnavaliable({
+	onNewClick,
+	onEditClick,
+	openModal,
+}: TableUnavaliable) {
 	const [unavaliables, setUnavaliable] = useState<FormDataUnavaliable[]>([]);
 
 	useEffect(() => {
@@ -76,8 +81,14 @@ export default function TableUnavaliable({ onNewClick }: TableServiceProps) {
 										<Td>{unavaliable.endTime}</Td>
 										<Td>
 											<Flex>
-												<MdEdit />
-												<MdDelete />
+												<EditIcon
+													onClick={onEditClick}
+													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
+												<DeleteIcon
+													onClick={openModal}
+													_hover={{ color: "red", cursor: "pointer" }}
+												/>
 											</Flex>
 										</Td>
 									</Tr>

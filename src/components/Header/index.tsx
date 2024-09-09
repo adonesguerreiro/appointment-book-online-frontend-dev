@@ -14,9 +14,24 @@ import { Avatar } from "@chakra-ui/react";
 
 import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Header() {
 	const navigate = useNavigate();
+	const { logout } = useAuth();
+
+	const handleLogout = () => {
+		logout(); // Realiza o logout
+		navigate("/login"); // Redireciona para a página de login
+	};
+
+	const goToUserProfile = () => {
+		navigate("/user");
+	};
+
+	const goToCompany = () => {
+		navigate("/company");
+	};
 
 	return (
 		<Box
@@ -65,23 +80,23 @@ export default function Header() {
 							bg="blackAlpha.900"
 							_hover={{ bg: "blackAlpha.800" }}
 							_focus={{ bg: "blackAlpha.800" }}
-							onClick={() => navigate("/user")}>
+							onClick={goToUserProfile}>
 							Perfil do usuário
 						</MenuItem>
 						<MenuItem
 							bg="blackAlpha.900"
 							_hover={{ bg: "blackAlpha.800" }}
 							_focus={{ bg: "blackAlpha.800" }}
-							onClick={() => navigate("/company")}>
+							onClick={goToCompany}>
 							Perfil da empresa
 						</MenuItem>
-						{/* <MenuItem
+						<MenuItem
 							bg="blackAlpha.900"
 							_hover={{ bg: "blackAlpha.800" }}
 							_focus={{ bg: "blackAlpha.800" }}
-							onClick={goToLogout}>
+							onClick={handleLogout}>
 							Deslogar
-						</MenuItem> */}
+						</MenuItem>
 					</MenuList>
 				</Menu>
 			</Flex>

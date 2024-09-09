@@ -13,32 +13,61 @@ import {
 	FormErrorMessage,
 	useToast,
 	Container,
+	Spinner,
 } from "@chakra-ui/react";
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "./loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { auth } from "../../services/api";
+import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
+	const [loading, setLoading] = useState(false);
 	const {
 		handleSubmit,
 		register,
+
 		formState: { errors },
 	} = useForm<FormDataLogin>({
 		resolver: yupResolver(loginSchema),
 	});
 
 	const toast = useToast();
+	const { setToken } = useAuth();
 
-	const onSubmit = () => {
-		toast({
-			title: "Autenticado com sucesso!",
-			status: "success",
-			duration: 3000,
-			isClosable: true,
-			position: "top-right",
-		});
+	const onSubmit = async (data: FormDataLogin) => {
+		try {
+			setLoading(true);
+			const authorization = await auth(data);
+			const { token } = authorization.data;
+			setToken(token);
+
+			await toast({
+				title: "Autenticado com sucesso!",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+				position: "top-right",
+			});
+
+			setTimeout(() => {
+				setLoading(false);
+				window.location.href = "/";
+			}, 1000);
+		} catch (e) {
+			console.error("Error authenticating user:", e);
+			toast({
+				title: "Falha na autenticação!",
+				status: "error",
+				duration: 3000,
+				isClosable: true,
+				position: "top-right",
+			});
+		}
+		setLoading(false);
 	};
 
 	return (
@@ -112,8 +141,15 @@ export default function LoginPage() {
 									colorScheme="teal"
 									size="lg"
 									rightIcon={<MdArrowForward />}
-									type="submit">
-									Entrar
+									type="submit"
+									isDisabled={loading}>
+									{loading ? (
+										<Spinner
+											size="sm"
+											mr="2"
+										/>
+									) : null}
+									{loading ? "Autenticando" : "Entrar"}
 								</Button>
 							</form>
 						</Box>

@@ -12,6 +12,7 @@ import {
 	Heading,
 	Input,
 	Select,
+	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
@@ -22,9 +23,10 @@ import InputMask from "react-input-mask";
 import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
 import { useState } from "react";
-import TableSchedule from "../../components/TableSchedule";
+import TableSchedule from "./TableSchedule";
 import { scheduleSchema } from "./scheduleSchema";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
+import ModalComponent from "../../components/Modal";
 
 export default function SchedulePage() {
 	const {
@@ -37,6 +39,7 @@ export default function SchedulePage() {
 	});
 
 	const [showForm, setShowForm] = useState(false);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
 
@@ -180,11 +183,19 @@ export default function SchedulePage() {
 					</Card>
 				) : (
 					<TableSchedule
-						onNewClick={function (): void {
+						onNewClick={() => {
 							setShowForm(true);
 						}}
+						onEditClick={() => {
+							return setShowForm(true);
+						}}
+						openModal={onOpen}
 					/>
 				)}
+				<ModalComponent
+					isOpen={isOpen}
+					onClose={onClose}
+				/>
 			</Flex>
 		</Container>
 	);

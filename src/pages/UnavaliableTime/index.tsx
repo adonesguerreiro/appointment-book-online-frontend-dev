@@ -11,6 +11,7 @@ import {
 	Grid,
 	Heading,
 	Input,
+	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
@@ -26,6 +27,7 @@ import { useState } from "react";
 import TableUnavaliable from "./TableUnavaliable";
 import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
+import ModalComponent from "../../components/Modal";
 
 export default function UnavaliableTimePage() {
 	const {
@@ -39,6 +41,7 @@ export default function UnavaliableTimePage() {
 	});
 
 	const [showForm, setShowForm] = useState(false);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
 
@@ -180,11 +183,19 @@ export default function UnavaliableTimePage() {
 					</Card>
 				) : (
 					<TableUnavaliable
-						onNewClick={function (): void {
+						onNewClick={() => {
 							setShowForm(true);
 						}}
+						onEditClick={() => {
+							return setShowForm(true);
+						}}
+						openModal={onOpen}
 					/>
 				)}
+				<ModalComponent
+					isOpen={isOpen}
+					onClose={onClose}
+				/>
 			</Flex>
 		</Container>
 	);

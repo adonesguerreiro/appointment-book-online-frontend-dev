@@ -12,16 +12,20 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FormDataSchedule } from "../../interface/FormDataSchedule";
-import { MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
+import { FormDataSchedule } from "../../../interface/FormDataSchedule";
 import { FaPlus } from "react-icons/fa";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 interface TableScheduleProps {
 	onNewClick: () => void;
+	onEditClick: () => void;
+	openModal: () => void;
 }
-
-export default function TableService({ onNewClick }: TableScheduleProps) {
+export default function TableSchedule({
+	onNewClick,
+	onEditClick,
+	openModal,
+}: TableScheduleProps) {
 	const [schedules, setSchedules] = useState<FormDataSchedule[]>([]);
 
 	useEffect(() => {
@@ -65,6 +69,7 @@ export default function TableService({ onNewClick }: TableScheduleProps) {
 									<Th>Serviço</Th>
 									<Th>Data</Th>
 									<Th>Horário</Th>
+									<Th>Ações</Th>
 								</Tr>
 							</Thead>
 							<Tbody>
@@ -76,8 +81,14 @@ export default function TableService({ onNewClick }: TableScheduleProps) {
 										<Td>{schedule.date}</Td>
 										<Td>
 											<Flex>
-												<MdEdit />
-												<MdDelete />
+												<EditIcon
+													onClick={onEditClick}
+													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
+												<DeleteIcon
+													onClick={openModal}
+													_hover={{ color: "red", cursor: "pointer" }}
+												/>
 											</Flex>
 										</Td>
 									</Tr>

@@ -11,7 +11,9 @@ import {
 	FormLabel,
 	Heading,
 	Input,
+	Spinner,
 	useToast,
+	// useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FormDataUser } from "../../interface/FormDataUser";
@@ -19,27 +21,91 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "./userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { getUserById, updateUser } from "../../services/api";
+import { useEffect, useState } from "react";
 
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { useAuth } from "../../context/AuthContext";
+import { AxiosError } from "axios";
+
+interface CustomJwtPayload extends JwtPayload {
+	id: number;
+}
 export default function UserPage() {
+	const [loading, setLoading] = useState(false);
 	const {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		formState: { errors },
 	} = useForm<FormDataUser>({
 		resolver: yupResolver(userSchema),
+		mode: "onChange",
 	});
 
-	const toast = useToast();
+	const { token } = useAuth();
 
-	const onSubmit = () => {
-		toast({
-			title: "Salvo com sucesso!",
-			status: "info",
-			duration: 3000,
-			isClosable: true,
-			position: "top-right",
-		});
+	useEffect(() => {
+		if (!token) {
+			return;
+		}
+
+		const fetchDataUser = async () => {
+			try {
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const userId = decoded.id;
+				const userData = await getUserById(userId);
+				setValue("name", userData.data.name);
+				setValue("email", userData.data.email);
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		};
+
+		fetchDataUser();
+	}, [setValue, token]);
+
+	const toast = useToast();
+	console.log("Erros:", errors);
+	const onSubmit = async (data: FormDataUser) => {
+		setLoading(true);
+		try {
+			if (token) {
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const userId = decoded.id;
+				const updatedUser = await updateUser(userId, data);
+				if (updatedUser.status === 200) {
+					toast({
+						title: "Salvo com sucesso!",
+						status: "success",
+						duration: 3000,
+						isClosable: true,
+						position: "top-right",
+					});
+
+					setLoading(false);
+					navigate("/");
+					return;
+				}
+			}
+		} catch (error) {
+			console.error("Erro ao salvar dados", error);
+
+			if (error instanceof AxiosError) {
+				const errors = error.response?.data.errors[0];
+
+				toast({
+					title: errors.message,
+					status: "warning",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
+			}
+			setLoading(false);
+			return;
+		}
 	};
 
 	const navigate = useNavigate();
@@ -119,28 +185,32 @@ export default function UserPage() {
 								{errors.password && (
 									<FormErrorMessage>{errors.password.message}</FormErrorMessage>
 								)}
+							</FormControl>
 
+							<FormControl
+								display="grid"
+								alignItems="center"
+								width="25.0625rem"
+								padding="0.625rem"
+								isInvalid={!!errors.newPassword || !!errors.confirmPassword}>
 								<FormLabel>Nova senha</FormLabel>
 								<Input
 									type="password"
 									placeholder="Nova senha"
 									id="newPassword"
 									{...register("newPassword")}
-									isInvalid={!!errors.newPassword}
 								/>
 								{errors.newPassword && (
 									<FormErrorMessage>
 										{errors.newPassword.message}
 									</FormErrorMessage>
 								)}
-
 								<FormLabel>Confirmar nova senha</FormLabel>
 								<Input
 									type="password"
 									placeholder="Confirmar nova senha"
 									id="confirmPassword"
 									{...register("confirmPassword")}
-									isInvalid={!!errors.confirmPassword}
 								/>
 								{errors.confirmPassword && (
 									<FormErrorMessage>
@@ -156,8 +226,15 @@ export default function UserPage() {
 									colorScheme="blue"
 									size="lg"
 									type="submit"
+									isDisabled={loading}
 									rightIcon={<MdSave />}>
-									Salvar
+									{loading ? (
+										<Spinner
+											size="sm"
+											mr="2"
+										/>
+									) : null}
+									{loading ? "Validando dados" : "Salvar"}
 								</Button>
 								<Button
 									colorScheme="gray"
