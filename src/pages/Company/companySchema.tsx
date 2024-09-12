@@ -25,8 +25,8 @@ export const companySchema = yup.object().shape({
 	number: yup.string().required("Número é obrigatório."),
 	complement: yup.string(),
 	neighborhood: yup.string().required("Bairro é obrigatório."),
-	city: yup.string(),
-	state: yup.string(),
+	city: yup.string().required("Cidade é obrigatório."),
+	state: yup.string().required("Estado é obrigatório."),
 	postalCode: yup
 		.string()
 		.required("CEP é obrigatório.")

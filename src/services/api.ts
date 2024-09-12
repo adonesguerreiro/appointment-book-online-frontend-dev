@@ -2,6 +2,8 @@ import axios from "axios";
 import { FormDataLogin } from "../interface/FormDataLogin";
 import { FormDataService } from "../interface/FormDataService";
 import { FormDataUser } from "../interface/FormDataUser";
+import { FormDataCompany } from "../interface/FormDataCompany";
+import { FormDataAddress } from "../interface/FormDataAddress";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,
@@ -26,7 +28,7 @@ export const getAllUsers = () => {
 	return api.get("/users");
 };
 
-export const getUserById = (userId: number) => {
+export const getUser = (userId: number) => {
 	const token = localStorage.getItem("token");
 
 	if (!token) {
@@ -47,7 +49,33 @@ export const updateUser = (userId: number, user: FormDataUser) => {
 };
 
 export const getCompany = (companyId: number) => {
+	const token = localStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("Token not found");
+	}
+
 	return api.get(`/companies/${companyId}`);
+};
+
+export const updateCompany = (companyId: number, company: FormDataCompany) => {
+	const token = localStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("Token not found");
+	}
+
+	return api.put(`/companies/${companyId}`, company);
+};
+
+export const updateAddress = (addressId: number, address: FormDataAddress) => {
+	const token = localStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("Token not found");
+	}
+
+	return api.put(`/addresses/${addressId}`, address);
 };
 
 export const getServices = () => {

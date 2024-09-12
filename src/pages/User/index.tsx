@@ -21,16 +21,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "./userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { getUserById, updateUser } from "../../services/api";
+import { getUser, updateUser } from "../../services/api";
 import { useEffect, useState } from "react";
 
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthContext";
 import { AxiosError } from "axios";
+import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
 
-interface CustomJwtPayload extends JwtPayload {
-	id: number;
-}
 export default function UserPage() {
 	const [loading, setLoading] = useState(false);
 	const {
@@ -55,7 +53,7 @@ export default function UserPage() {
 			try {
 				const decoded = jwtDecode<CustomJwtPayload>(token);
 				const userId = decoded.id;
-				const userData = await getUserById(userId);
+				const userData = await getUser(userId);
 				setValue("name", userData.data.name);
 				setValue("email", userData.data.email);
 			} catch (error) {

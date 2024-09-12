@@ -22,8 +22,13 @@ import { MdCancel, MdSave } from "react-icons/md";
 import InputMask from "react-input-mask";
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { viaCep } from "../../services/viaCep";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
+import { getCompany, updateAddress, updateCompany } from "../../services/api";
+import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
+import { AxiosError } from "axios";
 
 export default function CompanyPage() {
 	const [loading, setLoading] = useState(false);
@@ -31,8 +36,8 @@ export default function CompanyPage() {
 		handleSubmit,
 		register,
 		setError,
-		setValue,
 		reset,
+
 		formState: { errors },
 	} = useForm<FormDataCompany>({
 		resolver: yupResolver(companySchema),
@@ -40,32 +45,97 @@ export default function CompanyPage() {
 
 	const toast = useToast();
 
+	const { token } = useAuth();
+
+	useEffect(() => {
+		if (!token) {
+			return;
+		}
+
+		const fetchDataCompany = async () => {
+			try {
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const companyId = decoded.id;
+				const companyData = await getCompany(companyId);
+
+				reset({
+					name: companyData.data.name,
+					email: companyData.data.email,
+					mobile: companyData.data.mobile,
+					cnpj: companyData.data.cnpj,
+					street: companyData.data.addresses[0].street,
+					number: companyData.data.addresses[0].number,
+					complement: companyData.data.addresses[0].complement,
+					neighborhood: companyData.data.addresses[0].neighborhood,
+					city: companyData.data.addresses[0].city,
+					state: companyData.data.addresses[0].state,
+					postalCode: companyData.data.addresses[0].postalCode,
+				});
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		};
+
+		fetchDataCompany();
+	}, [reset, token]);
+
 	const onSubmit = async (data: FormDataCompany) => {
 		setLoading(true);
-		const existingCep = await viaCep(data.postalCode);
+		try {
+			const existingCep = await viaCep(data.postalCode);
+			if (existingCep != "CEP inválido") {
+				setLoading(false);
+				reset({
+					city: existingCep.localidade,
+					state: existingCep.uf,
+				});
+			} else {
+				setLoading(false);
+				reset({
+					city: "",
+					state: "",
+				});
 
-		if (existingCep != "CEP inválido") {
+				setError("postalCode", {
+					type: "manual",
+					message: existingCep as string,
+				});
+				return;
+			}
+
+			if (token) {
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const companyId = decoded.id;
+				const updatedCompany = await updateCompany(companyId, data);
+				const addressCompanyId =
+					updatedCompany.data.companyUpdated.addresses[0].id;
+				const updatedAddress = await updateAddress(addressCompanyId, data);
+				if (updatedCompany.status === 200 && updatedAddress.status === 200) {
+					toast({
+						title: "Alterado com sucesso!",
+						status: "success",
+						duration: 3000,
+						isClosable: true,
+						position: "top-right",
+					});
+				}
+			}
+		} catch (error) {
+			console.error("Erro ao salvar dados", error);
+
+			if (error instanceof AxiosError) {
+				const errors = error.response?.data?.errors[0];
+
+				toast({
+					title: errors.message,
+					status: "warning",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
+			}
 			setLoading(false);
-
-			setValue("city", existingCep.localidade);
-			setValue("state", existingCep.uf);
-
-			toast({
-				title: "Salvo com sucesso!",
-				status: "info",
-				duration: 3000,
-				isClosable: true,
-				position: "top-right",
-			});
-		} else {
-			setLoading(false);
-			setValue("city", "");
-			setValue("state", "");
-
-			setError("postalCode", {
-				type: "manual",
-				message: existingCep as string,
-			});
+			return;
 		}
 	};
 
