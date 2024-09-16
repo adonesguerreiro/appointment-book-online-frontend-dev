@@ -35,7 +35,6 @@ export default function UserPage() {
 		handleSubmit,
 		register,
 		reset,
-		setValue,
 		formState: { errors },
 	} = useForm<FormDataUser>({
 		resolver: yupResolver(userSchema),
@@ -54,15 +53,17 @@ export default function UserPage() {
 				const decoded = jwtDecode<CustomJwtPayload>(token);
 				const userId = decoded.id;
 				const userData = await getUser(userId);
-				setValue("name", userData.data.name);
-				setValue("email", userData.data.email);
+				reset({
+					name: userData.data.name,
+					email: userData.data.email,
+				});
 			} catch (error) {
 				console.error("Erro ao buscar dados", error);
 			}
 		};
 
 		fetchDataUser();
-	}, [setValue, token]);
+	}, [reset, token]);
 
 	const toast = useToast();
 	console.log("Erros:", errors);
@@ -70,9 +71,7 @@ export default function UserPage() {
 		setLoading(true);
 		try {
 			if (token) {
-				const decoded = jwtDecode<CustomJwtPayload>(token);
-				const userId = decoded.id;
-				const updatedUser = await updateUser(userId, data);
+				const updatedUser = await updateUser(data);
 				if (updatedUser.status === 200) {
 					toast({
 						title: "Salvo com sucesso!",

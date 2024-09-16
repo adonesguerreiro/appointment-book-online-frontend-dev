@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "./serviceSchema";
 import { MdCancel } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
+import { TbEditCircle } from "react-icons/tb";
 import { CurrencyInput } from "react-currency-mask";
 import InputMask from "react-input-mask";
 
@@ -26,6 +27,14 @@ import { FormDataService } from "../../interface/FormDataService";
 import TableService from "./TableService";
 import { useState } from "react";
 import ModalComponent from "../../components/Modal";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import {
+	createService,
+	getServicesById,
+	updateService,
+} from "../../services/api";
+import { AxiosError } from "axios";
 
 export default function ServicePage() {
 	const {
@@ -36,27 +45,86 @@ export default function ServicePage() {
 		formState: { errors },
 	} = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
+		defaultValues: { name: "", duration: "", price: 0 },
 	});
 
 	const [showForm, setShowForm] = useState(false);
+	const [selectedService, setSelectedService] =
+		useState<FormDataService | null>(null);
+
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
+	const navigate = useNavigate();
+	const { token } = useAuth();
 
-	const onSubmit = () => {
-		toast({
-			title: "Serviço registrado com sucesso.",
-			status: "success",
-			duration: 3000,
-			isClosable: true,
-			position: "top-right",
-		});
-		reset();
-		setShowForm(false);
+	console.error(errors);
+	const onSubmit = async (data: FormDataService) => {
+		try {
+			if (token && !selectedService) {
+				const createdService = await createService(data);
+				if (createdService.status === 200) {
+					toast({
+						title: "Serviço registrado com sucesso.",
+						status: "success",
+						duration: 3000,
+						isClosable: true,
+						position: "top-right",
+					});
+					setShowForm(false);
+					navigate("/service");
+				}
+			} else {
+				await updateService(Number(selectedService), data);
+				toast({
+					title: "Serviço alterado com sucesso.",
+					status: "info",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
+				setShowForm(false);
+				navigate("/service");
+			}
+		} catch (error) {
+			console.error("Erro ao salvar dados", error);
+			if (error instanceof AxiosError) {
+				const errors = error.response?.data.errors[0];
+
+				toast({
+					title: errors.message,
+					status: "warning",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
+			}
+		}
+	};
+
+	const handleEditClick = async (serviceId: number) => {
+		try {
+			const serviceData = await getServicesById(serviceId);
+
+			setSelectedService(serviceData.data.id);
+			reset({
+				name: serviceData.data.name,
+				duration: serviceData.data.duration,
+				price: Number(serviceData.data.price),
+			});
+
+			setShowForm(true);
+		} catch (error) {
+			console.error("Erro ao buscar dados", error);
+		}
 	};
 
 	const onCancel = () => {
-		reset();
+		reset({
+			name: "",
+			duration: "",
+			price: 0,
+		});
 		setShowForm(false);
 	};
 
@@ -155,14 +223,26 @@ export default function ServicePage() {
 									</FormControl>
 								</Grid>
 								<Flex justifyContent="flex-end">
-									<Button
-										colorScheme="green"
-										size="lg"
-										type="submit"
-										margin="0.625rem"
-										rightIcon={<LuPlusCircle />}>
-										Cadastrar
-									</Button>
+									{!selectedService ? (
+										<Button
+											colorScheme="green"
+											size="lg"
+											type="submit"
+											margin="0.625rem"
+											rightIcon={<LuPlusCircle />}>
+											Cadastrar
+										</Button>
+									) : (
+										<Button
+											colorScheme="blue"
+											size="lg"
+											type="submit"
+											margin="0.625rem"
+											rightIcon={<TbEditCircle />}>
+											Editar
+										</Button>
+									)}
+
 									<Button
 										colorScheme="gray"
 										size="lg"
@@ -178,10 +258,11 @@ export default function ServicePage() {
 				) : (
 					<TableService
 						onNewClick={() => {
+							setSelectedService(null);
 							setShowForm(true);
 						}}
-						onEditClick={() => {
-							return setShowForm(true);
+						onEditClick={(serviceId: number) => {
+							handleEditClick(serviceId);
 						}}
 						openModal={onOpen}
 					/>

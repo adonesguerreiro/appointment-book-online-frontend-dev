@@ -11,14 +11,17 @@ import {
 	Button,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FormDataService } from "../../../interface/FormDataService";
+import { FormDataServiceEdit } from "../../../interface/FormDataService";
 import { FaPlus } from "react-icons/fa";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { getServices } from "../../../services/api";
+import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
+import { useAuth } from "../../../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 interface TableServiceProps {
 	onNewClick: () => void;
-	onEditClick: () => void;
+	onEditClick: (serviceId: number) => void;
 	openModal: () => void;
 }
 
@@ -27,20 +30,29 @@ export default function TableService({
 	onEditClick,
 	openModal,
 }: TableServiceProps) {
-	const [services, setServices] = useState<FormDataService[]>([]);
+	const [services, setServices] = useState<FormDataServiceEdit[]>([]);
+
+	const { token } = useAuth();
 
 	useEffect(() => {
+		if (!token) {
+			return;
+		}
+
 		const fetchData = async () => {
 			try {
-				const response = await getServices();
-				setServices(response.data);
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const companyId = decoded.id;
+				const serviceData = await getServices(companyId);
+				setServices(serviceData.data);
 			} catch (error) {
 				console.error("Erro ao buscar dados", error);
 			}
 		};
 
 		fetchData();
-	}, []);
+	}, [token]);
+
 	return (
 		<>
 			<Box
@@ -81,10 +93,12 @@ export default function TableService({
 										<Td isNumeric>{service.price}</Td>
 										<Td>
 											<Flex>
-												<EditIcon
-													onClick={onEditClick}
-													_hover={{ color: "blue", cursor: "pointer" }}
-												/>
+												{service.id !== undefined && (
+													<EditIcon
+														onClick={() => onEditClick(service.id)}
+														_hover={{ color: "blue", cursor: "pointer" }}
+													/>
+												)}
 												<DeleteIcon
 													onClick={openModal}
 													_hover={{ color: "red", cursor: "pointer" }}

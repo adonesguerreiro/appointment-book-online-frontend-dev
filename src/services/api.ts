@@ -38,14 +38,14 @@ export const getUser = (userId: number) => {
 	return api.get(`/users/${userId}`);
 };
 
-export const updateUser = (userId: number, user: FormDataUser) => {
+export const updateUser = (user: FormDataUser) => {
 	const token = localStorage.getItem("token");
 
 	if (!token) {
 		throw new Error("Token not found");
 	}
 
-	return api.put(`/users/${userId}`, user);
+	return api.put(`/users`, user);
 };
 
 export const getCompany = (companyId: number) => {
@@ -58,14 +58,14 @@ export const getCompany = (companyId: number) => {
 	return api.get(`/companies/${companyId}`);
 };
 
-export const updateCompany = (companyId: number, company: FormDataCompany) => {
+export const updateCompany = (company: FormDataCompany) => {
 	const token = localStorage.getItem("token");
 
 	if (!token) {
 		throw new Error("Token not found");
 	}
 
-	return api.put(`/companies/${companyId}`, company);
+	return api.put(`/companies`, company);
 };
 
 export const updateAddress = (addressId: number, address: FormDataAddress) => {
@@ -78,8 +78,24 @@ export const updateAddress = (addressId: number, address: FormDataAddress) => {
 	return api.put(`/addresses/${addressId}`, address);
 };
 
-export const getServices = () => {
-	return api.get("/services");
+export const getServices = (companyId: number) => {
+	const token = localStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("Token not found");
+	}
+
+	return api.get(`/services/company/${companyId}`);
+};
+
+export const getServicesById = (serviceId: number) => {
+	const token = localStorage.getItem("token");
+
+	if (!token) {
+		throw new Error("Token not found");
+	}
+
+	return api.get(`/services/${serviceId}`);
 };
 
 export const createService = (service: FormDataService) => {

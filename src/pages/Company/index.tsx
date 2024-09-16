@@ -104,9 +104,7 @@ export default function CompanyPage() {
 			}
 
 			if (token) {
-				const decoded = jwtDecode<CustomJwtPayload>(token);
-				const companyId = decoded.id;
-				const updatedCompany = await updateCompany(companyId, data);
+				const updatedCompany = await updateCompany(data);
 				const addressCompanyId =
 					updatedCompany.data.companyUpdated.addresses[0].id;
 				const updatedAddress = await updateAddress(addressCompanyId, data);
