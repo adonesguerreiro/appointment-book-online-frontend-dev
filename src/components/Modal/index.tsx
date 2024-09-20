@@ -7,16 +7,23 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	Button,
+	Text,
 } from "@chakra-ui/react";
 
 interface ModalComponentProps {
 	isOpen: boolean;
 	onClose: () => void;
+	onDelete: () => void;
+	title: string;
+	itemName: string;
 }
 
 export default function ModalComponent({
 	isOpen,
 	onClose,
+	onDelete,
+	title,
+	itemName,
 }: ModalComponentProps) {
 	return (
 		<>
@@ -25,16 +32,30 @@ export default function ModalComponent({
 				onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader>Modal Title</ModalHeader>
+					<ModalHeader>Excluir {title}</ModalHeader>
 					<ModalCloseButton />
-					<ModalBody>This is the modal body.</ModalBody>
+					<ModalBody>
+						Deseja realmente excluir o{" "}
+						<Text
+							as="span"
+							fontWeight="bold">
+							{itemName}
+						</Text>
+						?
+					</ModalBody>
 
 					<ModalFooter>
 						<Button
-							colorScheme="blue"
+							colorScheme="red"
+							mr={3}
+							onClick={onDelete}>
+							Excluir
+						</Button>
+						<Button
+							colorScheme="gray"
 							mr={3}
 							onClick={onClose}>
-							Close
+							Cancelar
 						</Button>
 					</ModalFooter>
 				</ModalContent>

@@ -10,49 +10,29 @@ import {
 	Box,
 	Button,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { FormDataServiceEdit } from "../../../interface/FormDataService";
 import { FaPlus } from "react-icons/fa";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { getServices } from "../../../services/api";
-import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
-import { useAuth } from "../../../context/AuthContext";
-import { jwtDecode } from "jwt-decode";
+import { currencyFormat } from "../../../helpers/currencyFormat";
+// import { jwtDecode } from "jwt-decode";
+// import { useState, useEffect } from "react";
+// import { useAuth } from "../../../context/AuthContext";
+// import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
+// import { getServices } from "../../../services/api";
 
 interface TableServiceProps {
+	services: FormDataServiceEdit[];
 	onNewClick: () => void;
 	onEditClick: (serviceId: number) => void;
-	openModal: () => void;
+	onDeleteClick: (serviceId: number) => void;
 }
 
 export default function TableService({
+	services,
 	onNewClick,
 	onEditClick,
-	openModal,
+	onDeleteClick,
 }: TableServiceProps) {
-	const [services, setServices] = useState<FormDataServiceEdit[]>([]);
-
-	const { token } = useAuth();
-
-	useEffect(() => {
-		if (!token) {
-			return;
-		}
-
-		const fetchData = async () => {
-			try {
-				const decoded = jwtDecode<CustomJwtPayload>(token);
-				const companyId = decoded.id;
-				const serviceData = await getServices(companyId);
-				setServices(serviceData.data);
-			} catch (error) {
-				console.error("Erro ao buscar dados", error);
-			}
-		};
-
-		fetchData();
-	}, [token]);
-
 	return (
 		<>
 			<Box
@@ -90,17 +70,15 @@ export default function TableService({
 									<Tr key={index}>
 										<Td>{service.name}</Td>
 										<Td>{service.duration}</Td>
-										<Td isNumeric>{service.price}</Td>
+										<Td isNumeric>{currencyFormat(Number(service.price))}</Td>
 										<Td>
 											<Flex>
-												{service.id !== undefined && (
-													<EditIcon
-														onClick={() => onEditClick(service.id)}
-														_hover={{ color: "blue", cursor: "pointer" }}
-													/>
-												)}
+												<EditIcon
+													onClick={() => onEditClick(service.id)}
+													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
 												<DeleteIcon
-													onClick={openModal}
+													onClick={() => onDeleteClick(service.id)}
 													_hover={{ color: "red", cursor: "pointer" }}
 												/>
 											</Flex>
