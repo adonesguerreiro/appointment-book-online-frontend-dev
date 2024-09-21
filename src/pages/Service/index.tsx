@@ -1,15 +1,18 @@
-import { Container, Flex, useDisclosure, useToast } from "@chakra-ui/react";
+import {
+	Container,
+	Flex,
+	Spinner,
+	useDisclosure,
+	useToast,
+} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "./serviceSchema";
-import {
-	FormDataService,
-	FormDataServiceEdit,
-} from "../../interface/FormDataService";
+import { FormDataService } from "../../interface/FormDataService";
 import TableService from "./TableService";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+
 import {
 	createService,
 	deleteService,
@@ -17,12 +20,15 @@ import {
 	getServicesById,
 	updateService,
 } from "../../services/api";
-import { AxiosError } from "axios";
+
 import SectionHeader from "../../components/SectionHeader";
 import ServiceForm from "../../components/Form/Service";
-import ModalComponent from "../../components/Modal";
+import ModalDelete from "../../components/Modal";
 import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
+import { useHandleError } from "../../hooks/useHandleError";
+import { useNavigate } from "react-router-dom";
+import { handleAuthError } from "../../utils/handleAuthError";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -30,17 +36,20 @@ export default function ServicePage() {
 		defaultValues: { name: "", duration: "", price: 0 },
 	});
 
-	const [services, setServices] = useState<FormDataServiceEdit[]>([]);
+	const [services, setServices] = useState<FormDataService[]>([]);
+	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [selectedService, setSelectedService] =
 		useState<FormDataService | null>();
 	const [isEditing, setIsEditing] = useState(false);
+	const navigate = useNavigate();
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
-	const navigate = useNavigate();
-	const { token } = useAuth();
+	const handleError = useHandleError();
+
+	const { token, logout } = useAuth();
 
 	const handleSubmitService = async (data: FormDataService) => {
 		try {
@@ -54,8 +63,8 @@ export default function ServicePage() {
 						isClosable: true,
 						position: "top-right",
 					});
+					fetchData();
 					setShowForm(false);
-					navigate("/service");
 				}
 			} else {
 				await updateService(Number(selectedService?.id), data);
@@ -66,22 +75,12 @@ export default function ServicePage() {
 					isClosable: true,
 					position: "top-right",
 				});
+				fetchData();
 				setShowForm(false);
-				navigate("/service");
 			}
 		} catch (error) {
 			console.error("Erro ao salvar dados", error);
-			if (error instanceof AxiosError) {
-				const errors = error.response?.data.errors[0];
-
-				toast({
-					title: errors.message,
-					status: "warning",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
-				});
-			}
+			handleError(error);
 		}
 	};
 
@@ -97,12 +96,19 @@ export default function ServicePage() {
 		}
 	};
 
-	const handleDeleteService = async (serviceId: number) => {
-		const serviceData = await getServicesById(serviceId);
+	const handleDeleteService = useCallback(
+		async (serviceId: number) => {
+			try {
+				const serviceData = await getServicesById(serviceId);
 
-		setSelectedService(serviceData.data);
-		onOpen();
-	};
+				setSelectedService(serviceData.data);
+				onOpen();
+			} catch (error) {
+				console.error("Erro ao obter os dados do serviço", error);
+			}
+		},
+		[onOpen]
+	);
 
 	const onDeleteService = async () => {
 		if (!selectedService || !selectedService.id) {
@@ -123,7 +129,7 @@ export default function ServicePage() {
 				});
 				setShowForm(false);
 				setSelectedService(null);
-				navigate("/service");
+				fetchData();
 			}
 		} catch (error) {
 			console.error("Erro ao excluir serviço", error);
@@ -140,10 +146,9 @@ export default function ServicePage() {
 		setIsEditing(false);
 	};
 
-	const fetchData = async () => {
-		if (!token) {
-			return;
-		}
+	const fetchData = useCallback(async () => {
+		if (!token) return;
+		setLoading(true);
 
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
@@ -151,15 +156,36 @@ export default function ServicePage() {
 			const serviceData = await getServices(companyId);
 			setServices(serviceData.data);
 		} catch (error) {
+			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
+		} finally {
+			setLoading(false);
 		}
-	};
+	}, [token, logout, navigate]);
 
 	useEffect(() => {
 		fetchData();
-	});
+	}, [fetchData, token]);
 
-	return (
+	const handleNewClick = useCallback(() => {
+		setSelectedService(null);
+		setShowForm(true);
+	}, []);
+
+	const handleEditClick = useCallback((serviceId: number) => {
+		handleEditService(serviceId);
+	}, []);
+
+	const handleDeleteClick = useCallback(
+		(serviceId: number) => {
+			handleDeleteService(serviceId);
+		},
+		[handleDeleteService]
+	);
+
+	return loading ? (
+		<Spinner />
+	) : (
 		<Container>
 			<Flex
 				direction="column"
@@ -180,21 +206,14 @@ export default function ServicePage() {
 				) : (
 					<TableService
 						services={services}
-						onNewClick={() => {
-							setSelectedService(null);
-							setShowForm(true);
-						}}
-						onEditClick={(serviceId: number) => {
-							handleEditService(serviceId);
-						}}
-						onDeleteClick={(serviceId: number) => {
-							handleDeleteService(serviceId);
-						}}
+						onNewClick={handleNewClick}
+						onEditClick={handleEditClick}
+						onDeleteClick={handleDeleteClick}
 					/>
 				)}
 
 				{selectedService && (
-					<ModalComponent
+					<ModalDelete
 						isOpen={isOpen}
 						onClose={onClose}
 						title="serviço"

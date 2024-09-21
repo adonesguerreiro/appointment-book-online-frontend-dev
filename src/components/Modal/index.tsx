@@ -10,7 +10,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 
-interface ModalComponentProps {
+interface ModalDeleteProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onDelete: () => void;
@@ -18,13 +18,13 @@ interface ModalComponentProps {
 	itemName: string;
 }
 
-export default function ModalComponent({
+export default function ModalDelete({
 	isOpen,
 	onClose,
 	onDelete,
 	title,
 	itemName,
-}: ModalComponentProps) {
+}: ModalDeleteProps) {
 	return (
 		<>
 			<Modal

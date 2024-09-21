@@ -10,18 +10,13 @@ import {
 	Box,
 	Button,
 } from "@chakra-ui/react";
-import { FormDataServiceEdit } from "../../../interface/FormDataService";
+import { FormDataService } from "../../../interface/FormDataService";
 import { FaPlus } from "react-icons/fa";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { currencyFormat } from "../../../helpers/currencyFormat";
-// import { jwtDecode } from "jwt-decode";
-// import { useState, useEffect } from "react";
-// import { useAuth } from "../../../context/AuthContext";
-// import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
-// import { getServices } from "../../../services/api";
 
 interface TableServiceProps {
-	services: FormDataServiceEdit[];
+	services: FormDataService[];
 	onNewClick: () => void;
 	onEditClick: (serviceId: number) => void;
 	onDeleteClick: (serviceId: number) => void;
@@ -74,11 +69,11 @@ export default function TableService({
 										<Td>
 											<Flex>
 												<EditIcon
-													onClick={() => onEditClick(service.id)}
+													onClick={() => onEditClick(service.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
 												/>
 												<DeleteIcon
-													onClick={() => onDeleteClick(service.id)}
+													onClick={() => onDeleteClick(service.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
 												/>
 											</Flex>
