@@ -10,35 +10,30 @@ import {
 	Box,
 	Button,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { FormDataAvaliable } from "../../../interface/FormDataAvaliable";
+import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
 import { FaPlus } from "react-icons/fa";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 
-interface TableAvaliable {
+interface TableAvailableProps {
+	availables: FormDataAvailableTime[];
 	onNewClick: () => void;
-	onEditClick: () => void;
-	openModal: () => void;
+	onEditClick: (available: number) => void;
 }
 
 export default function TableAvaliable({
+	availables,
 	onNewClick,
 	onEditClick,
-	openModal,
-}: TableAvaliable) {
-	const [avaliables, setAvaliable] = useState<FormDataAvaliable[]>([]);
-
-	useEffect(() => {
-		axios
-			.get("http://localhost:3000/avaliable")
-			.then((response) => {
-				setAvaliable(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching avaliables:", error);
-			});
-	});
+}: TableAvailableProps) {
+	const dayMapping: { [key: string]: string } = {
+		MONDAY: "Segunda-feira",
+		TUESDAY: "Terça-feira",
+		WEDNESDAY: "Quarta-feira",
+		THURSDAY: "Quinta-feira",
+		FRIDAY: "Sexta-feira",
+		SATURDAY: "Sábado",
+		SUNDAY: "Domingo",
+	};
 
 	return (
 		<>
@@ -74,22 +69,18 @@ export default function TableAvaliable({
 								</Tr>
 							</Thead>
 							<Tbody>
-								{avaliables.map((avaliable, index) => (
+								{availables.map((available, index) => (
 									<Tr key={index}>
-										<Td>{avaliable.day}</Td>
-										<Td>{avaliable.startTime}</Td>
-										<Td>{avaliable.endTime}</Td>
-										<Td>{avaliable.interval} min</Td>
+										<Td>{dayMapping[available.day]}</Td>
+										<Td>{available.startTime}</Td>
+										<Td>{available.endTime}</Td>
+										<Td>{available.interval} min</Td>
 
 										<Td>
 											<Flex>
 												<EditIcon
-													onClick={onEditClick}
+													onClick={() => onEditClick(available.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
-												/>
-												<DeleteIcon
-													onClick={openModal}
-													_hover={{ color: "red", cursor: "pointer" }}
 												/>
 											</Flex>
 										</Td>
