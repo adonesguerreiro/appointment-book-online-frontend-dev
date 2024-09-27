@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const unavaliableTimeSchema = yup.object().shape({
+export const unavailableTimeSchema = yup.object().shape({
 	date: yup.string().required("Data é obrigatória"),
 	startTime: yup.string().required("Horário de início é obrigatório"),
 	endTime: yup

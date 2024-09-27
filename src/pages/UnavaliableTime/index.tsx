@@ -1,68 +1,197 @@
 import {
-	Box,
-	Button,
-	Card,
-	CardBody,
 	Container,
 	Flex,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
-	Grid,
-	Heading,
-	Input,
+	Spinner,
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { unavaliableTimeSchema } from "./unavaliableTimeSchema";
-
-import InputMask from "react-input-mask";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
-import { FormDataUnavaliable } from "../../interface/FormDataUnavaliable";
-import { useState } from "react";
+import { unavailableTimeSchema } from "./unavailableTimeSchema";
+import { useCallback, useEffect, useState } from "react";
 import TableUnavaliable from "./TableUnavaliable";
-import { MdCancel } from "react-icons/md";
-import { LuPlusCircle } from "react-icons/lu";
-import ModalComponent from "../../components/Modal";
+import UnavailableTimeForm from "../../components/Form/UnavailableTime";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useHandleError } from "../../hooks/useHandleError";
+import SectionHeader from "../../components/SectionHeader";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
+import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime";
+import {
+	getUnavailableTimeById,
+	getUnavailableTimes,
+	createUnavailableTime,
+	updateUnavailableTime,
+	deleteUnavailableTime,
+} from "../../services/api";
+import { handleAuthError } from "../../utils/handleAuthError";
+import ModalDelete from "../../components/Modal";
 
 export default function UnavaliableTimePage() {
-	const {
-		handleSubmit,
-		register,
-		control,
-		reset,
-		formState: { errors },
-	} = useForm<FormDataUnavaliable>({
-		resolver: yupResolver(unavaliableTimeSchema),
+	const { reset } = useForm<FormDataUnavailableTime>({
+		resolver: yupResolver(unavailableTimeSchema),
+		defaultValues: { date: "", startTime: "", endTime: "" },
 	});
 
+	const [unavailables, setUnavailables] = useState<FormDataUnavailableTime[]>(
+		[]
+	);
+	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
+	const [selectedUnavailableTime, setSelectedUnavailableTime] =
+		useState<FormDataUnavailableTime | null>();
+	const [isEditing, setIsEditing] = useState(false);
+	const navigate = useNavigate();
+
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const toast = useToast();
+	const handleError = useHandleError();
 
-	const onSubmit = async () => {
-		toast({
-			title: "Horário indisponível registrado com sucesso.",
-			status: "success",
-			duration: 3000,
-			isClosable: true,
-			position: "top-right",
+	const { token, logout } = useAuth();
+
+	const handleSubmitUnavailableTime = async (data: FormDataUnavailableTime) => {
+		try {
+			if (token && !selectedUnavailableTime) {
+				const createdUnavailableTime = await createUnavailableTime(data);
+				if (createdUnavailableTime.status === 200) {
+					toast({
+						title: "Horário indisponível registrado com sucesso.",
+						status: "success",
+						duration: 3000,
+						isClosable: true,
+						position: "top-right",
+					});
+					fetchData();
+					setShowForm(false);
+				}
+			} else {
+				await updateUnavailableTime(Number(selectedUnavailableTime?.id), data);
+				toast({
+					title: "Horário indisponível alterado com sucesso.",
+					status: "info",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
+				fetchData();
+				setShowForm(false);
+			}
+		} catch (error) {
+			console.error("Erro ao salvar dados", error);
+			handleError(error);
+		}
+	};
+
+	const handleEditUnavailableTime = async (unavailableTimeId: number) => {
+		try {
+			setIsEditing(true);
+			const unavailableTimeData = await getUnavailableTimeById(
+				unavailableTimeId
+			);
+
+			setSelectedUnavailableTime(unavailableTimeData.data);
+			setShowForm(true);
+		} catch (error) {
+			console.error("Erro ao buscar dados", error);
+		}
+	};
+
+	const handleDeleteUnavaliableTime = useCallback(
+		async (unavailableTimeId: number) => {
+			try {
+				const unavailableTimeData = await getUnavailableTimeById(
+					unavailableTimeId
+				);
+
+				setSelectedUnavailableTime(unavailableTimeData.data);
+				onOpen();
+			} catch (error) {
+				console.error("Erro ao obter os dados do horário disponível", error);
+			}
+		},
+		[onOpen]
+	);
+
+	const onDeleteUnavailableTime = async () => {
+		if (!selectedUnavailableTime || !selectedUnavailableTime.id) {
+			console.error("Horário indisponível selecionado não encontrado.");
+			return;
+		}
+
+		try {
+			const deletedUnavailableTime = await deleteUnavailableTime(
+				selectedUnavailableTime.id
+			);
+			if (deletedUnavailableTime.status === 200) {
+				onClose();
+				toast({
+					title: "Horário indisponível excluído com sucesso.",
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
+				setShowForm(false);
+				setSelectedUnavailableTime(null);
+				fetchData();
+			}
+		} catch (error) {
+			console.error("Erro ao excluir horário disponível", error);
+		}
+	};
+
+	const handleCancel = () => {
+		reset({
+			date: "",
+			startTime: "",
+			endTime: "",
 		});
-		reset();
 		setShowForm(false);
+		setIsEditing(false);
 	};
 
-	const onCancel = () => {
-		reset();
-		setShowForm(false);
-	};
+	const fetchData = useCallback(async () => {
+		if (!token) return;
+		setLoading(true);
 
-	return (
+		try {
+			const decoded = jwtDecode<CustomJwtPayload>(token);
+			const companyId = decoded.id;
+			const unavailableTimeData = await getUnavailableTimes(companyId);
+			setUnavailables(unavailableTimeData.data);
+		} catch (error) {
+			handleAuthError(error, logout, navigate);
+			console.error("Erro ao buscar dados", error);
+		} finally {
+			setLoading(false);
+		}
+	}, [token, logout, navigate]);
+
+	useEffect(() => {
+		fetchData();
+	}, [fetchData, token]);
+
+	const handleNewClick = useCallback(() => {
+		setSelectedUnavailableTime(null);
+		setShowForm(true);
+	}, []);
+
+	const handleEditClick = useCallback((unavailableTimeId: number) => {
+		handleEditUnavailableTime(unavailableTimeId);
+	}, []);
+
+	const handleDeleteClick = useCallback(
+		(unavailableTimeId: number) => {
+			handleDeleteUnavaliableTime(unavailableTimeId);
+		},
+		[handleDeleteUnavaliableTime]
+	);
+
+	return loading ? (
+		<Spinner />
+	) : (
 		<Container>
 			<Flex
 				display="flex"
@@ -71,131 +200,37 @@ export default function UnavaliableTimePage() {
 				justify="center"
 				gap="10"
 				padding="0.625rem">
-				<Heading
-					as="h1"
-					size="lg"
-					fontWeight="semibold">
-					Horário indisponível
-				</Heading>
+				<SectionHeader title="Horários indisponíveis" />
+
 				{showForm ? (
-					<Card>
-						<CardBody
-							width="25.0625rem"
-							height="40.6875rem"
-							padding="0.625rem">
-							<Box
-								as="form"
-								onSubmit={handleSubmit(onSubmit)}>
-								<Grid gap="0.625rem">
-									<FormControl isInvalid={!!errors.date}>
-										<Grid>
-											<FormLabel>Data</FormLabel>
-
-											<Controller
-												name="date"
-												control={control}
-												render={({ field }) => (
-													<DatePicker
-														id="date"
-														selected={
-															field.value ? new Date(field.value) : null
-														}
-														onChange={(date) => field.onChange(date)}
-														customInput={
-															<Input
-																as={InputMask}
-																mask="99/99/9999"
-																placeholder="Selecione uma data"
-															/>
-														}
-														dateFormat="dd/MM/yyyy"
-													/>
-												)}
-											/>
-
-											{errors.date && (
-												<FormErrorMessage>
-													{errors.date.message}
-												</FormErrorMessage>
-											)}
-										</Grid>
-									</FormControl>
-
-									<FormControl isInvalid={!!errors.startTime}>
-										<Grid>
-											<FormLabel>Horário de início</FormLabel>
-											<Input
-												as={InputMask}
-												mask="99:99"
-												placeholder="08:00"
-												type="text"
-												id="startTime"
-												{...register("startTime")}
-											/>
-											{errors.startTime && (
-												<FormErrorMessage>
-													{errors.startTime.message}
-												</FormErrorMessage>
-											)}
-										</Grid>
-									</FormControl>
-
-									<FormControl isInvalid={!!errors.endTime}>
-										<Grid>
-											<FormLabel>Horário final</FormLabel>
-											<Input
-												as={InputMask}
-												mask="99:99"
-												placeholder="19:00"
-												type="text"
-												id="endTime"
-												{...register("endTime")}
-											/>
-											{errors.endTime && (
-												<FormErrorMessage>
-													{errors.endTime.message}
-												</FormErrorMessage>
-											)}
-										</Grid>
-									</FormControl>
-								</Grid>
-
-								<Flex justifyContent="flex-end">
-									<Button
-										colorScheme="green"
-										size="lg"
-										type="submit"
-										margin="0.625rem"
-										rightIcon={<LuPlusCircle />}>
-										Cadastrar
-									</Button>
-									<Button
-										colorScheme="gray"
-										size="lg"
-										margin="0.625rem"
-										rightIcon={<MdCancel />}
-										onClick={onCancel}>
-										Cancelar
-									</Button>
-								</Flex>
-							</Box>
-						</CardBody>
-					</Card>
+					<UnavailableTimeForm
+						onSubmit={handleSubmitUnavailableTime}
+						onEdit={() =>
+							handleEditUnavailableTime(Number(selectedUnavailableTime))
+						}
+						onCancel={handleCancel}
+						isEditing={isEditing}
+						selectedUnavailableTime={selectedUnavailableTime}
+					/>
 				) : (
 					<TableUnavaliable
-						onNewClick={() => {
-							setShowForm(true);
-						}}
-						onEditClick={() => {
-							return setShowForm(true);
-						}}
-						openModal={onOpen}
+						unavailables={unavailables}
+						onNewClick={handleNewClick}
+						onEditClick={handleEditClick}
+						onDeleteClick={handleDeleteClick}
 					/>
 				)}
-				<ModalComponent
-					isOpen={isOpen}
-					onClose={onClose}
-				/>
+				{selectedUnavailableTime && (
+					<ModalDelete
+						isOpen={isOpen}
+						onClose={onClose}
+						title="horário disponível"
+						itemName={new Date(selectedUnavailableTime.date).toLocaleDateString(
+							"pt-BR"
+						)}
+						onDelete={onDeleteUnavailableTime}
+					/>
+				)}
 			</Flex>
 		</Container>
 	);

@@ -5,6 +5,7 @@ import { FormDataUser } from "../interface/FormDataUser";
 import { FormDataCompany } from "../interface/FormDataCompany";
 import { FormDataAddress } from "../interface/FormDataAddress";
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
+import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,
@@ -86,6 +87,31 @@ export const updateAvaliableTime = (
 	avalibleTime: FormDataAvailableTime
 ) => {
 	return api.put(`/available-times/${avaliableTimeId}`, avalibleTime);
+};
+
+export const getUnavailableTimes = (companyId: number) => {
+	return api.get(`/unavailable-times/company/${companyId}`);
+};
+
+export const getUnavailableTimeById = (unavailableTimeId: number) => {
+	return api.get(`/unavailable-times/${unavailableTimeId}`);
+};
+
+export const createUnavailableTime = (
+	unavailableTime: FormDataUnavailableTime
+) => {
+	return api.post("/unavailable-times", unavailableTime);
+};
+
+export const updateUnavailableTime = (
+	unavailableTimeId: number,
+	unavailableTime: FormDataUnavailableTime
+) => {
+	return api.put(`/unavailable-times/${unavailableTimeId}`, unavailableTime);
+};
+
+export const deleteUnavailableTime = (unavailableTimeId: number) => {
+	return api.delete(`/unavailable-times/${unavailableTimeId}`);
 };
 
 export default api;

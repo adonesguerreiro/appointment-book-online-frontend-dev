@@ -35,7 +35,7 @@ export default function ModalDelete({
 					<ModalHeader>Excluir {title}</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						Deseja realmente excluir o{" "}
+						Deseja realmente excluir o item{" "}
 						<Text
 							as="span"
 							fontWeight="bold">

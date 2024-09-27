@@ -10,36 +10,23 @@ import {
 	Box,
 	Button,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { FormDataUnavaliable } from "../../../interface/FormDataUnavaliable";
+import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableTime";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
-interface TableUnavaliable {
+interface TableUnavailableTimeProps {
+	unavailables: FormDataUnavailableTime[];
 	onNewClick: () => void;
-	onEditClick: () => void;
-	openModal: () => void;
+	onEditClick: (unavailableTimeId: number) => void;
+	onDeleteClick: (unavailableTimeId: number) => void;
 }
 
 export default function TableUnavaliable({
+	unavailables,
 	onNewClick,
 	onEditClick,
-	openModal,
-}: TableUnavaliable) {
-	const [unavaliables, setUnavaliable] = useState<FormDataUnavaliable[]>([]);
-
-	useEffect(() => {
-		axios
-			.get("http://localhost:3000/unavailable")
-			.then((response) => {
-				setUnavaliable(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching unavaliables:", error);
-			});
-	});
-
+	onDeleteClick,
+}: TableUnavailableTimeProps) {
 	return (
 		<>
 			<Box
@@ -74,19 +61,21 @@ export default function TableUnavaliable({
 								</Tr>
 							</Thead>
 							<Tbody>
-								{unavaliables.map((unavaliable, index) => (
+								{unavailables.map((unavaliable, index) => (
 									<Tr key={index}>
-										<Td>{unavaliable.date}</Td>
+										<Td>
+											{new Date(unavaliable.date).toLocaleDateString("pt-BR")}
+										</Td>
 										<Td>{unavaliable.startTime}</Td>
 										<Td>{unavaliable.endTime}</Td>
 										<Td>
 											<Flex>
 												<EditIcon
-													onClick={onEditClick}
+													onClick={() => onEditClick(unavaliable.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
 												/>
 												<DeleteIcon
-													onClick={openModal}
+													onClick={() => onDeleteClick(unavaliable.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
 												/>
 											</Flex>

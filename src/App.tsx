@@ -9,7 +9,7 @@ import LoginPage from "./pages/Login";
 import UserPage from "./pages/User";
 import CompanyPage from "./pages/Company";
 import ServicePage from "./pages/Service";
-import AvaliableTimePage from "./pages/AvaliableTime";
+import AvailableTimePage from "./pages/AvaliableTime";
 import UnavaliableTimePage from "./pages/UnavaliableTime";
 import { Box } from "@chakra-ui/react";
 import Sidebar from "./components/Sidebar";
@@ -135,7 +135,7 @@ export default function App() {
 									<Box
 										flex="1"
 										p="10">
-										<AvaliableTimePage />
+										<AvailableTimePage />
 									</Box>
 								</>
 							}

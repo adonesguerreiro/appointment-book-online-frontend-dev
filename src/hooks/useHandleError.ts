@@ -7,9 +7,16 @@ export function useHandleError() {
 	function handleError(error: unknown) {
 		if (error instanceof AxiosError) {
 			const errors =
-				error.response?.data.errors[0] || error.response?.data.errors;
+				error.response?.data.message || error.response?.data.errors;
+			const errorMessage =
+				typeof errors === "string"
+					? errors
+					: Array.isArray(errors)
+					? errors[0].message
+					: "Ocorreu um erro";
+
 			toast({
-				title: errors?.message || "Erro desconhecido",
+				title: errorMessage,
 				status: "warning",
 				duration: 3000,
 				isClosable: true,
