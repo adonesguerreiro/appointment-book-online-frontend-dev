@@ -6,6 +6,8 @@ import { FormDataCompany } from "../interface/FormDataCompany";
 import { FormDataAddress } from "../interface/FormDataAddress";
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
 import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
+import { FormDataCustomer } from "../interface/FormDataCustomer";
+import { FormDataSchedule } from "../interface/FormDataSchedule";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,
@@ -68,6 +70,48 @@ export const updateService = (serviceId: number, service: FormDataService) => {
 
 export const deleteService = (serviceId: number) => {
 	return api.delete(`/services/${serviceId}`);
+};
+
+export const getSchedules = (companyId: number) => {
+	return api.get(`/schedules/company/${companyId}`);
+};
+
+export const getScheduleById = (scheduleId: number) => {
+	return api.get(`/schedules/${scheduleId}`);
+};
+
+export const createSchedule = (schedule: FormDataSchedule) => {
+	return api.post("/schedules", schedule);
+};
+
+export const updateSchedule = (
+	scheduleId: number,
+	schedule: FormDataSchedule
+) => {
+	return api.put(`/schedules/${scheduleId}`, schedule);
+};
+
+export const getCustomers = (companyId: number) => {
+	return api.get(`/customers/company/${companyId}`);
+};
+
+export const getCustomerById = (customerId: number) => {
+	return api.get(`/customers/${customerId}`);
+};
+
+export const createCustomer = (customer: FormDataCustomer) => {
+	return api.post("/customers", customer);
+};
+
+export const updateCustomer = (
+	customerId: number,
+	customer: FormDataCustomer
+) => {
+	return api.put(`/customers/${customerId}`, customer);
+};
+
+export const deleteCustomer = (customerId: number) => {
+	return api.delete(`/customers/${customerId}`);
 };
 
 export const getAvaliableTimes = (companyId: number) => {

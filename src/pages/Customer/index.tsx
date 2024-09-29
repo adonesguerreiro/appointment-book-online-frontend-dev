@@ -7,22 +7,22 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { serviceSchema } from "./serviceSchema";
-import { FormDataService } from "../../interface/FormDataService";
-import TableService from "./TableService";
+import { customerSchema } from "./customerSchema";
+import { FormDataCustomer } from "../../interface/FormDataCustomer";
+import TableCustomer from "./TableCustomer";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 import {
-	createService,
-	deleteService,
-	getServices,
-	getServicesById,
-	updateService,
+	createCustomer,
+	getCustomers,
+	getCustomerById,
+	updateCustomer,
+	deleteCustomer,
 } from "../../services/api";
 
 import SectionHeader from "../../components/SectionHeader";
-import ServiceForm from "../../components/Form/Service";
+import CustomerForm from "../../components/Form/Customer";
 import ModalDelete from "../../components/Modal";
 import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
@@ -30,17 +30,17 @@ import { useHandleError } from "../../hooks/useHandleError";
 import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../utils/handleAuthError";
 
-export default function ServicePage() {
-	const { reset } = useForm<FormDataService>({
-		resolver: yupResolver(serviceSchema),
-		defaultValues: { serviceName: "", duration: "", price: 0 },
+export default function CustomerPage() {
+	const { reset } = useForm<FormDataCustomer>({
+		resolver: yupResolver(customerSchema),
+		defaultValues: { customerName: "", mobile: "" },
 	});
 
-	const [services, setServices] = useState<FormDataService[]>([]);
+	const [customers, setCustomers] = useState<FormDataCustomer[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
-	const [selectedService, setSelectedService] =
-		useState<FormDataService | null>();
+	const [selectedCustomer, setSelectedCustomer] =
+		useState<FormDataCustomer | null>();
 	const [isEditing, setIsEditing] = useState(false);
 	const navigate = useNavigate();
 
@@ -51,13 +51,13 @@ export default function ServicePage() {
 
 	const { token, logout } = useAuth();
 
-	const handleSubmitService = async (data: FormDataService) => {
+	const handleSubmitCustomer = async (data: FormDataCustomer) => {
 		try {
-			if (token && !selectedService) {
-				const createdService = await createService(data);
-				if (createdService.status === 200) {
+			if (token && !selectedCustomer) {
+				const createdCustomer = await createCustomer(data);
+				if (createdCustomer.status === 200) {
 					toast({
-						title: "Serviço registrado com sucesso.",
+						title: "Cliente registrado com sucesso.",
 						status: "success",
 						duration: 3000,
 						isClosable: true,
@@ -67,9 +67,9 @@ export default function ServicePage() {
 					setShowForm(false);
 				}
 			} else {
-				await updateService(Number(selectedService?.id), data);
+				await updateCustomer(Number(selectedCustomer?.id), data);
 				toast({
-					title: "Serviço alterado com sucesso.",
+					title: "Cliente alterado com sucesso.",
 					status: "info",
 					duration: 3000,
 					isClosable: true,
@@ -84,24 +84,24 @@ export default function ServicePage() {
 		}
 	};
 
-	const handleEditService = async (serviceId: number) => {
+	const handleEditCustomer = async (customerId: number) => {
 		try {
 			setIsEditing(true);
-			const serviceData = await getServicesById(serviceId);
+			const customerData = await getCustomerById(customerId);
 
-			setSelectedService(serviceData.data);
+			setSelectedCustomer(customerData.data);
 			setShowForm(true);
 		} catch (error) {
 			console.error("Erro ao buscar dados", error);
 		}
 	};
 
-	const handleDeleteService = useCallback(
-		async (serviceId: number) => {
+	const handleDeleteCustomer = useCallback(
+		async (customerId: number) => {
 			try {
-				const serviceData = await getServicesById(serviceId);
+				const customerData = await getCustomerById(customerId);
 
-				setSelectedService(serviceData.data);
+				setSelectedCustomer(customerData.data);
 				onOpen();
 			} catch (error) {
 				console.error("Erro ao obter os dados do serviço", error);
@@ -110,25 +110,25 @@ export default function ServicePage() {
 		[onOpen]
 	);
 
-	const onDeleteService = async () => {
-		if (!selectedService || !selectedService.id) {
-			console.error("Serviço selecionado não encontrado.");
+	const onDeleteCustomer = async () => {
+		if (!selectedCustomer || !selectedCustomer.id) {
+			console.error("Cliente selecionado não encontrado.");
 			return;
 		}
 
 		try {
-			const deletedService = await deleteService(selectedService.id);
-			if (deletedService.status === 200) {
+			const deletedCustomer = await deleteCustomer(selectedCustomer.id);
+			if (deletedCustomer.status === 200) {
 				onClose();
 				toast({
-					title: "Serviço excluído com sucesso.",
+					title: "Cliente excluído com sucesso.",
 					status: "success",
 					duration: 3000,
 					isClosable: true,
 					position: "top-right",
 				});
 				setShowForm(false);
-				setSelectedService(null);
+				setSelectedCustomer(null);
 				fetchData();
 			}
 		} catch (error) {
@@ -138,9 +138,8 @@ export default function ServicePage() {
 
 	const handleCancel = () => {
 		reset({
-			serviceName: "",
-			duration: "",
-			price: 0,
+			customerName: "",
+			mobile: "",
 		});
 		setShowForm(false);
 		setIsEditing(false);
@@ -153,8 +152,8 @@ export default function ServicePage() {
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
 			const companyId = decoded.id;
-			const serviceData = await getServices(companyId);
-			setServices(serviceData.data);
+			const customerData = await getCustomers(companyId);
+			setCustomers(customerData.data);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
@@ -168,19 +167,19 @@ export default function ServicePage() {
 	}, [fetchData, token]);
 
 	const handleNewClick = useCallback(() => {
-		setSelectedService(null);
+		setSelectedCustomer(null);
 		setShowForm(true);
 	}, []);
 
-	const handleEditClick = useCallback((serviceId: number) => {
-		handleEditService(serviceId);
+	const handleEditClick = useCallback((customerId: number) => {
+		handleEditCustomer(customerId);
 	}, []);
 
 	const handleDeleteClick = useCallback(
-		(serviceId: number) => {
-			handleDeleteService(serviceId);
+		(customerId: number) => {
+			handleDeleteCustomer(customerId);
 		},
-		[handleDeleteService]
+		[handleDeleteCustomer]
 	);
 
 	return loading ? (
@@ -193,32 +192,32 @@ export default function ServicePage() {
 				justify="center"
 				gap="10"
 				padding="0.625rem">
-				<SectionHeader title="Serviço" />
+				<SectionHeader title="Cliente" />
 
 				{showForm ? (
-					<ServiceForm
-						onSubmit={handleSubmitService}
-						onEdit={() => handleEditService(Number(selectedService))}
+					<CustomerForm
+						onSubmit={handleSubmitCustomer}
+						onEdit={() => handleEditCustomer(Number(selectedCustomer))}
 						onCancel={handleCancel}
 						isEditing={isEditing}
-						selectedService={selectedService}
+						selectedCustomer={selectedCustomer}
 					/>
 				) : (
-					<TableService
-						services={services}
+					<TableCustomer
+						customers={customers}
 						onNewClick={handleNewClick}
 						onEditClick={handleEditClick}
 						onDeleteClick={handleDeleteClick}
 					/>
 				)}
 
-				{selectedService && (
+				{selectedCustomer && (
 					<ModalDelete
 						isOpen={isOpen}
 						onClose={onClose}
-						title="serviço"
-						itemName={selectedService.serviceName}
-						onDelete={onDeleteService}
+						title="cliente"
+						itemName={selectedCustomer.customerName}
+						onDelete={onDeleteCustomer}
 					/>
 				)}
 			</Flex>

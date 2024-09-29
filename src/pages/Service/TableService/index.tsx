@@ -63,7 +63,7 @@ export default function TableService({
 							<Tbody>
 								{services.map((service, index) => (
 									<Tr key={index}>
-										<Td>{service.name}</Td>
+										<Td>{service.serviceName}</Td>
 										<Td>{service.duration}</Td>
 										<Td isNumeric>{currencyFormat(Number(service.price))}</Td>
 										<Td>

@@ -43,13 +43,13 @@ export default function ServiceForm({
 		formState: { errors },
 	} = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
-		defaultValues: { name: "", duration: "", price: 0 },
+		defaultValues: { serviceName: "", duration: "", price: 0 },
 	});
 
 	useEffect(() => {
 		if (selectedService) {
 			reset({
-				name: selectedService.name,
+				serviceName: selectedService.serviceName,
 				duration: selectedService.duration,
 				price: Number(selectedService.price),
 			});
@@ -66,17 +66,19 @@ export default function ServiceForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.name}>
+						<FormControl isInvalid={!!errors.serviceName}>
 							<Grid>
 								<FormLabel>Nome</FormLabel>
 								<Input
 									type="text"
 									placeholder="Nome do serviço"
-									id="name"
-									{...register("name")}
+									id="serviceName"
+									{...register("serviceName")}
 								/>
-								{errors.name && (
-									<FormErrorMessage>{errors.name.message}</FormErrorMessage>
+								{errors.serviceName && (
+									<FormErrorMessage>
+										{errors.serviceName.message}
+									</FormErrorMessage>
 								)}
 							</Grid>
 						</FormControl>

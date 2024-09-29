@@ -6,7 +6,7 @@ export const serviceSchema = yup.object().shape({
 		then: (schema) => schema.required("Id é obrigatório"),
 		otherwise: (schema) => schema.optional(),
 	}),
-	name: yup.string().required("Nome do serviço é obrigatório"),
+	serviceName: yup.string().required("Nome do serviço é obrigatório"),
 	duration: yup.string().required("Duração do serviço é obrigatória"),
 	price: yup
 		.number()

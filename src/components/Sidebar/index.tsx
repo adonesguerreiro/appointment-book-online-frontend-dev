@@ -1,6 +1,12 @@
 import { Box, Link, VStack, Text, Grid } from "@chakra-ui/react";
 import { MdDashboard, MdEventAvailable, MdEventBusy } from "react-icons/md";
-import { FaChevronDown, FaChevronUp, FaClock, FaWrench } from "react-icons/fa";
+import {
+	FaChevronDown,
+	FaChevronUp,
+	FaClock,
+	FaWrench,
+	FaUser,
+} from "react-icons/fa";
 import { GrSchedule } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -91,6 +97,25 @@ export default function Sidebar() {
 						onClick={() => navigate("/schedule")}>
 						<GrSchedule />
 						Agenda
+					</Link>
+				</Grid>
+
+				<Grid
+					_hover={{
+						width: "14.25rem",
+						height: "2.75rem",
+						borderRadius: "0.625rem",
+						padding: "0.625rem",
+						background: "blue.800",
+					}}>
+					<Link
+						display="flex"
+						alignItems="center"
+						gap="0.625rem"
+						_hover={{ textDecoration: "none", color: "teal.300" }}
+						onClick={() => navigate("/customer")}>
+						<FaUser />
+						Clientes
 					</Link>
 				</Grid>
 

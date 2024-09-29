@@ -10,20 +10,23 @@ import {
 	Box,
 	Button,
 } from "@chakra-ui/react";
-import { FormDataSchedule } from "../../../interface/FormDataSchedule";
+import { FormDataCustomer } from "../../../interface/FormDataCustomer";
 import { FaPlus } from "react-icons/fa";
-import { EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
-interface TableScheduleProps {
-	schedules: FormDataSchedule[];
+interface TableCustomerProps {
+	customers: FormDataCustomer[];
 	onNewClick: () => void;
-	onEditClick: (scheduleId: number) => void;
+	onEditClick: (serviceId: number) => void;
+	onDeleteClick: (serviceId: number) => void;
 }
-export default function TableSchedule({
-	schedules,
+
+export default function TableService({
+	customers,
 	onNewClick,
 	onEditClick,
-}: TableScheduleProps) {
+	onDeleteClick,
+}: TableCustomerProps) {
 	return (
 		<>
 			<Box
@@ -34,7 +37,7 @@ export default function TableSchedule({
 					size="lg"
 					rightIcon={<FaPlus />}
 					onClick={onNewClick}>
-					Nova agenda
+					Novo cliente
 				</Button>
 			</Box>
 			<Flex
@@ -50,25 +53,25 @@ export default function TableSchedule({
 							colorScheme="gray">
 							<Thead>
 								<Tr>
-									<Th>Cliente</Th>
-									<Th>Serviço</Th>
-									<Th>Data</Th>
-									<Th>Horário</Th>
+									<Th>Nome</Th>
+									<Th>Celular</Th>
 									<Th>Ações</Th>
 								</Tr>
 							</Thead>
 							<Tbody>
-								{schedules.map((schedule, index) => (
+								{customers.map((customer, index) => (
 									<Tr key={index}>
-										<Td>{schedule.customerName}</Td>
-										<Td>{schedule.serviceName}</Td>
-										<Td>{schedule.status}</Td>
-										<Td>{schedule.date}</Td>
+										<Td>{customer.customerName}</Td>
+										<Td>{customer.mobile}</Td>
 										<Td>
 											<Flex>
 												<EditIcon
-													onClick={() => onEditClick(schedule.id!)}
+													onClick={() => onEditClick(customer.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
+												<DeleteIcon
+													onClick={() => onDeleteClick(customer.id!)}
+													_hover={{ color: "red", cursor: "pointer" }}
 												/>
 											</Flex>
 										</Td>

@@ -13,7 +13,7 @@ import {
 interface ModalDeleteProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onDelete: () => void;
+	onDelete?: () => void;
 	title: string;
 	itemName: string;
 }

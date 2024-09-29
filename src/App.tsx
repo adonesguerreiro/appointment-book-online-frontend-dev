@@ -16,6 +16,7 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import SchedulePage from "./pages/Schedule";
 import DashboardPage from "./pages/Dashboard";
+import CustomerPage from "./pages/Customer";
 
 const isAuthenticated = () => {
 	return localStorage.getItem("token") !== null;
@@ -98,6 +99,25 @@ export default function App() {
 										flex="1"
 										p="10">
 										<ServicePage />
+									</Box>
+								</>
+							}
+						/>
+					}
+				/>
+
+				<Route
+					path="/customer"
+					element={
+						<ProtectedRoute
+							element={
+								<>
+									<Header />
+									<Sidebar />
+									<Box
+										flex="1"
+										p="10">
+										<CustomerPage />
 									</Box>
 								</>
 							}

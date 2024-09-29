@@ -1,6 +1,6 @@
 export interface FormDataService {
 	id?: number;
-	name: string;
+	serviceName: string;
 	duration: string;
 	price: number;
 }
