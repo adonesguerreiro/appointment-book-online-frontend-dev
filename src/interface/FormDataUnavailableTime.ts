@@ -1,6 +1,6 @@
 export interface FormDataUnavailableTime {
 	id?: number;
-	date: string;
+	date?: string;
 	startTime: string;
 	endTime: string;
 }

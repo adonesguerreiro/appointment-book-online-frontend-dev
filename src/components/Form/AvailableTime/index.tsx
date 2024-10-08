@@ -42,13 +42,20 @@ export default function AvaliableTimeForm({
 		formState: { errors },
 	} = useForm<FormDataAvailableTime>({
 		resolver: yupResolver(availableTimeSchema),
-		defaultValues: { day: "", startTime: "", endTime: "", interval: 0 },
+		defaultValues: {
+			day: "",
+			period: "",
+			startTime: "",
+			endTime: "",
+			interval: 0,
+		},
 	});
 
 	useEffect(() => {
 		if (selectedAvailableTime) {
 			reset({
 				day: selectedAvailableTime.day,
+				period: selectedAvailableTime.period,
 				startTime: selectedAvailableTime.startTime,
 				endTime: selectedAvailableTime.endTime,
 				interval: selectedAvailableTime.interval,
@@ -84,6 +91,24 @@ export default function AvaliableTimeForm({
 
 								{errors.day && (
 									<FormErrorMessage>{errors.day.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
+
+						<FormControl isInvalid={!!errors.period}>
+							<Grid>
+								<FormLabel>Período</FormLabel>
+								<Select
+									id="period"
+									placeholder="Selecione um período"
+									{...register("period")}>
+									<option value="MORNING">Manhã</option>
+									<option value="AFTERNOON">Tarde</option>
+									<option value="EVENING">Noite</option>
+								</Select>
+
+								{errors.period && (
+									<FormErrorMessage>{errors.period.message}</FormErrorMessage>
 								)}
 							</Grid>
 						</FormControl>

@@ -225,9 +225,9 @@ export default function UnavaliableTimePage() {
 						isOpen={isOpen}
 						onClose={onClose}
 						title="horário disponível"
-						itemName={new Date(selectedUnavailableTime.date).toLocaleDateString(
-							"pt-BR"
-						)}
+						itemName={new Date(
+							selectedUnavailableTime.date!
+						).toLocaleDateString("pt-BR")}
 						onDelete={onDeleteUnavailableTime}
 					/>
 				)}

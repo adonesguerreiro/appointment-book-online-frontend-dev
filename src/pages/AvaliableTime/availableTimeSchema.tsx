@@ -2,6 +2,39 @@ import * as yup from "yup";
 
 export const availableTimeSchema = yup.object().shape({
 	day: yup.string().required("Dia é obrigatório"),
+	period: yup
+		.string()
+		.required("Período é obrigatório")
+		.test("valid-period", function (value) {
+			const { startTime, endTime } = this.parent;
+
+			const startTimeDate = new Date(`1970-01-01T${startTime}:00Z`);
+			const endTimeDate = new Date(`1970-01-01T${endTime}:00Z`);
+
+			if (
+				value === "MORNING" &&
+				startTimeDate >= new Date(`1970-01-01T01:00:00Z`) &&
+				endTimeDate <= new Date(`1970-01-01T12:59:00Z`)
+			) {
+				return true;
+			} else if (
+				value === "AFTERNOON" &&
+				startTimeDate >= new Date(`1970-01-01T13:00:00Z`) &&
+				endTimeDate <= new Date(`1970-01-01T18:59:00Z`)
+			) {
+				return true;
+			} else if (
+				value === "EVENING" &&
+				startTimeDate >= new Date(`1970-01-01T19:00:00Z`) &&
+				endTimeDate <= new Date(`1970-01-01T23:59:00Z`)
+			) {
+				return true;
+			}
+
+			return this.createError({
+				message: "Horário não corresponde ao período informado",
+			});
+		}),
 	startTime: yup
 		.string()
 		.required("Horário de início é obrigatório")

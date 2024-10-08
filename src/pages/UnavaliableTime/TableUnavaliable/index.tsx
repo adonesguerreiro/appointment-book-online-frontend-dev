@@ -64,7 +64,11 @@ export default function TableUnavaliable({
 								{unavailables.map((unavaliable, index) => (
 									<Tr key={index}>
 										<Td>
-											{new Date(unavaliable.date).toLocaleDateString("pt-BR")}
+											{unavaliable.date === null
+												? "Não informado"
+												: new Date(unavaliable.date!).toLocaleDateString(
+														"pt-BR"
+												  )}
 										</Td>
 										<Td>{unavaliable.startTime}</Td>
 										<Td>{unavaliable.endTime}</Td>

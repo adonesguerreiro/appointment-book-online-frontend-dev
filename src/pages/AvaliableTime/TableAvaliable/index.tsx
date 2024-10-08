@@ -35,6 +35,12 @@ export default function TableAvaliable({
 		SUNDAY: "Domingo",
 	};
 
+	const periodMapping: { [key: string]: string } = {
+		MORNING: "Manhã",
+		AFTERNOON: "Tarde",
+		EVENING: "Noite",
+	};
+
 	return (
 		<>
 			<Box
@@ -62,6 +68,7 @@ export default function TableAvaliable({
 							<Thead>
 								<Tr>
 									<Th>Dia</Th>
+									<Th>Período</Th>
 									<Th>Horário ínicio</Th>
 									<Th>Horário fim</Th>
 									<Th>Intervalo</Th>
@@ -72,6 +79,7 @@ export default function TableAvaliable({
 								{availables.map((available, index) => (
 									<Tr key={index}>
 										<Td>{dayMapping[available.day]}</Td>
+										<Td>{periodMapping[available.period!]}</Td>
 										<Td>{available.startTime}</Td>
 										<Td>{available.endTime}</Td>
 										<Td>{available.interval} min</Td>
