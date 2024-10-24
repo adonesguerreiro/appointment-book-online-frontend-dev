@@ -13,6 +13,7 @@ import {
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
 import { FaPlus } from "react-icons/fa";
 import { EditIcon } from "@chakra-ui/icons";
+import { formatDate } from "../../../utils/formatDate";
 
 interface TableScheduleProps {
 	schedules: FormDataSchedule[];
@@ -24,6 +25,12 @@ export default function TableSchedule({
 	onNewClick,
 	onEditClick,
 }: TableScheduleProps) {
+	const statusMapping: { [key: string]: string } = {
+		SCHEDULED: "Agendado",
+		CANCELLED: "Cancelado",
+		ATTENDED: "Atendido",
+	};
+
 	return (
 		<>
 			<Box
@@ -62,8 +69,8 @@ export default function TableSchedule({
 									<Tr key={index}>
 										<Td>{schedule.customerName}</Td>
 										<Td>{schedule.serviceName}</Td>
-										<Td>{schedule.status}</Td>
-										<Td>{schedule.date}</Td>
+										<Td>{formatDate(schedule.date)}</Td>
+										<Td>{statusMapping[schedule.status]}</Td>
 										<Td>
 											<Flex>
 												<EditIcon

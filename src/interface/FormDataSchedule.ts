@@ -1,9 +1,11 @@
 export interface FormDataSchedule {
 	id?: number;
-	customerId: number;
-	customerName: string;
-	serviceId: number;
-	serviceName: string;
+	customerId: string;
+	customerName?: string;
+	serviceId: string;
+	serviceName?: string;
 	status: string;
 	date: string;
+	timeSlotAvailable: string;
+	availableTimeSlot?: string[];
 }

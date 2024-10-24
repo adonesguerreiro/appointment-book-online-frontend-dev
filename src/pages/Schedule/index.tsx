@@ -20,6 +20,7 @@ import { useAuth } from "../../context/AuthContext";
 import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
 import {
 	createSchedule,
+	getAvaliableTimesSlots,
 	getScheduleById,
 	getSchedules,
 	updateSchedule,
@@ -30,10 +31,11 @@ import ModalDelete from "../../components/Modal";
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
-		defaultValues: { customerId: 0, serviceId: 0, status: "", date: "" },
 	});
 
 	const [schedules, setSchedules] = useState<FormDataSchedule[]>([]);
+	const [selectedDate, setSelectedDate] = useState<string>();
+	const [timeSlots, setTimeSlots] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [selectedSchedule, setSelectedSchedule] =
@@ -95,14 +97,29 @@ export default function SchedulePage() {
 
 	const handleCancel = () => {
 		reset({
-			customerId: 0,
-			serviceId: 0,
 			status: "",
 			date: "",
 		});
 		setShowForm(false);
 		setIsEditing(false);
 	};
+
+	const fetchDataTimeSlot = useCallback(
+		async (date: string) => {
+			if (!token || Array.isArray(date)) return;
+
+			try {
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const companyId = decoded.id;
+				const timeSlots = await getAvaliableTimesSlots(companyId, date);
+				setTimeSlots(timeSlots.data);
+			} catch (error) {
+				handleAuthError(error, logout, navigate);
+				console.error("Erro ao buscar dados", error);
+			}
+		},
+		[logout, navigate, token]
+	);
 
 	const fetchData = useCallback(async () => {
 		if (!token) return;
@@ -123,7 +140,13 @@ export default function SchedulePage() {
 
 	useEffect(() => {
 		fetchData();
-	}, [fetchData, token]);
+	}, [fetchData]);
+
+	useEffect(() => {
+		if (selectedDate) {
+			fetchDataTimeSlot(selectedDate);
+		}
+	}, [fetchDataTimeSlot, selectedDate]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectedSchedule(null);
@@ -132,6 +155,10 @@ export default function SchedulePage() {
 
 	const handleEditClick = useCallback((scheduleId: number) => {
 		handleEditSchedule(scheduleId);
+	}, []);
+
+	const handleDateChange = useCallback((date: string) => {
+		setSelectedDate(date);
 	}, []);
 
 	return loading ? (
@@ -158,6 +185,9 @@ export default function SchedulePage() {
 						onCancel={handleCancel}
 						isEditing={isEditing}
 						selectedSchedule={selectedSchedule}
+						selectedDate={selectedDate || ""}
+						onDateChange={handleDateChange}
+						timeSlots={timeSlots}
 					/>
 				) : (
 					<TableSchedule

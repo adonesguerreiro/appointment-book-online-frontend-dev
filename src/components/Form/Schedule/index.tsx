@@ -21,10 +21,16 @@ import { scheduleSchema } from "../../../pages/Schedule/scheduleSchema";
 import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import { getCustomers, getServices } from "../../../services/api";
+import {
+	getAvaliableTimesSlots,
+	getCustomers,
+	getServices,
+} from "../../../services/api";
 import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
 import { jwtDecode } from "jwt-decode";
 import DatePicker from "react-datepicker";
+import { TimeSlot } from "../../../interface/TimeSlot";
+import { extractTimeFromDate } from "../../../utils/extractTimeFromDate";
 
 interface ScheduleFormProps {
 	onSubmit: (data: FormDataSchedule) => void;
@@ -32,6 +38,9 @@ interface ScheduleFormProps {
 	isEditing: boolean;
 	onEdit: (data: FormDataSchedule) => void;
 	selectedSchedule?: FormDataSchedule | null;
+	selectedDate: string;
+	timeSlots: TimeSlot[];
+	onDateChange: (date: string) => void;
 }
 
 export default function ScheduleForm({
@@ -39,6 +48,8 @@ export default function ScheduleForm({
 	onCancel,
 	isEditing,
 	selectedSchedule,
+	selectedDate,
+	onDateChange,
 }: ScheduleFormProps) {
 	const {
 		handleSubmit,
@@ -48,22 +59,41 @@ export default function ScheduleForm({
 		formState: { errors },
 	} = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
-		defaultValues: {},
 	});
 	const [customers, setCustomers] = useState<FormDataSchedule[]>([]);
 	const [services, setServices] = useState<FormDataSchedule[]>([]);
+	const [timesSlots, setTimesSlots] = useState<TimeSlot[]>([]);
 
 	const { token } = useAuth();
+	// console.log("Erros:", errors);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			if (!token) return;
 			if (selectedSchedule) {
+				const decoded = jwtDecode<CustomJwtPayload>(token);
+				const companyId = decoded.id;
+				const [customersData, servicesData, timesSlotsData] = await Promise.all(
+					[
+						getCustomers(companyId),
+						getServices(companyId),
+						getAvaliableTimesSlots(
+							companyId,
+							selectedSchedule.date.split("T")[0]
+						),
+					]
+				);
+				setCustomers(customersData.data);
+				setServices(servicesData.data);
+				console.log(timesSlotsData.data);
+				setTimesSlots(timesSlotsData.data);
+
 				reset({
-					customerName: selectedSchedule.customerName,
-					serviceName: selectedSchedule.serviceName,
+					customerId: selectedSchedule.customerId,
+					serviceId: selectedSchedule.serviceId,
 					date: selectedSchedule.date,
 					status: selectedSchedule.status,
+					timeSlotAvailable: extractTimeFromDate(selectedSchedule.date),
 				});
 			} else {
 				try {
@@ -82,7 +112,7 @@ export default function ScheduleForm({
 		};
 
 		fetchData();
-	}, [selectedSchedule, reset, token]);
+	}, [reset, selectedDate, selectedSchedule, timesSlots, token]);
 
 	return (
 		<Card>
@@ -94,12 +124,15 @@ export default function ScheduleForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.customerName}>
+						<FormControl isInvalid={!!errors.customerId}>
 							<Grid>
 								<FormLabel>Cliente</FormLabel>
 								<Select
 									placeholder="Selecione o cliente"
-									{...register("customerId")}>
+									{...register("customerId")}
+									defaultValue={
+										selectedSchedule ? selectedSchedule.customerId : ""
+									}>
 									{customers.map((customer) => (
 										<option
 											key={customer.id}
@@ -109,20 +142,23 @@ export default function ScheduleForm({
 									))}
 								</Select>
 
-								{errors.customerName && (
+								{errors.customerId && (
 									<FormErrorMessage>
-										{errors.customerName.message}
+										{errors.customerId.message}
 									</FormErrorMessage>
 								)}
 							</Grid>
 						</FormControl>
 
-						<FormControl isInvalid={!!errors.customerName}>
+						<FormControl isInvalid={!!errors.serviceId}>
 							<Grid>
 								<FormLabel>Serviço</FormLabel>
 								<Select
 									placeholder="Selecione o serviço"
-									{...register("serviceId")}>
+									{...register("serviceId")}
+									defaultValue={
+										selectedSchedule ? selectedSchedule.serviceId : ""
+									}>
 									{services.map((service) => (
 										<option
 											key={service.id}
@@ -131,9 +167,9 @@ export default function ScheduleForm({
 										</option>
 									))}
 								</Select>
-								{errors.serviceName && (
+								{errors.serviceId && (
 									<FormErrorMessage>
-										{errors.serviceName.message}
+										{errors.serviceId.message}
 									</FormErrorMessage>
 								)}
 							</Grid>
@@ -149,12 +185,20 @@ export default function ScheduleForm({
 										<DatePicker
 											id="date"
 											selected={field.value ? new Date(field.value) : null}
-											onChange={(date) => field.onChange(date?.toISOString())}
+											onChange={(date) => {
+												field.onChange(date?.toISOString());
+												if (date && !isEditing) {
+													onDateChange(date.toISOString().split("T")[0]);
+												} else if (date && isEditing) {
+													onDateChange(date.toISOString());
+												}
+											}}
 											customInput={
 												<Input
 													as={InputMask}
 													mask="99/99/9999"
 													placeholder="Selecione uma data"
+													value={field.value}
 												/>
 											}
 											dateFormat="dd/MM/yyyy"
@@ -168,6 +212,45 @@ export default function ScheduleForm({
 							</Grid>
 						</FormControl>
 
+						<FormControl isInvalid={!!errors.timeSlotAvailable}>
+							<Grid>
+								<FormLabel>Horário</FormLabel>
+								<Select
+									size="md"
+									sx={{
+										maxHeight: "200px",
+										overflowY: "scroll",
+										position: "relative",
+										zIndex: 10,
+									}}
+									{...register("timeSlotAvailable")}
+									defaultValue={
+										selectedSchedule
+											? extractTimeFromDate(selectedSchedule.date)
+											: ""
+									}>
+									{timesSlots.length > 0 ? (
+										timesSlots.map((slot, index) =>
+											slot.availableTimeSlot.map((availableSlot, subIndex) => (
+												<option
+													key={`${index}-${subIndex}`}
+													value={availableSlot.timeSlot}>
+													{availableSlot.timeSlot}
+												</option>
+											))
+										)
+									) : (
+										<option>Sem horários disponíveis</option>
+									)}
+								</Select>
+								{errors.availableTimeSlot && (
+									<FormErrorMessage>
+										{errors.availableTimeSlot.message}
+									</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
+
 						<FormControl isInvalid={!!errors.status}>
 							<Grid>
 								<FormLabel>Status</FormLabel>
@@ -175,9 +258,15 @@ export default function ScheduleForm({
 									id="status"
 									placeholder="Selecione o status"
 									{...register("status")}>
-									<option value="SCHEDULED">Agendado</option>
-									<option value="CANCELLED">Cancelado</option>
-									<option value="ATTENDED">Atendido</option>
+									{!isEditing ? (
+										<option value="SCHEDULED">Agendado</option>
+									) : (
+										<>
+											<option value="SCHEDULED">Agendado</option>
+											<option value="CANCELLED">Cancelado</option>
+											<option value="ATTENDED">Atendido</option>
+										</>
+									)}
 								</Select>
 
 								{errors.status && (

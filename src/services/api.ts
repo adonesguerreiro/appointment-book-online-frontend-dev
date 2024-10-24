@@ -118,6 +118,10 @@ export const getAvaliableTimes = (companyId: number) => {
 	return api.get(`/available-times/company/${companyId}`);
 };
 
+export const getAvaliableTimesSlots = (companyId: number, date: string) => {
+	return api.get(`/available-times/company/${companyId}/${date}`);
+};
+
 export const getAvaliableTimeById = (avaliableTimeId: number) => {
 	return api.get(`/available-times/${avaliableTimeId}`);
 };

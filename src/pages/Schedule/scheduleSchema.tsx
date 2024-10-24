@@ -6,10 +6,17 @@ export const scheduleSchema = yup.object().shape({
 		then: (schema) => schema.required("Id é obrigatório"),
 		otherwise: (schema) => schema.optional(),
 	}),
-	customerId: yup.number().required("Id do cliente é obrigatório"),
-	customerName: yup.string().required("Nome do cliente é obrigatório"),
-	serviceId: yup.number().required("Id do serviço é obrigatório"),
-	serviceName: yup.string().required("Nome do serviço é obrigatório"),
+	customerId: yup.string().required("Nome do cliente é obrigatório"),
+	customerName: yup.string().optional(),
+	serviceId: yup.string().required("Nome do serviço é obrigatório"),
+	serviceName: yup.string().optional(),
 	date: yup.string().required("Data é obrigatória"),
+	timeSlotAvailable: yup
+		.string()
+		.required("Horário é obrigatório")
+		.test("valid-service", "Selecione um horário válido", function (value) {
+			return value !== "Sem horários disponíveis";
+		}),
+	availableTimeSlot: yup.array().optional(),
 	status: yup.string().required("Status é obrigatório"),
 });
