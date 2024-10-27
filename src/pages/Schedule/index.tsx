@@ -97,11 +97,16 @@ export default function SchedulePage() {
 
 	const handleCancel = () => {
 		reset({
-			status: "",
+			customerId: "",
+			serviceId: "",
 			date: "",
+			status: "",
+			timeSlotAvailable: "",
 		});
 		setShowForm(false);
 		setIsEditing(false);
+		setSelectedSchedule(null);
+		setSelectedDate("");
 	};
 
 	const fetchDataTimeSlot = useCallback(
@@ -111,7 +116,10 @@ export default function SchedulePage() {
 			try {
 				const decoded = jwtDecode<CustomJwtPayload>(token);
 				const companyId = decoded.id;
-				const timeSlots = await getAvaliableTimesSlots(companyId, date);
+				const timeSlots = await getAvaliableTimesSlots(
+					companyId,
+					date.split("T")[0]
+				);
 				setTimeSlots(timeSlots.data);
 			} catch (error) {
 				handleAuthError(error, logout, navigate);
@@ -143,10 +151,19 @@ export default function SchedulePage() {
 	}, [fetchData]);
 
 	useEffect(() => {
-		if (selectedDate) {
+		setTimeSlots([]);
+		if ((selectedDate && isEditing) || (selectedDate && !isEditing)) {
 			fetchDataTimeSlot(selectedDate);
+		} else if (selectedSchedule && isEditing) {
+			fetchDataTimeSlot(selectedSchedule?.date);
 		}
-	}, [fetchDataTimeSlot, selectedDate]);
+	}, [
+		fetchDataTimeSlot,
+		isEditing,
+		selectedDate,
+		selectedSchedule,
+		selectedSchedule?.date,
+	]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectedSchedule(null);

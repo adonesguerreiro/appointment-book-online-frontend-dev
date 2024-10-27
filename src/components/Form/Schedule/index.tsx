@@ -21,14 +21,11 @@ import { scheduleSchema } from "../../../pages/Schedule/scheduleSchema";
 import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import {
-	getAvaliableTimesSlots,
-	getCustomers,
-	getServices,
-} from "../../../services/api";
+import { getCustomers, getServices } from "../../../services/api";
 import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
 import { jwtDecode } from "jwt-decode";
 import DatePicker from "react-datepicker";
+import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../../interface/TimeSlot";
 import { extractTimeFromDate } from "../../../utils/extractTimeFromDate";
 
@@ -48,7 +45,7 @@ export default function ScheduleForm({
 	onCancel,
 	isEditing,
 	selectedSchedule,
-	selectedDate,
+	timeSlots,
 	onDateChange,
 }: ScheduleFormProps) {
 	const {
@@ -59,10 +56,16 @@ export default function ScheduleForm({
 		formState: { errors },
 	} = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
+		defaultValues: {
+			customerId: "",
+			serviceId: "",
+			date: "",
+			status: "",
+			timeSlotAvailable: "",
+		},
 	});
 	const [customers, setCustomers] = useState<FormDataSchedule[]>([]);
 	const [services, setServices] = useState<FormDataSchedule[]>([]);
-	const [timesSlots, setTimesSlots] = useState<TimeSlot[]>([]);
 
 	const { token } = useAuth();
 	// console.log("Erros:", errors);
@@ -70,49 +73,34 @@ export default function ScheduleForm({
 	useEffect(() => {
 		const fetchData = async () => {
 			if (!token) return;
-			if (selectedSchedule) {
-				const decoded = jwtDecode<CustomJwtPayload>(token);
-				const companyId = decoded.id;
-				const [customersData, servicesData, timesSlotsData] = await Promise.all(
-					[
-						getCustomers(companyId),
-						getServices(companyId),
-						getAvaliableTimesSlots(
-							companyId,
-							selectedSchedule.date.split("T")[0]
-						),
-					]
-				);
+
+			const decoded = jwtDecode<CustomJwtPayload>(token);
+			const companyId = decoded.id;
+
+			try {
+				const [customersData, servicesData] = await Promise.all([
+					getCustomers(companyId),
+					getServices(companyId),
+				]);
 				setCustomers(customersData.data);
 				setServices(servicesData.data);
-				console.log(timesSlotsData.data);
-				setTimesSlots(timesSlotsData.data);
 
-				reset({
-					customerId: selectedSchedule.customerId,
-					serviceId: selectedSchedule.serviceId,
-					date: selectedSchedule.date,
-					status: selectedSchedule.status,
-					timeSlotAvailable: extractTimeFromDate(selectedSchedule.date),
-				});
-			} else {
-				try {
-					const decoded = jwtDecode<CustomJwtPayload>(token);
-					const companyId = decoded.id;
-					const [customersData, servicesData] = await Promise.all([
-						getCustomers(companyId),
-						getServices(companyId),
-					]);
-					setCustomers(customersData.data);
-					setServices(servicesData.data);
-				} catch (err) {
-					console.error("Erro ao buscar dados", err);
+				if (selectedSchedule) {
+					reset({
+						customerId: selectedSchedule.customerId,
+						serviceId: selectedSchedule.serviceId,
+						date: selectedSchedule.date,
+						status: selectedSchedule.status,
+						timeSlotAvailable: extractTimeFromDate(selectedSchedule.date),
+					});
 				}
+			} catch (err) {
+				console.error("Erro ao buscar dados", err);
 			}
 		};
 
 		fetchData();
-	}, [reset, selectedDate, selectedSchedule, timesSlots, token]);
+	}, [reset, selectedSchedule, token]);
 
 	return (
 		<Card>
@@ -155,10 +143,7 @@ export default function ScheduleForm({
 								<FormLabel>Serviço</FormLabel>
 								<Select
 									placeholder="Selecione o serviço"
-									{...register("serviceId")}
-									defaultValue={
-										selectedSchedule ? selectedSchedule.serviceId : ""
-									}>
+									{...register("serviceId")}>
 									{services.map((service) => (
 										<option
 											key={service.id}
@@ -183,6 +168,7 @@ export default function ScheduleForm({
 									control={control}
 									render={({ field }) => (
 										<DatePicker
+											locale={ptBR}
 											id="date"
 											selected={field.value ? new Date(field.value) : null}
 											onChange={(date) => {
@@ -223,14 +209,9 @@ export default function ScheduleForm({
 										position: "relative",
 										zIndex: 10,
 									}}
-									{...register("timeSlotAvailable")}
-									defaultValue={
-										selectedSchedule
-											? extractTimeFromDate(selectedSchedule.date)
-											: ""
-									}>
-									{timesSlots.length > 0 ? (
-										timesSlots.map((slot, index) =>
+									{...register("timeSlotAvailable")}>
+									{timeSlots.length > 0 ? (
+										timeSlots.map((slot, index) =>
 											slot.availableTimeSlot.map((availableSlot, subIndex) => (
 												<option
 													key={`${index}-${subIndex}`}
