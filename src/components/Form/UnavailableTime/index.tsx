@@ -9,7 +9,6 @@ import {
 	FormLabel,
 	Grid,
 	Input,
-	Tooltip,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
@@ -22,7 +21,6 @@ import { unavailableTimeSchema } from "../../../pages/UnavaliableTime/unavailabl
 import InputMask from "react-input-mask";
 import { TbEditCircle } from "react-icons/tb";
 import "react-datepicker/dist/react-datepicker.css";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 interface UnavailableTimeProps {
 	onSubmit: (data: FormDataUnavailableTime) => void;
@@ -46,9 +44,8 @@ export default function UnavailableTimeForm({
 		formState: { errors },
 	} = useForm<FormDataUnavailableTime>({
 		resolver: yupResolver(unavailableTimeSchema),
-		defaultValues: {},
 	});
-
+	console.log("Erros:", errors);
 	useEffect(() => {
 		if (selectedUnavailableTime) {
 			reset({
@@ -69,16 +66,10 @@ export default function UnavailableTimeForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl>
+						<FormControl isInvalid={!!errors.date}>
 							<Grid>
 								<Flex alignItems="center">
 									<FormLabel>Data</FormLabel>
-									<Tooltip
-										padding="5px"
-										label="Se informar a data marcará indisponível na data marcada, caso não informado apenas os horário serão aplicado ao todo os dias"
-										fontSize="sm">
-										<QuestionOutlineIcon />
-									</Tooltip>
 								</Flex>
 
 								<Controller
@@ -96,6 +87,7 @@ export default function UnavailableTimeForm({
 													placeholder="Selecione uma data"
 												/>
 											}
+											// minDate={new Date()}
 											dateFormat="dd/MM/yyyy"
 										/>
 									)}

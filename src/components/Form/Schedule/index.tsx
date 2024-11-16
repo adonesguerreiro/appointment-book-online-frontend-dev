@@ -187,6 +187,7 @@ export default function ScheduleForm({
 													value={field.value}
 												/>
 											}
+											// minDate={new Date()}
 											dateFormat="dd/MM/yyyy"
 										/>
 									)}

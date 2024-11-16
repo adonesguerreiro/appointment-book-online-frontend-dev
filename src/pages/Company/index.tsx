@@ -37,6 +37,7 @@ export default function CompanyPage() {
 		register,
 		setError,
 		reset,
+		setValue,
 
 		formState: { errors },
 	} = useForm<FormDataCompany>({
@@ -81,20 +82,17 @@ export default function CompanyPage() {
 
 	const onSubmit = async (data: FormDataCompany) => {
 		setLoading(true);
+		if (!token) return;
+
 		try {
 			const existingCep = await viaCep(data.postalCode);
 			if (existingCep != "CEP inválido") {
 				setLoading(false);
-				reset({
-					city: existingCep.localidade,
-					state: existingCep.uf,
-				});
+				setValue("city", existingCep.localidade);
+				setValue("state", existingCep.uf);
 			} else {
-				setLoading(false);
-				reset({
-					city: "",
-					state: "",
-				});
+				setValue("city", "");
+				setValue("state", "existingCep.uf");
 
 				setError("postalCode", {
 					type: "manual",
@@ -103,20 +101,18 @@ export default function CompanyPage() {
 				return;
 			}
 
-			if (token) {
-				const updatedCompany = await updateCompany(data);
-				const addressCompanyId =
-					updatedCompany.data.companyUpdated.addresses[0].id;
-				const updatedAddress = await updateAddress(addressCompanyId, data);
-				if (updatedCompany.status === 200 && updatedAddress.status === 200) {
-					toast({
-						title: "Alterado com sucesso!",
-						status: "success",
-						duration: 3000,
-						isClosable: true,
-						position: "top-right",
-					});
-				}
+			const updatedCompany = await updateCompany(data);
+			const addressCompanyId =
+				updatedCompany.data.companyUpdated.addresses[0].id;
+			const updatedAddress = await updateAddress(addressCompanyId, data);
+			if (updatedCompany.status === 200 && updatedAddress.status === 200) {
+				toast({
+					title: "Alterado com sucesso!",
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+					position: "top-right",
+				});
 			}
 		} catch (error) {
 			console.error("Erro ao salvar dados", error);
