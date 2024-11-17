@@ -8,21 +8,17 @@ import {
 	TableContainer,
 	Flex,
 	Box,
-	Button,
 } from "@chakra-ui/react";
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
-import { FaPlus } from "react-icons/fa";
 import { EditIcon } from "@chakra-ui/icons";
 import { formatDate } from "../../../utils/formatDate";
 
 interface TableScheduleProps {
 	schedules: FormDataSchedule[];
-	onNewClick: () => void;
 	onEditClick: (scheduleId: number) => void;
 }
 export default function TableSchedule({
 	schedules,
-	onNewClick,
 	onEditClick,
 }: TableScheduleProps) {
 	const statusMapping: { [key: string]: string } = {
@@ -33,17 +29,6 @@ export default function TableSchedule({
 
 	return (
 		<>
-			<Box
-				padding="0.625rem"
-				marginLeft="100%">
-				<Button
-					colorScheme="teal"
-					size="lg"
-					rightIcon={<FaPlus />}
-					onClick={onNewClick}>
-					Nova agenda
-				</Button>
-			</Box>
 			<Flex
 				direction="column"
 				align="center"

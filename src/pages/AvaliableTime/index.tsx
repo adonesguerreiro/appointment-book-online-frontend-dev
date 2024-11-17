@@ -20,6 +20,8 @@ import {
 	getAvaliableTimes,
 } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
+import RegisterButton from "../../components/RegisterButton";
+import EmptyState from "../../components/EmptyState";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
@@ -151,12 +153,25 @@ export default function AvaliableTimePage() {
 						isEditing={isEditing}
 						selectedAvailableTime={selectedAvailableTime}
 					/>
+				) : availableTime.length > 0 ? (
+					<>
+						<RegisterButton
+							buttonText="Novo horário"
+							onNewClick={handleNewClick}
+						/>
+						<TableAvaliable
+							availables={availableTime}
+							onEditClick={handleEditClick}
+						/>
+					</>
 				) : (
-					<TableAvaliable
-						availables={availableTime}
-						onNewClick={handleNewClick}
-						onEditClick={handleEditClick}
-					/>
+					<>
+						<RegisterButton
+							buttonText="Novo horário"
+							onNewClick={handleNewClick}
+						/>
+						<EmptyState />
+					</>
 				)}
 			</Flex>
 		</Container>

@@ -27,6 +27,8 @@ import {
 } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import ModalDelete from "../../components/Modal";
+import RegisterButton from "../../components/RegisterButton";
+import EmptyState from "../../components/EmptyState";
 
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({
@@ -206,12 +208,25 @@ export default function SchedulePage() {
 						onDateChange={handleDateChange}
 						timeSlots={timeSlots}
 					/>
+				) : schedules.length > 0 ? (
+					<>
+						<RegisterButton
+							buttonText="Novo agendamento"
+							onNewClick={handleNewClick}
+						/>
+						<TableSchedule
+							schedules={schedules}
+							onEditClick={handleEditClick}
+						/>
+					</>
 				) : (
-					<TableSchedule
-						schedules={schedules}
-						onNewClick={handleNewClick}
-						onEditClick={handleEditClick}
-					/>
+					<>
+						<RegisterButton
+							buttonText="Novo agendamento"
+							onNewClick={handleNewClick}
+						/>
+						<EmptyState />
+					</>
 				)}
 				{selectedSchedule && (
 					<ModalDelete

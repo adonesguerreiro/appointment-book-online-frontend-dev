@@ -8,39 +8,23 @@ import {
 	TableContainer,
 	Flex,
 	Box,
-	Button,
 } from "@chakra-ui/react";
-import { FaPlus } from "react-icons/fa";
 import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableTime";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 interface TableUnavailableTimeProps {
 	unavailables: FormDataUnavailableTime[];
-	onNewClick: () => void;
 	onEditClick: (unavailableTimeId: number) => void;
 	onDeleteClick: (unavailableTimeId: number) => void;
 }
 
 export default function TableUnavaliable({
 	unavailables,
-	onNewClick,
 	onEditClick,
 	onDeleteClick,
 }: TableUnavailableTimeProps) {
 	return (
 		<>
-			<Box
-				padding="0.625rem"
-				marginLeft="100%">
-				<Button
-					colorScheme="teal"
-					size="lg"
-					rightIcon={<FaPlus />}
-					onClick={onNewClick}>
-					Nova indisponibilidade
-				</Button>
-			</Box>
-
 			<Flex
 				direction="column"
 				align="center"

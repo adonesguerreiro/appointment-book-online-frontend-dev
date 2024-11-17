@@ -8,10 +8,8 @@ import {
 	TableContainer,
 	Flex,
 	Box,
-	Button,
 } from "@chakra-ui/react";
 import { FormDataService } from "../../../interface/FormDataService";
-import { FaPlus } from "react-icons/fa";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { currencyFormat } from "../../../helpers/currencyFormat";
 
@@ -24,23 +22,11 @@ interface TableServiceProps {
 
 export default function TableService({
 	services,
-	onNewClick,
 	onEditClick,
 	onDeleteClick,
 }: TableServiceProps) {
 	return (
 		<>
-			<Box
-				padding="0.625rem"
-				marginLeft="100%">
-				<Button
-					colorScheme="teal"
-					size="lg"
-					rightIcon={<FaPlus />}
-					onClick={onNewClick}>
-					Novo serviço
-				</Button>
-			</Box>
 			<Flex
 				direction="column"
 				align="center"

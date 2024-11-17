@@ -29,6 +29,8 @@ import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
 import { useHandleError } from "../../hooks/useHandleError";
 import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../utils/handleAuthError";
+import RegisterButton from "../../components/RegisterButton";
+import EmptyState from "../../components/EmptyState";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -203,13 +205,27 @@ export default function ServicePage() {
 						isEditing={isEditing}
 						selectedService={selectedService}
 					/>
+				) : services.length > 0 ? (
+					<>
+						<RegisterButton
+							buttonText="Novo serviço"
+							onNewClick={handleNewClick}
+						/>
+						<TableService
+							services={services}
+							onNewClick={handleNewClick}
+							onEditClick={handleEditClick}
+							onDeleteClick={handleDeleteClick}
+						/>
+					</>
 				) : (
-					<TableService
-						services={services}
-						onNewClick={handleNewClick}
-						onEditClick={handleEditClick}
-						onDeleteClick={handleDeleteClick}
-					/>
+					<>
+						<RegisterButton
+							buttonText="Novo serviço"
+							onNewClick={handleNewClick}
+						/>
+						<EmptyState />
+					</>
 				)}
 
 				{selectedService && (

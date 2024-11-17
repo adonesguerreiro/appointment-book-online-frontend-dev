@@ -8,21 +8,17 @@ import {
 	TableContainer,
 	Flex,
 	Box,
-	Button,
 } from "@chakra-ui/react";
 import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
-import { FaPlus } from "react-icons/fa";
 import { EditIcon } from "@chakra-ui/icons";
 
 interface TableAvailableProps {
 	availables: FormDataAvailableTime[];
-	onNewClick: () => void;
 	onEditClick: (available: number) => void;
 }
 
 export default function TableAvaliable({
 	availables,
-	onNewClick,
 	onEditClick,
 }: TableAvailableProps) {
 	const dayMapping: { [key: string]: string } = {
@@ -43,17 +39,6 @@ export default function TableAvaliable({
 
 	return (
 		<>
-			<Box
-				padding="0.625rem"
-				marginLeft="100%">
-				<Button
-					colorScheme="teal"
-					size="lg"
-					rightIcon={<FaPlus />}
-					onClick={onNewClick}>
-					Novo horário
-				</Button>
-			</Box>
 			<Flex
 				direction="column"
 				align="center"

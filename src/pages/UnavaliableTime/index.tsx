@@ -27,6 +27,8 @@ import {
 } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import ModalDelete from "../../components/Modal";
+import EmptyState from "../../components/EmptyState";
+import RegisterButton from "../../components/RegisterButton";
 
 export default function UnavaliableTimePage() {
 	const { reset } = useForm<FormDataUnavailableTime>({
@@ -212,13 +214,26 @@ export default function UnavaliableTimePage() {
 						isEditing={isEditing}
 						selectedUnavailableTime={selectedUnavailableTime}
 					/>
+				) : unavailables.length > 0 ? (
+					<>
+						<RegisterButton
+							buttonText="Nova indisponibilidade"
+							onNewClick={handleNewClick}
+						/>
+						<TableUnavaliable
+							unavailables={unavailables}
+							onEditClick={handleEditClick}
+							onDeleteClick={handleDeleteClick}
+						/>
+					</>
 				) : (
-					<TableUnavaliable
-						unavailables={unavailables}
-						onNewClick={handleNewClick}
-						onEditClick={handleEditClick}
-						onDeleteClick={handleDeleteClick}
-					/>
+					<>
+						<RegisterButton
+							buttonText="Nova indisponibilidade"
+							onNewClick={handleNewClick}
+						/>
+						<EmptyState />
+					</>
 				)}
 				{selectedUnavailableTime && (
 					<ModalDelete

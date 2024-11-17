@@ -29,6 +29,8 @@ import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
 import { useHandleError } from "../../hooks/useHandleError";
 import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../utils/handleAuthError";
+import RegisterButton from "../../components/RegisterButton";
+import EmptyState from "../../components/EmptyState";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
@@ -202,13 +204,26 @@ export default function CustomerPage() {
 						isEditing={isEditing}
 						selectedCustomer={selectedCustomer}
 					/>
+				) : customers.length > 0 ? (
+					<>
+						<RegisterButton
+							buttonText="Novo cliente"
+							onNewClick={handleNewClick}
+						/>
+						<TableCustomer
+							customers={customers}
+							onEditClick={handleEditClick}
+							onDeleteClick={handleDeleteClick}
+						/>
+					</>
 				) : (
-					<TableCustomer
-						customers={customers}
-						onNewClick={handleNewClick}
-						onEditClick={handleEditClick}
-						onDeleteClick={handleDeleteClick}
-					/>
+					<>
+						<RegisterButton
+							buttonText="Novo cliente"
+							onNewClick={handleNewClick}
+						/>
+						<EmptyState />
+					</>
 				)}
 
 				{selectedCustomer && (

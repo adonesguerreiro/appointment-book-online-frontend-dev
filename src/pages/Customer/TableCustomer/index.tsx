@@ -8,38 +8,23 @@ import {
 	TableContainer,
 	Flex,
 	Box,
-	Button,
 } from "@chakra-ui/react";
 import { FormDataCustomer } from "../../../interface/FormDataCustomer";
-import { FaPlus } from "react-icons/fa";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 interface TableCustomerProps {
 	customers: FormDataCustomer[];
-	onNewClick: () => void;
 	onEditClick: (serviceId: number) => void;
 	onDeleteClick: (serviceId: number) => void;
 }
 
 export default function TableService({
 	customers,
-	onNewClick,
 	onEditClick,
 	onDeleteClick,
 }: TableCustomerProps) {
 	return (
 		<>
-			<Box
-				padding="0.625rem"
-				marginLeft="100%">
-				<Button
-					colorScheme="teal"
-					size="lg"
-					rightIcon={<FaPlus />}
-					onClick={onNewClick}>
-					Novo cliente
-				</Button>
-			</Box>
 			<Flex
 				direction="column"
 				align="center"
