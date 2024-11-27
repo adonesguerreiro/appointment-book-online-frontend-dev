@@ -31,13 +31,15 @@ import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
+import Pagination from "../../components/Pagination";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
-		defaultValues: { serviceName: "", duration: "", price: 0 },
 	});
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 	const [services, setServices] = useState<FormDataService[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
@@ -155,15 +157,16 @@ export default function ServicePage() {
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
 			const companyId = decoded.id;
-			const serviceData = await getServices(companyId);
-			setServices(serviceData.data);
+			const serviceData = await getServices(companyId, currentPage);
+			setServices(serviceData.data.services);
+			setTotalPages(serviceData.data.totalPages);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
 			setLoading(false);
 		}
-	}, [token, logout, navigate]);
+	}, [token, currentPage, logout, navigate]);
 
 	useEffect(() => {
 		fetchData();
@@ -184,6 +187,9 @@ export default function ServicePage() {
 		},
 		[handleDeleteService]
 	);
+
+	const handleNext = () => setCurrentPage((prev) => prev + 1);
+	const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
 	return loading ? (
 		<Spinner />
@@ -211,11 +217,18 @@ export default function ServicePage() {
 							buttonText="Novo serviço"
 							onNewClick={handleNewClick}
 						/>
+
 						<TableService
 							services={services}
 							onNewClick={handleNewClick}
 							onEditClick={handleEditClick}
 							onDeleteClick={handleDeleteClick}
+						/>
+						<Pagination
+							handlePrev={handlePrev}
+							handleNext={handleNext}
+							currentPage={currentPage}
+							totalPages={totalPages}
 						/>
 					</>
 				) : (

@@ -29,13 +29,15 @@ import { handleAuthError } from "../../utils/handleAuthError";
 import ModalDelete from "../../components/Modal";
 import EmptyState from "../../components/EmptyState";
 import RegisterButton from "../../components/RegisterButton";
+import Pagination from "../../components/Pagination";
 
 export default function UnavaliableTimePage() {
 	const { reset } = useForm<FormDataUnavailableTime>({
 		resolver: yupResolver(unavailableTimeSchema),
-		defaultValues: { date: "", startTime: "", endTime: "" },
 	});
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 	const [unavailables, setUnavailables] = useState<FormDataUnavailableTime[]>(
 		[]
 	);
@@ -161,15 +163,19 @@ export default function UnavaliableTimePage() {
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
 			const companyId = decoded.id;
-			const unavailableTimeData = await getUnavailableTimes(companyId);
-			setUnavailables(unavailableTimeData.data);
+			const unavailableTimeData = await getUnavailableTimes(
+				companyId,
+				currentPage
+			);
+			setUnavailables(unavailableTimeData.data.unavailableTimes);
+			setTotalPages(unavailableTimeData.data.totalPages);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
 			setLoading(false);
 		}
-	}, [token, logout, navigate]);
+	}, [token, currentPage, logout, navigate]);
 
 	useEffect(() => {
 		fetchData();
@@ -190,6 +196,9 @@ export default function UnavaliableTimePage() {
 		},
 		[handleDeleteUnavaliableTime]
 	);
+
+	const handleNext = () => setCurrentPage((prev) => prev + 1);
+	const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
 	return loading ? (
 		<Spinner />
@@ -224,6 +233,12 @@ export default function UnavaliableTimePage() {
 							unavailables={unavailables}
 							onEditClick={handleEditClick}
 							onDeleteClick={handleDeleteClick}
+						/>
+						<Pagination
+							handlePrev={handlePrev}
+							handleNext={handleNext}
+							currentPage={currentPage}
+							totalPages={totalPages}
 						/>
 					</>
 				) : (

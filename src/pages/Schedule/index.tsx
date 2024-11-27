@@ -29,12 +29,14 @@ import { handleAuthError } from "../../utils/handleAuthError";
 import ModalDelete from "../../components/Modal";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
+import Pagination from "../../components/Pagination";
 
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
 	});
-
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 	const [schedules, setSchedules] = useState<FormDataSchedule[]>([]);
 	const [selectedDate, setSelectedDate] = useState<string>();
 	const [timeSlots, setTimeSlots] = useState([]);
@@ -138,15 +140,19 @@ export default function SchedulePage() {
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
 			const companyId = decoded.id;
-			const scheduleData = await getSchedules(companyId);
-			setSchedules(scheduleData.data);
+			const scheduleData = await getSchedules(companyId, currentPage);
+			setSchedules(scheduleData.data.schedules);
+			setTotalPages(scheduleData.data.totalPages);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
 			setLoading(false);
 		}
-	}, [token, logout, navigate]);
+	}, [token, currentPage, logout, navigate]);
+
+	const handleNext = () => setCurrentPage((prev) => prev + 1);
+	const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
 	useEffect(() => {
 		fetchData();
@@ -217,6 +223,12 @@ export default function SchedulePage() {
 						<TableSchedule
 							schedules={schedules}
 							onEditClick={handleEditClick}
+						/>
+						<Pagination
+							handlePrev={handlePrev}
+							handleNext={handleNext}
+							currentPage={currentPage}
+							totalPages={totalPages}
 						/>
 					</>
 				) : (

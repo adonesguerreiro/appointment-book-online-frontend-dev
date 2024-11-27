@@ -52,8 +52,10 @@ export const updateAddress = (addressId: number, address: FormDataAddress) => {
 	return api.put(`/addresses/${addressId}`, address);
 };
 
-export const getServices = (companyId: number) => {
-	return api.get(`/services/company/${companyId}`);
+export const getServices = (companyId: number, currentPage: number) => {
+	return api.get(`/services/company/${companyId}`, {
+		params: { page: currentPage, limit: 10 },
+	});
 };
 
 export const getServicesById = (serviceId: number) => {
@@ -72,8 +74,10 @@ export const deleteService = (serviceId: number) => {
 	return api.delete(`/services/${serviceId}`);
 };
 
-export const getSchedules = (companyId: number) => {
-	return api.get(`/schedules/company/${companyId}`);
+export const getSchedules = async (companyId: number, currentPage: number) => {
+	return api.get(`/schedules/company/${companyId}`, {
+		params: { page: currentPage, limit: 10 },
+	});
 };
 
 export const getScheduleById = (scheduleId: number) => {
@@ -91,8 +95,10 @@ export const updateSchedule = (
 	return api.put(`/schedules/${scheduleId}`, schedule);
 };
 
-export const getCustomers = (companyId: number) => {
-	return api.get(`/customers/company/${companyId}`);
+export const getCustomers = (companyId: number, currentPage: number) => {
+	return api.get(`/customers/company/${companyId}`, {
+		params: { page: currentPage, limit: 10 },
+	});
 };
 
 export const getCustomerById = (customerId: number) => {
@@ -114,8 +120,10 @@ export const deleteCustomer = (customerId: number) => {
 	return api.delete(`/customers/${customerId}`);
 };
 
-export const getAvaliableTimes = (companyId: number) => {
-	return api.get(`/available-times/company/${companyId}`);
+export const getAvaliableTimes = (companyId: number, currentPage: number) => {
+	return api.get(`/available-times/company/${companyId}`, {
+		params: { page: currentPage, limit: 10 },
+	});
 };
 
 export const getAvaliableTimesSlots = (companyId: number, date: string) => {
@@ -137,8 +145,10 @@ export const updateAvaliableTime = (
 	return api.put(`/available-times/${avaliableTimeId}`, avalibleTime);
 };
 
-export const getUnavailableTimes = (companyId: number) => {
-	return api.get(`/unavailable-times/company/${companyId}`);
+export const getUnavailableTimes = (companyId: number, currentPage: number) => {
+	return api.get(`/unavailable-times/company/${companyId}`, {
+		params: { page: currentPage, limit: 1 },
+	});
 };
 
 export const getUnavailableTimeById = (unavailableTimeId: number) => {

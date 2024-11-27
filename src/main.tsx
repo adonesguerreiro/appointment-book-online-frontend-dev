@@ -3,6 +3,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import * as ReactDOM from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const colors = {
 	brand: {
@@ -14,12 +15,16 @@ const colors = {
 
 const theme = extendTheme({ colors });
 
+const queryClient = new QueryClient();
+
 const rootElement = document.getElementById("root");
 ReactDOM.createRoot(rootElement!).render(
 	<React.StrictMode>
 		<AuthProvider>
 			<ChakraProvider theme={theme}>
-				<App />
+				<QueryClientProvider client={queryClient}>
+					<App />
+				</QueryClientProvider>
 			</ChakraProvider>
 		</AuthProvider>
 	</React.StrictMode>

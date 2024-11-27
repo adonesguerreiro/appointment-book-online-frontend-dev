@@ -31,13 +31,15 @@ import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
+import Pagination from "../../components/Pagination";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
 		resolver: yupResolver(customerSchema),
-		defaultValues: { customerName: "", mobile: "" },
 	});
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 	const [customers, setCustomers] = useState<FormDataCustomer[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
@@ -154,15 +156,16 @@ export default function CustomerPage() {
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
 			const companyId = decoded.id;
-			const customerData = await getCustomers(companyId);
-			setCustomers(customerData.data);
+			const customerData = await getCustomers(companyId, currentPage);
+			setCustomers(customerData.data.customers);
+			setTotalPages(customerData.data.totalPages);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
 			setLoading(false);
 		}
-	}, [token, logout, navigate]);
+	}, [token, currentPage, logout, navigate]);
 
 	useEffect(() => {
 		fetchData();
@@ -183,6 +186,9 @@ export default function CustomerPage() {
 		},
 		[handleDeleteCustomer]
 	);
+
+	const handleNext = () => setCurrentPage((prev) => prev + 1);
+	const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
 	return loading ? (
 		<Spinner />
@@ -214,6 +220,12 @@ export default function CustomerPage() {
 							customers={customers}
 							onEditClick={handleEditClick}
 							onDeleteClick={handleDeleteClick}
+						/>
+						<Pagination
+							handlePrev={handlePrev}
+							handleNext={handleNext}
+							currentPage={currentPage}
+							totalPages={totalPages}
 						/>
 					</>
 				) : (
