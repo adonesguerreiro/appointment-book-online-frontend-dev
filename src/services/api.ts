@@ -52,7 +52,7 @@ export const updateAddress = (addressId: number, address: FormDataAddress) => {
 	return api.put(`/addresses/${addressId}`, address);
 };
 
-export const getServices = (companyId: number, currentPage: number) => {
+export const getServices = (companyId: number, currentPage?: number) => {
 	return api.get(`/services/company/${companyId}`, {
 		params: { page: currentPage, limit: 10 },
 	});
@@ -95,7 +95,7 @@ export const updateSchedule = (
 	return api.put(`/schedules/${scheduleId}`, schedule);
 };
 
-export const getCustomers = (companyId: number, currentPage: number) => {
+export const getCustomers = (companyId: number, currentPage?: number) => {
 	return api.get(`/customers/company/${companyId}`, {
 		params: { page: currentPage, limit: 10 },
 	});
@@ -147,7 +147,7 @@ export const updateAvaliableTime = (
 
 export const getUnavailableTimes = (companyId: number, currentPage: number) => {
 	return api.get(`/unavailable-times/company/${companyId}`, {
-		params: { page: currentPage, limit: 1 },
+		params: { page: currentPage, limit: 10 },
 	});
 };
 

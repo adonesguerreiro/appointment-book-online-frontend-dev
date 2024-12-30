@@ -157,6 +157,7 @@ export default function ServicePage() {
 		try {
 			const decoded = jwtDecode<CustomJwtPayload>(token);
 			const companyId = decoded.id;
+
 			const serviceData = await getServices(companyId, currentPage);
 			setServices(serviceData.data.services);
 			setTotalPages(serviceData.data.totalPages);

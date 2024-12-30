@@ -22,12 +22,11 @@ import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { getCustomers, getServices } from "../../../services/api";
-import { CustomJwtPayload } from "../../../interface/CustomJwtPayload";
-import { jwtDecode } from "jwt-decode";
 import DatePicker from "react-datepicker";
 import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../../interface/TimeSlot";
 import { extractTimeFromDate } from "../../../utils/extractTimeFromDate";
+import { decodeToken } from "../../../utils/decodeToken";
 
 interface ScheduleFormProps {
 	onSubmit: (data: FormDataSchedule) => void;
@@ -52,6 +51,7 @@ export default function ScheduleForm({
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		control,
 		formState: { errors },
 	} = useForm<FormDataSchedule>({
@@ -63,6 +63,7 @@ export default function ScheduleForm({
 			status: "",
 			timeSlotAvailable: "",
 		},
+		mode: "onChange",
 	});
 	const [customers, setCustomers] = useState<FormDataSchedule[]>([]);
 	const [services, setServices] = useState<FormDataSchedule[]>([]);
@@ -73,26 +74,25 @@ export default function ScheduleForm({
 	useEffect(() => {
 		const fetchData = async () => {
 			if (!token) return;
-
-			const decoded = jwtDecode<CustomJwtPayload>(token);
-			const companyId = decoded.id;
-
+			const companyId = decodeToken(token);
 			try {
 				const [customersData, servicesData] = await Promise.all([
-					getCustomers(companyId),
-					getServices(companyId),
+					getCustomers(companyId.id),
+					getServices(companyId.id),
 				]);
-				setCustomers(customersData.data);
-				setServices(servicesData.data);
+
+				setCustomers(customersData.data.customers);
+				setServices(servicesData.data.services);
 
 				if (selectedSchedule) {
-					reset({
-						customerId: selectedSchedule.customerId,
-						serviceId: selectedSchedule.serviceId,
-						date: selectedSchedule.date,
-						status: selectedSchedule.status,
-						timeSlotAvailable: extractTimeFromDate(selectedSchedule.date),
-					});
+					setValue("customerId", selectedSchedule.customerId);
+					setValue("serviceId", selectedSchedule.serviceId);
+					setValue("date", selectedSchedule.date);
+					setValue("status", selectedSchedule.status);
+					setValue(
+						"timeSlotAvailable",
+						extractTimeFromDate(selectedSchedule.date)
+					);
 				}
 			} catch (err) {
 				console.error("Erro ao buscar dados", err);
@@ -100,7 +100,7 @@ export default function ScheduleForm({
 		};
 
 		fetchData();
-	}, [reset, selectedSchedule, token]);
+	}, [reset, selectedSchedule, setValue, token]);
 
 	return (
 		<Card>
@@ -117,10 +117,7 @@ export default function ScheduleForm({
 								<FormLabel>Cliente</FormLabel>
 								<Select
 									placeholder="Selecione o cliente"
-									{...register("customerId")}
-									defaultValue={
-										selectedSchedule ? selectedSchedule.customerId : ""
-									}>
+									{...register("customerId")}>
 									{customers.map((customer) => (
 										<option
 											key={customer.id}
@@ -222,7 +219,7 @@ export default function ScheduleForm({
 											))
 										)
 									) : (
-										<option>Sem horários disponíveis</option>
+										<option value="">Sem horários disponíveis</option>
 									)}
 								</Select>
 								{errors.availableTimeSlot && (
