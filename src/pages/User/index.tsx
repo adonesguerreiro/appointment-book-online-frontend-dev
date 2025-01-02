@@ -12,8 +12,6 @@ import {
 	Heading,
 	Input,
 	Spinner,
-	useToast,
-	// useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FormDataUser } from "../../interface/FormDataUser";
@@ -28,6 +26,7 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../context/AuthContext";
 import { AxiosError } from "axios";
 import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function UserPage() {
 	const [loading, setLoading] = useState(false);
@@ -42,6 +41,7 @@ export default function UserPage() {
 	});
 
 	const { token } = useAuth();
+	const { showToast } = useCustomToast();
 
 	useEffect(() => {
 		if (!token) {
@@ -65,7 +65,6 @@ export default function UserPage() {
 		fetchDataUser();
 	}, [reset, token]);
 
-	const toast = useToast();
 	console.log("Erros:", errors);
 	const onSubmit = async (data: FormDataUser) => {
 		setLoading(true);
@@ -73,14 +72,10 @@ export default function UserPage() {
 			if (token) {
 				const updatedUser = await updateUser(data);
 				if (updatedUser.status === 200) {
-					toast({
+					showToast({
 						title: "Salvo com sucesso!",
 						status: "success",
-						duration: 3000,
-						isClosable: true,
-						position: "top-right",
 					});
-
 					setLoading(false);
 					navigate("/");
 					return;
@@ -91,13 +86,9 @@ export default function UserPage() {
 
 			if (error instanceof AxiosError) {
 				const errors = error.response?.data.errors[0];
-
-				toast({
+				showToast({
 					title: errors.message,
 					status: "warning",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 			}
 			setLoading(false);

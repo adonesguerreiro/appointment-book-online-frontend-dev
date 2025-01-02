@@ -56,14 +56,6 @@ export default function ScheduleForm({
 		formState: { errors },
 	} = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
-		defaultValues: {
-			customerId: "",
-			serviceId: "",
-			date: "",
-			status: "",
-			timeSlotAvailable: "",
-		},
-		mode: "onChange",
 	});
 	const [customers, setCustomers] = useState<FormDataSchedule[]>([]);
 	const [services, setServices] = useState<FormDataSchedule[]>([]);

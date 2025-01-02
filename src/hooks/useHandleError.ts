@@ -1,8 +1,8 @@
-import { useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
+import { useCustomToast } from "./useCustomToast";
 
 export function useHandleError() {
-	const toast = useToast();
+	const { showToast } = useCustomToast();
 
 	function handleError(error: unknown) {
 		if (error instanceof AxiosError) {
@@ -15,12 +15,9 @@ export function useHandleError() {
 					? errors[0].message
 					: "Ocorreu um erro";
 
-			toast({
+			showToast({
 				title: errorMessage,
 				status: "warning",
-				duration: 3000,
-				isClosable: true,
-				position: "top-right",
 			});
 		} else {
 			console.error("Erro desconhecido", error);

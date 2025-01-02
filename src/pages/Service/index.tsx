@@ -1,10 +1,4 @@
-import {
-	Container,
-	Flex,
-	Spinner,
-	useDisclosure,
-	useToast,
-} from "@chakra-ui/react";
+import { Container, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "./serviceSchema";
@@ -32,6 +26,7 @@ import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
 import Pagination from "../../components/Pagination";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -50,7 +45,7 @@ export default function ServicePage() {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const toast = useToast();
+	const { showToast } = useCustomToast();
 	const handleError = useHandleError();
 
 	const { token, logout } = useAuth();
@@ -60,24 +55,19 @@ export default function ServicePage() {
 			if (token && !selectedService) {
 				const createdService = await createService(data);
 				if (createdService.status === 200) {
-					toast({
+					showToast({
 						title: "Serviço registrado com sucesso.",
 						status: "success",
-						duration: 3000,
-						isClosable: true,
-						position: "top-right",
 					});
+
 					fetchData();
 					setShowForm(false);
 				}
 			} else {
 				await updateService(Number(selectedService?.id), data);
-				toast({
+				showToast({
 					title: "Serviço alterado com sucesso.",
 					status: "info",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				fetchData();
 				setShowForm(false);
@@ -124,12 +114,9 @@ export default function ServicePage() {
 			const deletedService = await deleteService(selectedService.id);
 			if (deletedService.status === 200) {
 				onClose();
-				toast({
+				showToast({
 					title: "Serviço excluído com sucesso.",
 					status: "success",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				setShowForm(false);
 				setSelectedService(null);

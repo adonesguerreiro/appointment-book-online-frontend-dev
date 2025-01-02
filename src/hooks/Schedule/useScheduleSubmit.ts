@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { createSchedule, updateSchedule } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
-import Toast from "../../components/Toast";
 import { useHandleError } from "../useHandleError";
+import { useCustomToast } from "../useCustomToast";
 
 interface useScheduleSubmitProps {
 	selectedSchedule?: FormDataSchedule | null;
@@ -18,6 +18,7 @@ export const useScheduleSubmit = ({
 }: useScheduleSubmitProps) => {
 	const { token } = useAuth();
 	const handleError = useHandleError();
+	const { showToast } = useCustomToast();
 
 	const handleSubmitSchedule = useCallback(
 		async (data: FormDataSchedule) => {
@@ -25,7 +26,7 @@ export const useScheduleSubmit = ({
 				if (token && !selectedSchedule) {
 					const createdSchedule = await createSchedule(data);
 					if (createdSchedule.status === 200) {
-						Toast({
+						showToast({
 							title: "Agendamento realizado com sucesso",
 							status: "success",
 						});
@@ -34,7 +35,7 @@ export const useScheduleSubmit = ({
 					}
 				} else {
 					await updateSchedule(Number(selectedSchedule?.id), data);
-					Toast({
+					showToast({
 						title: "Agendamento alterado com sucesso.",
 						status: "info",
 					});
@@ -46,7 +47,14 @@ export const useScheduleSubmit = ({
 				handleError(error);
 			}
 		},
-		[token, selectedSchedule, fetchSchedules, setShowForm, handleError]
+		[
+			token,
+			selectedSchedule,
+			showToast,
+			fetchSchedules,
+			setShowForm,
+			handleError,
+		]
 	);
 
 	return {

@@ -1,10 +1,4 @@
-import {
-	Container,
-	Flex,
-	Spinner,
-	useDisclosure,
-	useToast,
-} from "@chakra-ui/react";
+import { Container, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { customerSchema } from "./customerSchema";
@@ -12,7 +6,6 @@ import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import TableCustomer from "./TableCustomer";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-
 import {
 	createCustomer,
 	getCustomers,
@@ -20,7 +13,6 @@ import {
 	updateCustomer,
 	deleteCustomer,
 } from "../../services/api";
-
 import SectionHeader from "../../components/SectionHeader";
 import CustomerForm from "../../components/Form/Customer";
 import ModalDelete from "../../components/Modal";
@@ -32,6 +24,7 @@ import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
 import Pagination from "../../components/Pagination";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
@@ -50,7 +43,7 @@ export default function CustomerPage() {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const toast = useToast();
+	const { showToast } = useCustomToast();
 	const handleError = useHandleError();
 
 	const { token, logout } = useAuth();
@@ -60,24 +53,18 @@ export default function CustomerPage() {
 			if (token && !selectedCustomer) {
 				const createdCustomer = await createCustomer(data);
 				if (createdCustomer.status === 200) {
-					toast({
+					showToast({
 						title: "Cliente registrado com sucesso.",
 						status: "success",
-						duration: 3000,
-						isClosable: true,
-						position: "top-right",
 					});
 					fetchData();
 					setShowForm(false);
 				}
 			} else {
 				await updateCustomer(Number(selectedCustomer?.id), data);
-				toast({
+				showToast({
 					title: "Cliente alterado com sucesso.",
 					status: "info",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				fetchData();
 				setShowForm(false);
@@ -124,12 +111,9 @@ export default function CustomerPage() {
 			const deletedCustomer = await deleteCustomer(selectedCustomer.id);
 			if (deletedCustomer.status === 200) {
 				onClose();
-				toast({
+				showToast({
 					title: "Cliente excluído com sucesso.",
 					status: "success",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				setShowForm(false);
 				setSelectedCustomer(null);

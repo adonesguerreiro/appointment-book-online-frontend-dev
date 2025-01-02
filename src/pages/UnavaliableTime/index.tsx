@@ -1,10 +1,4 @@
-import {
-	Container,
-	Flex,
-	Spinner,
-	useDisclosure,
-	useToast,
-} from "@chakra-ui/react";
+import { Container, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { unavailableTimeSchema } from "./unavailableTimeSchema";
@@ -30,6 +24,7 @@ import ModalDelete from "../../components/Modal";
 import EmptyState from "../../components/EmptyState";
 import RegisterButton from "../../components/RegisterButton";
 import Pagination from "../../components/Pagination";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function UnavaliableTimePage() {
 	const { reset } = useForm<FormDataUnavailableTime>({
@@ -50,7 +45,7 @@ export default function UnavaliableTimePage() {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const toast = useToast();
+	const { showToast } = useCustomToast();
 	const handleError = useHandleError();
 
 	const { token, logout } = useAuth();
@@ -60,24 +55,18 @@ export default function UnavaliableTimePage() {
 			if (token && !selectedUnavailableTime) {
 				const createdUnavailableTime = await createUnavailableTime(data);
 				if (createdUnavailableTime.status === 200) {
-					toast({
+					showToast({
 						title: "Horário indisponível registrado com sucesso.",
 						status: "success",
-						duration: 3000,
-						isClosable: true,
-						position: "top-right",
 					});
 					fetchData();
 					setShowForm(false);
 				}
 			} else {
 				await updateUnavailableTime(Number(selectedUnavailableTime?.id), data);
-				toast({
+				showToast({
 					title: "Horário indisponível alterado com sucesso.",
 					status: "info",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				fetchData();
 				setShowForm(false);
@@ -130,12 +119,9 @@ export default function UnavaliableTimePage() {
 			);
 			if (deletedUnavailableTime.status === 200) {
 				onClose();
-				toast({
+				showToast({
 					title: "Horário indisponível excluído com sucesso.",
 					status: "success",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				setShowForm(false);
 				setSelectedUnavailableTime(null);

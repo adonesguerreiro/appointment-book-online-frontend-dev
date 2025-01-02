@@ -12,13 +12,11 @@ import {
 	Heading,
 	Input,
 	Spinner,
-	useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { companySchema } from "./companySchema";
 import { MdCancel, MdSave } from "react-icons/md";
-
 import InputMask from "react-input-mask";
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { viaCep } from "../../services/viaCep";
@@ -29,6 +27,7 @@ import { jwtDecode } from "jwt-decode";
 import { getCompany, updateAddress, updateCompany } from "../../services/api";
 import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
 import { AxiosError } from "axios";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function CompanyPage() {
 	const [loading, setLoading] = useState(false);
@@ -44,7 +43,7 @@ export default function CompanyPage() {
 		resolver: yupResolver(companySchema),
 	});
 
-	const toast = useToast();
+	const { showToast } = useCustomToast();
 
 	const { token } = useAuth();
 
@@ -106,12 +105,9 @@ export default function CompanyPage() {
 				updatedCompany.data.companyUpdated.addresses[0].id;
 			const updatedAddress = await updateAddress(addressCompanyId, data);
 			if (updatedCompany.status === 200 && updatedAddress.status === 200) {
-				toast({
+				showToast({
 					title: "Alterado com sucesso!",
 					status: "success",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 			}
 		} catch (error) {
@@ -119,13 +115,9 @@ export default function CompanyPage() {
 
 			if (error instanceof AxiosError) {
 				const errors = error.response?.data?.errors[0];
-
-				toast({
+				showToast({
 					title: errors.message,
 					status: "warning",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 			}
 			setLoading(false);

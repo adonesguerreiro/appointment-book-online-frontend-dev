@@ -1,8 +1,7 @@
-import { Container, Flex, Spinner, useToast } from "@chakra-ui/react";
+import { Container, Flex, Spinner } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { availableTimeSchema } from "./availableTimeSchema";
-
 import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 import { useCallback, useEffect, useState } from "react";
 import TableAvaliable from "./TableAvaliable";
@@ -23,6 +22,7 @@ import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
 import Pagination from "../../components/Pagination";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
@@ -40,8 +40,8 @@ export default function AvaliableTimePage() {
 		useState<FormDataAvailableTime | null>();
 	const [isEditing, setIsEditing] = useState(false);
 	const navigate = useNavigate();
+	const { showToast } = useCustomToast();
 
-	const toast = useToast();
 	const handleError = useHandleError();
 
 	const { token, logout } = useAuth();
@@ -51,24 +51,18 @@ export default function AvaliableTimePage() {
 			if (token && !selectedAvailableTime) {
 				const createdService = await createAvaliableTime(data);
 				if (createdService.status === 200) {
-					toast({
+					showToast({
 						title: "Horário disponível registrado com sucesso.",
 						status: "success",
-						duration: 3000,
-						isClosable: true,
-						position: "top-right",
 					});
 					fetchData();
 					setShowForm(false);
 				}
 			} else {
 				await updateAvaliableTime(Number(selectedAvailableTime?.id), data);
-				toast({
+				showToast({
 					title: "Horário disponível alterado com sucesso.",
 					status: "info",
-					duration: 3000,
-					isClosable: true,
-					position: "top-right",
 				});
 				fetchData();
 				setShowForm(false);

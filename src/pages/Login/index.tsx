@@ -11,7 +11,6 @@ import {
 	Input,
 	Button,
 	FormErrorMessage,
-	useToast,
 	Container,
 	Spinner,
 } from "@chakra-ui/react";
@@ -21,21 +20,21 @@ import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "./loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { auth } from "../../services/api";
-import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useLoading } from "../../hooks/useLoading";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export default function LoginPage() {
-	const [loading, setLoading] = useState(false);
+	const { loading, setLoading } = useLoading();
 	const {
 		handleSubmit,
 		register,
-
 		formState: { errors },
 	} = useForm<FormDataLogin>({
 		resolver: yupResolver(loginSchema),
 	});
 
-	const toast = useToast();
+	const { showToast } = useCustomToast();
 	const { setToken } = useAuth();
 
 	const onSubmit = async (data: FormDataLogin) => {
@@ -44,27 +43,19 @@ export default function LoginPage() {
 			const authorization = await auth(data);
 			const { token } = authorization.data;
 			setToken(token);
-
-			await toast({
+			showToast({
 				title: "Autenticado com sucesso!",
 				status: "success",
-				duration: 3000,
-				isClosable: true,
-				position: "top-right",
 			});
-
 			setTimeout(() => {
 				setLoading(false);
 				window.location.href = "/";
 			}, 1000);
 		} catch (e) {
 			console.error("Error authenticating user:", e);
-			toast({
+			showToast({
 				title: "Falha na autenticação!",
 				status: "error",
-				duration: 3000,
-				isClosable: true,
-				position: "top-right",
 			});
 		}
 		setLoading(false);
