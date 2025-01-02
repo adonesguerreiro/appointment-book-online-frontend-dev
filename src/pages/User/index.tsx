@@ -9,7 +9,6 @@ import {
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
-	Heading,
 	Input,
 	Spinner,
 } from "@chakra-ui/react";
@@ -18,18 +17,13 @@ import { FormDataUser } from "../../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "./userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import { getUser, updateUser } from "../../services/api";
-import { useEffect, useState } from "react";
-
-import { jwtDecode } from "jwt-decode";
-import { useAuth } from "../../context/AuthContext";
-import { AxiosError } from "axios";
-import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
-import { useCustomToast } from "../../hooks/useCustomToast";
+import { useEffect } from "react";
+import { useUser } from "../../hooks/User/useUser";
+import { useUserSubmit } from "../../hooks/User/useUserSubmit";
+import HeadingComponent from "../../components/Heading";
+import { useUserCancel } from "../../hooks/User/useUserCancel";
 
 export default function UserPage() {
-	const [loading, setLoading] = useState(false);
 	const {
 		handleSubmit,
 		register,
@@ -40,68 +34,27 @@ export default function UserPage() {
 		mode: "onChange",
 	});
 
-	const { token } = useAuth();
-	const { showToast } = useCustomToast();
+	const { fetchDataUser } = useUser();
+	const { handleCancel } = useUserCancel();
+	const { handleSubmitUser, loading } = useUserSubmit();
 
 	useEffect(() => {
-		if (!token) {
-			return;
-		}
-
-		const fetchDataUser = async () => {
+		const fetchData = async () => {
 			try {
-				const decoded = jwtDecode<CustomJwtPayload>(token);
-				const userId = decoded.id;
-				const userData = await getUser(userId);
+				const data = await fetchDataUser();
 				reset({
-					name: userData.data.name,
-					email: userData.data.email,
+					name: data.name,
+					email: data.email,
 				});
 			} catch (error) {
-				console.error("Erro ao buscar dados", error);
+				console.error("Error:", error);
 			}
 		};
 
-		fetchDataUser();
-	}, [reset, token]);
+		fetchData();
+	}, [fetchDataUser, reset]);
 
 	console.log("Erros:", errors);
-	const onSubmit = async (data: FormDataUser) => {
-		setLoading(true);
-		try {
-			if (token) {
-				const updatedUser = await updateUser(data);
-				if (updatedUser.status === 200) {
-					showToast({
-						title: "Salvo com sucesso!",
-						status: "success",
-					});
-					setLoading(false);
-					navigate("/");
-					return;
-				}
-			}
-		} catch (error) {
-			console.error("Erro ao salvar dados", error);
-
-			if (error instanceof AxiosError) {
-				const errors = error.response?.data.errors[0];
-				showToast({
-					title: errors.message,
-					status: "warning",
-				});
-			}
-			setLoading(false);
-			return;
-		}
-	};
-
-	const navigate = useNavigate();
-
-	const onCancel = () => {
-		reset();
-		navigate("/");
-	};
 
 	return (
 		<Container>
@@ -112,12 +65,7 @@ export default function UserPage() {
 				justify="center"
 				gap="10"
 				padding="0.625rem">
-				<Heading
-					as="h1"
-					size="lg"
-					fontWeight="semibold">
-					Usuário
-				</Heading>
+				<HeadingComponent title="Usuário" />
 				<Card>
 					<CardBody
 						width="52.5625rem"
@@ -126,7 +74,7 @@ export default function UserPage() {
 							as="form"
 							display="grid"
 							placeItems="center"
-							onSubmit={handleSubmit(onSubmit)}>
+							onSubmit={handleSubmit(handleSubmitUser)}>
 							<Avatar
 								size="lg"
 								name="Adones"
@@ -229,7 +177,7 @@ export default function UserPage() {
 									size="lg"
 									margin="0.625rem"
 									rightIcon={<MdCancel />}
-									onClick={onCancel}>
+									onClick={handleCancel}>
 									Cancelar
 								</Button>
 							</Flex>
