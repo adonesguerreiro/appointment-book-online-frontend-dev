@@ -21,116 +21,32 @@ import InputMask from "react-input-mask";
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { viaCep } from "../../services/viaCep";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { jwtDecode } from "jwt-decode";
-import { getCompany, updateAddress, updateCompany } from "../../services/api";
-import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
-import { AxiosError } from "axios";
-import { useCustomToast } from "../../hooks/useCustomToast";
+import { useCompany } from "../../hooks/Company/useCompany";
+import { useCompanySubmit } from "../../hooks/Company/useCompanySubmit";
+import { useCompanyCancel } from "../../hooks/Company/useCompanyCancel";
 
 export default function CompanyPage() {
-	const [loading, setLoading] = useState(false);
 	const {
 		handleSubmit,
 		register,
-		setError,
 		reset,
 		setValue,
-
 		formState: { errors },
 	} = useForm<FormDataCompany>({
 		resolver: yupResolver(companySchema),
 	});
+	const [postalCodeData, setPostalCodeData] = useState<string>();
 
-	const { showToast } = useCustomToast();
-
-	const { token } = useAuth();
+	const { fetchDataCompany } = useCompany({ reset, setPostalCodeData });
+	const { handleSubmitCompany, loading } = useCompanySubmit({
+		setValue,
+		postalCodeData: postalCodeData || "",
+	});
+	const { handleCancel } = useCompanyCancel({ reset });
 
 	useEffect(() => {
-		if (!token) {
-			return;
-		}
-
-		const fetchDataCompany = async () => {
-			try {
-				const decoded = jwtDecode<CustomJwtPayload>(token);
-				const companyId = decoded.id;
-				const companyData = await getCompany(companyId);
-
-				reset({
-					name: companyData.data.name,
-					email: companyData.data.email,
-					mobile: companyData.data.mobile,
-					cnpj: companyData.data.cnpj,
-					street: companyData.data.addresses[0].street,
-					number: companyData.data.addresses[0].number,
-					complement: companyData.data.addresses[0].complement,
-					neighborhood: companyData.data.addresses[0].neighborhood,
-					city: companyData.data.addresses[0].city,
-					state: companyData.data.addresses[0].state,
-					postalCode: companyData.data.addresses[0].postalCode,
-				});
-			} catch (error) {
-				console.error("Erro ao buscar dados", error);
-			}
-		};
-
 		fetchDataCompany();
-	}, [reset, token]);
-
-	const onSubmit = async (data: FormDataCompany) => {
-		setLoading(true);
-		if (!token) return;
-
-		try {
-			const existingCep = await viaCep(data.postalCode);
-			if (existingCep != "CEP inválido") {
-				setLoading(false);
-				setValue("city", existingCep.localidade);
-				setValue("state", existingCep.uf);
-			} else {
-				setValue("city", "");
-				setValue("state", "existingCep.uf");
-
-				setError("postalCode", {
-					type: "manual",
-					message: existingCep as string,
-				});
-				return;
-			}
-
-			const updatedCompany = await updateCompany(data);
-			const addressCompanyId =
-				updatedCompany.data.companyUpdated.addresses[0].id;
-			const updatedAddress = await updateAddress(addressCompanyId, data);
-			if (updatedCompany.status === 200 && updatedAddress.status === 200) {
-				showToast({
-					title: "Alterado com sucesso!",
-					status: "success",
-				});
-			}
-		} catch (error) {
-			console.error("Erro ao salvar dados", error);
-
-			if (error instanceof AxiosError) {
-				const errors = error.response?.data?.errors[0];
-				showToast({
-					title: errors.message,
-					status: "warning",
-				});
-			}
-			setLoading(false);
-			return;
-		}
-	};
-
-	const navigate = useNavigate();
-
-	const onCancel = () => {
-		reset();
-		navigate("/");
-	};
+	}, [fetchDataCompany]);
 
 	return (
 		<Container>
@@ -153,7 +69,7 @@ export default function CompanyPage() {
 						height="40.6875rem">
 						<Box
 							as="form"
-							onSubmit={handleSubmit(onSubmit)}>
+							onSubmit={handleSubmit(handleSubmitCompany)}>
 							<Flex gap="0.625rem">
 								<FormControl isInvalid={!!errors.name}>
 									<Grid>
@@ -370,7 +286,7 @@ export default function CompanyPage() {
 									size="lg"
 									margin="0.625rem"
 									rightIcon={<MdCancel />}
-									onClick={onCancel}>
+									onClick={handleCancel}>
 									Cancelar
 								</Button>
 							</Flex>
