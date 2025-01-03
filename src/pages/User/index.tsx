@@ -34,25 +34,13 @@ export default function UserPage() {
 		mode: "onChange",
 	});
 
-	const { fetchDataUser } = useUser();
+	const { fetchDataUser } = useUser({ reset });
 	const { handleCancel } = useUserCancel();
 	const { handleSubmitUser, loading } = useUserSubmit();
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = await fetchDataUser();
-				reset({
-					name: data.name,
-					email: data.email,
-				});
-			} catch (error) {
-				console.error("Error:", error);
-			}
-		};
-
-		fetchData();
-	}, [fetchDataUser, reset]);
+		fetchDataUser();
+	}, [fetchDataUser]);
 
 	console.log("Erros:", errors);
 

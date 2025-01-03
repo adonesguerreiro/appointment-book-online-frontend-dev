@@ -1,9 +1,15 @@
+import { FormDataUser } from "./../../interface/FormDataUser";
 import { useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { getUser } from "../../services/api";
 import { decodeToken } from "../../utils/decodeToken";
+import { UseFormReset } from "react-hook-form";
 
-export const useUser = () => {
+interface useUserProps {
+	reset: UseFormReset<FormDataUser>;
+}
+
+export const useUser = ({ reset }: useUserProps) => {
 	const { token } = useAuth();
 
 	const fetchDataUser = useCallback(async () => {
@@ -14,12 +20,16 @@ export const useUser = () => {
 		try {
 			const userId = decodeToken(token);
 			const { data } = await getUser(userId.id);
+			reset({
+				name: data.name,
+				email: data.email,
+			});
 
 			return data;
 		} catch (error) {
 			console.error("Erro ao buscar dados", error);
 		}
-	}, [token]);
+	}, [reset, token]);
 
 	return {
 		fetchDataUser,
