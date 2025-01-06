@@ -5,28 +5,16 @@ import { serviceSchema } from "./serviceSchema";
 import { FormDataService } from "../../interface/FormDataService";
 import TableService from "./TableService";
 import { useCallback, useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-
-import {
-	createService,
-	deleteService,
-	getServices,
-	getServicesById,
-	updateService,
-} from "../../services/api";
-
+import { deleteService, getServicesById } from "../../services/api";
 import SectionHeader from "../../components/SectionHeader";
 import ServiceForm from "../../components/Form/Service";
 import ModalDelete from "../../components/Modal";
-import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
-import { useHandleError } from "../../hooks/useHandleError";
-import { useNavigate } from "react-router-dom";
-import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
 import Pagination from "../../components/Pagination";
 import { useCustomToast } from "../../hooks/useCustomToast";
+import { useService } from "../../hooks/Service/useService";
+import { useServiceSubmit } from "../../hooks/Service/useServiceSubmit";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -34,49 +22,22 @@ export default function ServicePage() {
 	});
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
-	const [services, setServices] = useState<FormDataService[]>([]);
-	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [selectedService, setSelectedService] =
 		useState<FormDataService | null>();
 	const [isEditing, setIsEditing] = useState(false);
-	const navigate = useNavigate();
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { showToast } = useCustomToast();
-	const handleError = useHandleError();
 
-	const { token, logout } = useAuth();
-
-	const handleSubmitService = async (data: FormDataService) => {
-		try {
-			if (token && !selectedService) {
-				const createdService = await createService(data);
-				if (createdService.status === 200) {
-					showToast({
-						title: "Serviço registrado com sucesso.",
-						status: "success",
-					});
-
-					fetchData();
-					setShowForm(false);
-				}
-			} else {
-				await updateService(Number(selectedService?.id), data);
-				showToast({
-					title: "Serviço alterado com sucesso.",
-					status: "info",
-				});
-				fetchData();
-				setShowForm(false);
-			}
-		} catch (error) {
-			console.error("Erro ao salvar dados", error);
-			handleError(error);
-		}
-	};
+	const { fetchService, services, totalPages, loading } =
+		useService(currentPage);
+	const { handleSubmitService } = useServiceSubmit({
+		fetchService,
+		setShowForm,
+		selectedService,
+	});
 
 	const handleEditService = async (serviceId: number) => {
 		try {
@@ -120,7 +81,7 @@ export default function ServicePage() {
 				});
 				setShowForm(false);
 				setSelectedService(null);
-				fetchData();
+				fetchService();
 			}
 		} catch (error) {
 			console.error("Erro ao excluir serviço", error);
@@ -137,28 +98,9 @@ export default function ServicePage() {
 		setIsEditing(false);
 	};
 
-	const fetchData = useCallback(async () => {
-		if (!token) return;
-		setLoading(true);
-
-		try {
-			const decoded = jwtDecode<CustomJwtPayload>(token);
-			const companyId = decoded.id;
-
-			const serviceData = await getServices(companyId, currentPage);
-			setServices(serviceData.data.services);
-			setTotalPages(serviceData.data.totalPages);
-		} catch (error) {
-			handleAuthError(error, logout, navigate);
-			console.error("Erro ao buscar dados", error);
-		} finally {
-			setLoading(false);
-		}
-	}, [token, currentPage, logout, navigate]);
-
 	useEffect(() => {
-		fetchData();
-	}, [fetchData, token]);
+		fetchService();
+	}, [fetchService]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectedService(null);

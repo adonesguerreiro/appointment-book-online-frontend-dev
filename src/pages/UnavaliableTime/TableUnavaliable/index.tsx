@@ -13,13 +13,13 @@ import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableT
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 interface TableUnavailableTimeProps {
-	unavailables: FormDataUnavailableTime[];
+	unavaliables: FormDataUnavailableTime[];
 	onEditClick: (unavailableTimeId: number) => void;
 	onDeleteClick: (unavailableTimeId: number) => void;
 }
 
 export default function TableUnavaliable({
-	unavailables,
+	unavaliables,
 	onEditClick,
 	onDeleteClick,
 }: TableUnavailableTimeProps) {
@@ -45,7 +45,7 @@ export default function TableUnavaliable({
 								</Tr>
 							</Thead>
 							<Tbody>
-								{unavailables.map((unavaliable, index) => (
+								{unavaliables.map((unavaliable, index) => (
 									<Tr key={index}>
 										<Td>
 											{unavaliable.date === null
