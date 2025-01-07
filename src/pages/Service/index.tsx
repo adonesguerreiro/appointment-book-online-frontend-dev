@@ -17,6 +17,7 @@ import { useServiceEdit } from "../../hooks/Service/useServiceEdit";
 import { useServiceOpenDeleteModal } from "../../hooks/Service/useServiceOpenDeleteModal";
 import { usePagination } from "../../hooks/usePagination";
 import { useServiceDelete } from "../../hooks/Service/useServiceDelete";
+import { useServiceCancel } from "../../hooks/Service/useServiceCancel";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -58,15 +59,11 @@ export default function ServicePage() {
 		setSelectedService,
 	});
 
-	const handleCancel = () => {
-		reset({
-			serviceName: "",
-			duration: "",
-			price: 0,
-		});
-		setShowForm(false);
-		setIsEditing(false);
-	};
+	const { handleCancel } = useServiceCancel({
+		reset,
+		setShowForm,
+		setIsEditing,
+	});
 
 	useEffect(() => {
 		fetchService();
