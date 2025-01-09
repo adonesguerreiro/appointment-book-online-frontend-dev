@@ -7,128 +7,62 @@ import { useCallback, useEffect, useState } from "react";
 import TableAvaliable from "./TableAvaliable";
 import SectionHeader from "../../components/SectionHeader";
 import AvailableTime from "../../components/Form/AvailableTime";
-import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import { useAuth } from "../../context/AuthContext";
-import { useHandleError } from "../../hooks/useHandleError";
-import { CustomJwtPayload } from "../../interface/CustomJwtPayload";
-import {
-	createAvaliableTime,
-	updateAvaliableTime,
-	getAvaliableTimeById,
-	getAvaliableTimes,
-} from "../../services/api";
-import { handleAuthError } from "../../utils/handleAuthError";
 import RegisterButton from "../../components/RegisterButton";
 import EmptyState from "../../components/EmptyState";
 import Pagination from "../../components/Pagination";
-import { useCustomToast } from "../../hooks/useCustomToast";
+import { useAvaliableTime } from "../../hooks/AvaliableTime/useAvaliableTime";
+import { usePagination } from "../../hooks/usePagination";
+import { useAvaliableTimeSubmit } from "../../hooks/AvaliableTime/useAvaliableTimeSubmit";
+import { useAvaliableTimeEdit } from "../../hooks/AvaliableTime/useAvaliableTimeEdit";
+import { useAvaliableTimeCancel } from "../../hooks/AvaliableTime/useAvaliableTimeCancel";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
 		resolver: yupResolver(availableTimeSchema),
 	});
 
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
-	const [availableTime, setAvailableTime] = useState<FormDataAvailableTime[]>(
-		[]
-	);
-	const [loading, setLoading] = useState(false);
+	const { currentPage, handlePrev, handleNext } = usePagination();
 	const [showForm, setShowForm] = useState(false);
 	const [selectedAvailableTime, setSelectAvailableTime] =
 		useState<FormDataAvailableTime | null>();
 	const [isEditing, setIsEditing] = useState(false);
-	const navigate = useNavigate();
-	const { showToast } = useCustomToast();
 
-	const handleError = useHandleError();
+	const { availableTime, totalPages, loading, fetchAvaliableTime } =
+		useAvaliableTime(currentPage);
 
-	const { token, logout } = useAuth();
+	const { handleSubmitAvaliableTime } = useAvaliableTimeSubmit({
+		selectedAvailableTime,
+		fetchAvaliableTime,
+		setShowForm,
+	});
 
-	const handleSubmitAvaliableTime = async (data: FormDataAvailableTime) => {
-		try {
-			if (token && !selectedAvailableTime) {
-				const createdService = await createAvaliableTime(data);
-				if (createdService.status === 200) {
-					showToast({
-						title: "Horário disponível registrado com sucesso.",
-						status: "success",
-					});
-					fetchData();
-					setShowForm(false);
-				}
-			} else {
-				await updateAvaliableTime(Number(selectedAvailableTime?.id), data);
-				showToast({
-					title: "Horário disponível alterado com sucesso.",
-					status: "info",
-				});
-				fetchData();
-				setShowForm(false);
-			}
-		} catch (error) {
-			console.error("Erro ao salvar dados", error);
-			handleError(error);
-		}
-	};
+	const { handleEditAvaliableTime } = useAvaliableTimeEdit({
+		setShowForm,
+		setIsEditing,
+		setSelectAvailableTime,
+	});
 
-	const handleEditAvaliableTime = async (avaliableTimeId: number) => {
-		try {
-			setIsEditing(true);
-			const avaliableTimeData = await getAvaliableTimeById(avaliableTimeId);
-
-			setSelectAvailableTime(avaliableTimeData.data);
-			setShowForm(true);
-		} catch (error) {
-			console.error("Erro ao buscar dados", error);
-		}
-	};
-
-	const handleCancel = () => {
-		reset({
-			day: "",
-			startTime: "",
-			endTime: "",
-			interval: 0,
-		});
-		setShowForm(false);
-		setIsEditing(false);
-	};
-
-	const fetchData = useCallback(async () => {
-		if (!token) return;
-		setLoading(true);
-
-		try {
-			const decoded = jwtDecode<CustomJwtPayload>(token);
-			const companyId = decoded.id;
-			const avaliableTimeData = await getAvaliableTimes(companyId, currentPage);
-			setAvailableTime(avaliableTimeData.data.availableTimes);
-			setTotalPages(avaliableTimeData.data.totalPages);
-		} catch (error) {
-			handleAuthError(error, logout, navigate);
-			console.error("Erro ao buscar dados", error);
-		} finally {
-			setLoading(false);
-		}
-	}, [token, currentPage, logout, navigate]);
+	const { handleCancel } = useAvaliableTimeCancel({
+		reset,
+		setShowForm,
+		setIsEditing,
+	});
 
 	useEffect(() => {
-		fetchData();
-	}, [fetchData, token]);
+		fetchAvaliableTime();
+	}, [fetchAvaliableTime]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectAvailableTime(null);
 		setShowForm(true);
 	}, []);
 
-	const handleEditClick = useCallback((avaliableTimeId: number) => {
-		handleEditAvaliableTime(avaliableTimeId);
-	}, []);
-
-	const handleNext = () => setCurrentPage((prev) => prev + 1);
-	const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+	const handleEditClick = useCallback(
+		(avaliableTimeId: number) => {
+			handleEditAvaliableTime(avaliableTimeId);
+		},
+		[handleEditAvaliableTime]
+	);
 
 	return loading ? (
 		<Spinner />

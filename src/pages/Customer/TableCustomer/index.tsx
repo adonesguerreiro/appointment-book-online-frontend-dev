@@ -18,7 +18,7 @@ interface TableCustomerProps {
 	onDeleteClick: (serviceId: number) => void;
 }
 
-export default function TableService({
+export default function TableCustomer({
 	customers,
 	onEditClick,
 	onDeleteClick,
