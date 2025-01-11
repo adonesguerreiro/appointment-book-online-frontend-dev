@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { companySchema } from "./companySchema";
+import { companySchema } from "../../validators/companySchema";
 import { MdCancel, MdSave } from "react-icons/md";
 import InputMask from "react-input-mask";
 import { FormDataCompany } from "../../interface/FormDataCompany";

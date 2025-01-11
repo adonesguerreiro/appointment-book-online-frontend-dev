@@ -15,7 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import { FormDataUser } from "../../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchema } from "./userSchema";
+import { userSchema } from "../../validators/userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
 import { useEffect } from "react";
 import { useUser } from "../../hooks/User/useUser";

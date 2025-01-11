@@ -6,7 +6,7 @@ import { useLoading } from "../useLoading";
 import { useCustomToast } from "../useCustomToast";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, UseFormSetValue } from "react-hook-form";
-import { companySchema } from "../../pages/Company/companySchema";
+import { companySchema } from "../../validators/companySchema";
 import { useHandleError } from "../useHandleError";
 
 interface useCompanySubmitProps {

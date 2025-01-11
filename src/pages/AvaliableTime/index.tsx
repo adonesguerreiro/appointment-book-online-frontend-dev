@@ -1,7 +1,7 @@
 import { Container, Flex, Spinner } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { availableTimeSchema } from "./availableTimeSchema";
+import { availableTimeSchema } from "../../validators/availableTimeSchema";
 import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 import { useCallback, useEffect, useState } from "react";
 import TableAvaliable from "./TableAvaliable";

@@ -17,7 +17,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
 import InputMask from "react-input-mask";
-import { availableTimeSchema } from "../../../pages/AvaliableTime/availableTimeSchema";
+import { availableTimeSchema } from "../../../validators/availableTimeSchema";
 import { useEffect } from "react";
 import { TbEditCircle } from "react-icons/tb";
 

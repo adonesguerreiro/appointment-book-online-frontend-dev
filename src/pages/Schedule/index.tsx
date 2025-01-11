@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
 import TableSchedule from "./TableSchedule";
-import { scheduleSchema } from "./scheduleSchema";
+import { scheduleSchema } from "../../validators/scheduleSchema";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import ScheduleForm from "../../components/Form/Schedule";
 import ModalDelete from "../../components/Modal";

@@ -1,7 +1,7 @@
 import { Container, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { serviceSchema } from "./serviceSchema";
+import { serviceSchema } from "../../validators/serviceSchema";
 import { FormDataService } from "../../interface/FormDataService";
 import TableService from "./TableService";
 import { useCallback, useEffect, useState } from "react";

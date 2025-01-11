@@ -17,7 +17,7 @@ import { MdCancel } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { FormDataService } from "../../../interface/FormDataService";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { serviceSchema } from "../../../pages/Service/serviceSchema";
+import { serviceSchema } from "../../../validators/serviceSchema";
 import InputMask from "react-input-mask";
 import { useEffect } from "react";
 

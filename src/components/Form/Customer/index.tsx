@@ -19,7 +19,7 @@ import { FormDataCustomer } from "../../../interface/FormDataCustomer";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputMask from "react-input-mask";
 import { useEffect } from "react";
-import { customerSchema } from "../../../pages/Customer/customerSchema";
+import { customerSchema } from "../../../validators/customerSchema";
 
 interface CustomerFormProps {
 	onSubmit: (data: FormDataCustomer) => void;

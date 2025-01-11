@@ -17,7 +17,7 @@ import { MdCancel } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { scheduleSchema } from "../../../pages/Schedule/scheduleSchema";
+import { scheduleSchema } from "../../../validators/scheduleSchema";
 import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";

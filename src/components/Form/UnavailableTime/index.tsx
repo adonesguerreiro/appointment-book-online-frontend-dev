@@ -17,7 +17,7 @@ import { Controller, useForm } from "react-hook-form";
 import { LuPlusCircle } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableTime";
-import { unavailableTimeSchema } from "../../../pages/UnavaliableTime/unavailableTimeSchema";
+import { unavailableTimeSchema } from "../../../validators/unavailableTimeSchema";
 import InputMask from "react-input-mask";
 import { TbEditCircle } from "react-icons/tb";
 import "react-datepicker/dist/react-datepicker.css";
