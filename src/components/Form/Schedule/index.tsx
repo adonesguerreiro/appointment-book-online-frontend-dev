@@ -77,14 +77,13 @@ export default function ScheduleForm({
 				setServices(servicesData.data.services);
 
 				if (selectedSchedule) {
-					setValue("customerId", selectedSchedule.customerId);
-					setValue("serviceId", selectedSchedule.serviceId);
-					setValue("date", selectedSchedule.date);
-					setValue("status", selectedSchedule.status);
-					setValue(
-						"timeSlotAvailable",
-						extractTimeFromDate(selectedSchedule.date)
-					);
+					reset({
+						customerId: selectedSchedule?.customerId,
+						serviceId: selectedSchedule?.serviceId,
+						date: selectedSchedule?.date,
+						status: selectedSchedule?.status,
+						timeSlotAvailable: extractTimeFromDate(selectedSchedule!.date),
+					});
 				}
 			} catch (err) {
 				console.error("Erro ao buscar dados", err);
@@ -153,8 +152,8 @@ export default function ScheduleForm({
 							<Grid>
 								<FormLabel>Data</FormLabel>
 								<Controller
-									name="date"
 									control={control}
+									{...register("date")}
 									render={({ field }) => (
 										<DatePicker
 											locale={ptBR}

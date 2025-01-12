@@ -91,12 +91,16 @@ export default function SchedulePage() {
 	const handleEditClick = useCallback(
 		(scheduleId: number) => {
 			handleEditSchedule(scheduleId);
+			setSelectedSchedule(
+				(prev) => schedules.find((s) => s.id === scheduleId) || prev
+			);
 		},
-		[handleEditSchedule]
+		[handleEditSchedule, schedules]
 	);
 
 	const handleDateChange = useCallback((date: string) => {
 		setSelectedDate(date);
+		setSelectedSchedule((prev) => (prev ? { ...prev, date } : null));
 	}, []);
 
 	return loading ? (
@@ -118,7 +122,7 @@ export default function SchedulePage() {
 						onCancel={handleCancel}
 						isEditing={isEditing}
 						selectedSchedule={selectedSchedule}
-						selectedDate={selectedDate || ""}
+						selectedDate={selectedDate!}
 						onDateChange={handleDateChange}
 						timeSlots={timeSlots}
 					/>
