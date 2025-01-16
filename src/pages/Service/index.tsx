@@ -144,6 +144,7 @@ export default function ServicePage() {
 						onClose={onClose}
 						title="serviço"
 						itemName={selectedService.serviceName}
+						description="Tem certeza que deseja excluir o serviço "
 						onDelete={handleDeleteService}
 					/>
 				)}
