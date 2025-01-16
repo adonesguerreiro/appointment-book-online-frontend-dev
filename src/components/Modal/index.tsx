@@ -15,6 +15,7 @@ interface ModalDeleteProps {
 	onClose: () => void;
 	onDelete?: () => void;
 	title: string;
+	description: string;
 	itemName: string;
 }
 
@@ -24,6 +25,7 @@ export default function ModalDelete({
 	onDelete,
 	title,
 	itemName,
+	description,
 }: ModalDeleteProps) {
 	return (
 		<>
@@ -35,7 +37,7 @@ export default function ModalDelete({
 					<ModalHeader>Excluir {title}</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody>
-						Deseja realmente excluir o item{" "}
+						{description}
 						<Text
 							as="span"
 							fontWeight="bold">

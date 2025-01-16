@@ -26,14 +26,14 @@ interface AvaliableTimeFormProps {
 	onCancel: () => void;
 	isEditing: boolean;
 	onEdit: (data: FormDataAvailableTime) => void;
-	selectedAvailableTime?: FormDataAvailableTime | null;
+	selectedAvaliableTime?: FormDataAvailableTime | null;
 }
 
 export default function AvaliableTimeForm({
 	onSubmit,
 	onCancel,
 	isEditing,
-	selectedAvailableTime,
+	selectedAvaliableTime,
 }: AvaliableTimeFormProps) {
 	const {
 		handleSubmit,
@@ -52,16 +52,16 @@ export default function AvaliableTimeForm({
 	});
 
 	useEffect(() => {
-		if (selectedAvailableTime) {
+		if (selectedAvaliableTime) {
 			reset({
-				day: selectedAvailableTime.day,
-				period: selectedAvailableTime.period,
-				startTime: selectedAvailableTime.startTime,
-				endTime: selectedAvailableTime.endTime,
-				interval: selectedAvailableTime.interval,
+				day: selectedAvaliableTime.day,
+				period: selectedAvaliableTime.period,
+				startTime: selectedAvaliableTime.startTime,
+				endTime: selectedAvaliableTime.endTime,
+				interval: selectedAvaliableTime.interval,
 			});
 		}
-	}, [selectedAvailableTime, reset]);
+	}, [selectedAvaliableTime, reset]);
 
 	return (
 		<Card>

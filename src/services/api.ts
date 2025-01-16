@@ -145,6 +145,10 @@ export const updateAvaliableTime = (
 	return api.put(`/available-times/${avaliableTimeId}`, avalibleTime);
 };
 
+export const deleteAvaliableTime = (avaliableTimeId: number) => {
+	return api.delete(`/available-times/${avaliableTimeId}`);
+};
+
 export const getUnavailableTimes = (companyId: number, currentPage: number) => {
 	return api.get(`/unavailable-times/company/${companyId}`, {
 		params: { page: currentPage, limit: 10 },

@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { FormDataService } from "../../../interface/FormDataService";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { currencyFormat } from "../../../helpers/currencyFormat";
+import { currencyFormat } from "../../../utils/currencyFormat";
 
 interface TableServiceProps {
 	services: FormDataService[];

@@ -2,18 +2,18 @@ import { useCallback } from "react";
 import { getUnavailableTimeById } from "../../services/api";
 import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime";
 
-interface useUnavaliableTimeOpenModal {
+interface useUnavaliableTimeOpenModalDeleteProps {
 	setSelectedUnavailableTime: (
 		unavailableTime: FormDataUnavailableTime
 	) => void;
 	onOpen: () => void;
 }
 
-export const useUnavaliableTimeOpenModal = ({
+export const useUnavaliableTimeOpenModalDelete = ({
 	setSelectedUnavailableTime,
 	onOpen,
-}: useUnavaliableTimeOpenModal) => {
-	const handleUnavaliableTimeOpenModal = useCallback(
+}: useUnavaliableTimeOpenModalDeleteProps) => {
+	const handleUnavaliableTimeOpenModalDelete = useCallback(
 		async (unavailableTimeId: number) => {
 			try {
 				const unavailableTimeData = await getUnavailableTimeById(
@@ -29,6 +29,6 @@ export const useUnavaliableTimeOpenModal = ({
 	);
 
 	return {
-		handleUnavaliableTimeOpenModal,
+		handleUnavaliableTimeOpenModalDelete,
 	};
 };

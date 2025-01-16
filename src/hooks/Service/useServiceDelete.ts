@@ -8,7 +8,7 @@ interface useServiceDeleteProps {
 	setShowForm: (show: boolean) => void;
 	fetchService: () => Promise<void>;
 	selectedService?: FormDataService | null;
-	setSelectedService: (time: FormDataService | null) => void;
+	setSelectedService: (service: FormDataService | null) => void;
 }
 export const useServiceDelete = ({
 	onClose,

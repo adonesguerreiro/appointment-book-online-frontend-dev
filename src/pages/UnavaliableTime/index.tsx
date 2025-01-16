@@ -15,7 +15,7 @@ import { useUnavaliableTime } from "../../hooks/UnavaliableTime/useUnavaliableTi
 import { usePagination } from "../../hooks/usePagination";
 import { useUnavaliableTimeSubmit } from "../../hooks/UnavaliableTime/useUnavaliableTimeSubmit";
 import { useUnavaliableTimeEdit } from "../../hooks/UnavaliableTime/useUnavaliableTimeEdit";
-import { useUnavaliableTimeOpenModal } from "../../hooks/UnavaliableTime/useUnavaliableTimeOpenDeleteModal";
+import { useUnavaliableTimeOpenModalDelete } from "../../hooks/UnavaliableTime/useUnavaliableTimeOpenDeleteModal";
 import { useUnavaliableTimeDelete } from "../../hooks/UnavaliableTime/useUnavaliableTimeDelete";
 import { useUnavailableTimeCancel } from "../../hooks/UnavaliableTime/useUnavaliableTimeCancel";
 
@@ -47,10 +47,11 @@ export default function UnavaliableTimePage() {
 		setSelectedUnavailableTime,
 	});
 
-	const { handleUnavaliableTimeOpenModal } = useUnavaliableTimeOpenModal({
-		onOpen,
-		setSelectedUnavailableTime,
-	});
+	const { handleUnavaliableTimeOpenModalDelete } =
+		useUnavaliableTimeOpenModalDelete({
+			onOpen,
+			setSelectedUnavailableTime,
+		});
 
 	const { handleDeleteUnavailableTime } = useUnavaliableTimeDelete({
 		onClose,
@@ -84,9 +85,9 @@ export default function UnavaliableTimePage() {
 
 	const handleDeleteClick = useCallback(
 		(unavailableTimeId: number) => {
-			handleUnavaliableTimeOpenModal(unavailableTimeId);
+			handleUnavaliableTimeOpenModalDelete(unavailableTimeId);
 		},
-		[handleUnavaliableTimeOpenModal]
+		[handleUnavaliableTimeOpenModalDelete]
 	);
 
 	return loading ? (
@@ -147,6 +148,7 @@ export default function UnavaliableTimePage() {
 						itemName={new Date(selectedUnavailableTime.date).toLocaleDateString(
 							"pt-BR"
 						)}
+						description="Deseja excluir o horário indisponível do dia "
 						onDelete={handleDeleteUnavailableTime}
 					/>
 				)}

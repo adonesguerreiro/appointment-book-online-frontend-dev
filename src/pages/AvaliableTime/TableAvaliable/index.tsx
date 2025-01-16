@@ -10,27 +10,20 @@ import {
 	Box,
 } from "@chakra-ui/react";
 import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
-import { EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { dayMapping } from "../../../utils/dayMapping";
 
 interface TableAvailableProps {
 	availables: FormDataAvailableTime[];
 	onEditClick: (available: number) => void;
+	onDeleteClick: (available: number) => void;
 }
 
 export default function TableAvaliable({
 	availables,
 	onEditClick,
+	onDeleteClick,
 }: TableAvailableProps) {
-	const dayMapping: { [key: string]: string } = {
-		MONDAY: "Segunda-feira",
-		TUESDAY: "Terça-feira",
-		WEDNESDAY: "Quarta-feira",
-		THURSDAY: "Quinta-feira",
-		FRIDAY: "Sexta-feira",
-		SATURDAY: "Sábado",
-		SUNDAY: "Domingo",
-	};
-
 	const periodMapping: { [key: string]: string } = {
 		MORNING: "Manhã",
 		AFTERNOON: "Tarde",
@@ -74,6 +67,10 @@ export default function TableAvaliable({
 												<EditIcon
 													onClick={() => onEditClick(available.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
+												/>
+												<DeleteIcon
+													onClick={() => onDeleteClick(available.id!)}
+													_hover={{ color: "red", cursor: "pointer" }}
 												/>
 											</Flex>
 										</Td>

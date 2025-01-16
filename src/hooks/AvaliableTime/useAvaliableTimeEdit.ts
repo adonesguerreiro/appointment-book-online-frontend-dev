@@ -4,20 +4,20 @@ import { getAvaliableTimeById } from "../../services/api";
 interface useAvaliableTimeEditProps {
 	setShowForm: (show: boolean) => void;
 	setIsEditing: (editing: boolean) => void;
-	setSelectAvailableTime: (avaliableTime: FormDataAvailableTime) => void;
+	setSelectAvaliableTime: (avaliableTime: FormDataAvailableTime) => void;
 }
 
 export const useAvaliableTimeEdit = ({
 	setShowForm,
 	setIsEditing,
-	setSelectAvailableTime,
+	setSelectAvaliableTime,
 }: useAvaliableTimeEditProps) => {
 	const handleEditAvaliableTime = async (avaliableTimeId: number) => {
 		try {
 			setIsEditing(true);
 			const avaliableTimeData = await getAvaliableTimeById(avaliableTimeId);
 
-			setSelectAvailableTime(avaliableTimeData.data);
+			setSelectAvaliableTime(avaliableTimeData.data);
 			setShowForm(true);
 		} catch (error) {
 			console.error("Erro ao buscar dados", error);

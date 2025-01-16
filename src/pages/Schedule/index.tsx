@@ -157,6 +157,7 @@ export default function SchedulePage() {
 						isOpen={isOpen}
 						onClose={onClose}
 						title="agendamento"
+						description="Deseja excluir a agenda do dia "
 						itemName={selectedSchedule.date}
 					/>
 				)}

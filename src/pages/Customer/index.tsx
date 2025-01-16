@@ -141,6 +141,7 @@ export default function CustomerPage() {
 						onClose={onClose}
 						title="cliente"
 						itemName={selectedCustomer.customerName}
+						description="Tem certeza que deseja excluir o cliente "
 						onDelete={handleDeleteCustomer}
 					/>
 				)}

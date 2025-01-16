@@ -1,4 +1,4 @@
-import { Container, Flex, Spinner } from "@chakra-ui/react";
+import { Container, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { availableTimeSchema } from "../../validators/availableTimeSchema";
@@ -15,6 +15,10 @@ import { usePagination } from "../../hooks/usePagination";
 import { useAvaliableTimeSubmit } from "../../hooks/AvaliableTime/useAvaliableTimeSubmit";
 import { useAvaliableTimeEdit } from "../../hooks/AvaliableTime/useAvaliableTimeEdit";
 import { useAvaliableTimeCancel } from "../../hooks/AvaliableTime/useAvaliableTimeCancel";
+import ModalDelete from "../../components/Modal";
+import { useAvaliableTimeDelete } from "../../hooks/AvaliableTime/useAvaliableTimeDelete";
+import { useAvaliableTimeOpenModalDelete } from "../../hooks/AvaliableTime/useAvaliableTimeOpenDeleteModal";
+import { dayMapping } from "../../utils/dayMapping";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
@@ -23,15 +27,16 @@ export default function AvaliableTimePage() {
 
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const [showForm, setShowForm] = useState(false);
-	const [selectedAvailableTime, setSelectAvailableTime] =
+	const [selectedAvaliableTime, setSelectAvaliableTime] =
 		useState<FormDataAvailableTime | null>();
 	const [isEditing, setIsEditing] = useState(false);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { availableTime, totalPages, loading, fetchAvaliableTime } =
 		useAvaliableTime(currentPage);
 
 	const { handleSubmitAvaliableTime } = useAvaliableTimeSubmit({
-		selectedAvailableTime,
+		selectedAvaliableTime,
 		fetchAvaliableTime,
 		setShowForm,
 	});
@@ -39,7 +44,21 @@ export default function AvaliableTimePage() {
 	const { handleEditAvaliableTime } = useAvaliableTimeEdit({
 		setShowForm,
 		setIsEditing,
-		setSelectAvailableTime,
+		setSelectAvaliableTime,
+	});
+
+	const { handleAvaliableTimeOpenDeleteModal } =
+		useAvaliableTimeOpenModalDelete({
+			onOpen,
+			setSelectAvaliableTime,
+		});
+
+	const { handleDeleteAvaliableTime } = useAvaliableTimeDelete({
+		onClose,
+		setShowForm,
+		fetchAvaliableTime,
+		selectedAvaliableTime,
+		setSelectAvaliableTime,
 	});
 
 	const { handleCancel } = useAvaliableTimeCancel({
@@ -53,7 +72,7 @@ export default function AvaliableTimePage() {
 	}, [fetchAvaliableTime]);
 
 	const handleNewClick = useCallback(() => {
-		setSelectAvailableTime(null);
+		setSelectAvaliableTime(null);
 		setShowForm(true);
 	}, []);
 
@@ -62,6 +81,13 @@ export default function AvaliableTimePage() {
 			handleEditAvaliableTime(avaliableTimeId);
 		},
 		[handleEditAvaliableTime]
+	);
+
+	const handleDeleteClick = useCallback(
+		(avaliableTimeId: number) => {
+			handleAvaliableTimeOpenDeleteModal(avaliableTimeId);
+		},
+		[handleAvaliableTimeOpenDeleteModal]
 	);
 
 	return loading ? (
@@ -81,11 +107,11 @@ export default function AvaliableTimePage() {
 					<AvailableTime
 						onSubmit={handleSubmitAvaliableTime}
 						onEdit={() =>
-							handleEditAvaliableTime(Number(selectedAvailableTime))
+							handleEditAvaliableTime(Number(selectedAvaliableTime))
 						}
 						onCancel={handleCancel}
 						isEditing={isEditing}
-						selectedAvailableTime={selectedAvailableTime}
+						selectedAvaliableTime={selectedAvaliableTime}
 					/>
 				) : availableTime.length > 0 ? (
 					<>
@@ -96,6 +122,7 @@ export default function AvaliableTimePage() {
 						<TableAvaliable
 							availables={availableTime}
 							onEditClick={handleEditClick}
+							onDeleteClick={handleDeleteClick}
 						/>
 						<Pagination
 							handlePrev={handlePrev}
@@ -112,6 +139,16 @@ export default function AvaliableTimePage() {
 						/>
 						<EmptyState />
 					</>
+				)}
+				{selectedAvaliableTime && (
+					<ModalDelete
+						isOpen={isOpen}
+						onClose={onClose}
+						title="horário disponível"
+						itemName={dayMapping[selectedAvaliableTime?.day]}
+						description="Deseja excluir o horário indisponível na "
+						onDelete={handleDeleteAvaliableTime}
+					/>
 				)}
 			</Flex>
 		</Container>

@@ -5,13 +5,13 @@ import { useCustomToast } from "../useCustomToast";
 import { useHandleError } from "../useHandleError";
 
 interface useAvaliableTimeSubmitProps {
-	selectedAvailableTime?: FormDataAvailableTime | null;
+	selectedAvaliableTime?: FormDataAvailableTime | null;
 	fetchAvaliableTime: () => Promise<void>;
 	setShowForm: (show: boolean) => void;
 }
 
 export const useAvaliableTimeSubmit = ({
-	selectedAvailableTime,
+	selectedAvaliableTime,
 	fetchAvaliableTime,
 	setShowForm,
 }: useAvaliableTimeSubmitProps) => {
@@ -21,7 +21,7 @@ export const useAvaliableTimeSubmit = ({
 
 	const handleSubmitAvaliableTime = async (data: FormDataAvailableTime) => {
 		try {
-			if (token && !selectedAvailableTime) {
+			if (token && !selectedAvaliableTime) {
 				const createdService = await createAvaliableTime(data);
 				if (createdService.status === 200) {
 					showToast({
@@ -32,7 +32,7 @@ export const useAvaliableTimeSubmit = ({
 					setShowForm(false);
 				}
 			} else {
-				await updateAvaliableTime(Number(selectedAvailableTime?.id), data);
+				await updateAvaliableTime(Number(selectedAvaliableTime?.id), data);
 				showToast({
 					title: "Horário disponível alterado com sucesso.",
 					status: "info",
