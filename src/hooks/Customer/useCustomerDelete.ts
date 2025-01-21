@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { deleteCustomer } from "../../services/api";
 import { useCustomToast } from "../useCustomToast";
+import { useHandleError } from "../useHandleError";
 
 interface useCustomerDeleteProps {
 	onClose: () => void;
@@ -18,6 +19,7 @@ export const useCustomerDelete = ({
 	selectedCustomer,
 	setSelectedCustomer,
 }: useCustomerDeleteProps) => {
+	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
 
 	const handleDeleteCustomer = useCallback(async () => {
@@ -39,10 +41,13 @@ export const useCustomerDelete = ({
 				fetchCustomer();
 			}
 		} catch (error) {
-			console.error("Erro ao excluir serviço", error);
+			console.error("Erro ao excluir cliente", error);
+			onClose();
+			handleError(error);
 		}
 	}, [
 		fetchCustomer,
+		handleError,
 		onClose,
 		selectedCustomer,
 		setSelectedCustomer,

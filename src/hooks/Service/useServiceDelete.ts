@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { FormDataService } from "../../interface/FormDataService";
 import { deleteService } from "../../services/api";
 import { useCustomToast } from "../useCustomToast";
+import { useHandleError } from "../useHandleError";
 
 interface useServiceDeleteProps {
 	onClose: () => void;
@@ -18,6 +19,8 @@ export const useServiceDelete = ({
 	setSelectedService,
 }: useServiceDeleteProps) => {
 	const { showToast } = useCustomToast();
+	const handleError = useHandleError();
+
 	const handleDeleteService = useCallback(async () => {
 		if (!selectedService || !selectedService.id) {
 			console.error("Serviço selecionado não encontrado.");
@@ -38,9 +41,12 @@ export const useServiceDelete = ({
 			}
 		} catch (error) {
 			console.error("Erro ao excluir serviço", error);
+			onClose();
+			handleError(error);
 		}
 	}, [
 		fetchService,
+		handleError,
 		onClose,
 		selectedService,
 		setSelectedService,

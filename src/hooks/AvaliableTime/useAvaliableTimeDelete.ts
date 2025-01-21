@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useCustomToast } from "../useCustomToast";
 import { deleteAvaliableTime } from "../../services/api";
 import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
+import { useHandleError } from "../useHandleError";
 
 interface useAvaliableTimeDeleteProps {
 	onClose: () => void;
@@ -19,6 +20,7 @@ export const useAvaliableTimeDelete = ({
 	selectedAvaliableTime,
 	setSelectAvaliableTime,
 }: useAvaliableTimeDeleteProps) => {
+	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
 
 	const handleDeleteAvaliableTime = useCallback(async () => {
@@ -34,7 +36,7 @@ export const useAvaliableTimeDelete = ({
 			if (deletedUnavailableTime.status === 200) {
 				onClose();
 				showToast({
-					title: "Horário indisponível excluído com sucesso.",
+					title: "Horário disponível excluído com sucesso.",
 					status: "success",
 				});
 				setShowForm(false);
@@ -43,9 +45,12 @@ export const useAvaliableTimeDelete = ({
 			}
 		} catch (error) {
 			console.error("Erro ao excluir horário disponível", error);
+			onClose();
+			handleError(error);
 		}
 	}, [
 		fetchAvaliableTime,
+		handleError,
 		onClose,
 		selectedAvaliableTime,
 		setSelectAvaliableTime,
