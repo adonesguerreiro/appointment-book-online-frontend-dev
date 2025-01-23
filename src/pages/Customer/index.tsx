@@ -65,8 +65,10 @@ export default function CustomerPage() {
 	});
 
 	useEffect(() => {
-		fetchCustomer();
-	}, [fetchCustomer]);
+		if (!showForm) {
+			fetchCustomer();
+		}
+	}, [fetchCustomer, showForm]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectedCustomer(null);
