@@ -68,8 +68,10 @@ export default function AvaliableTimePage() {
 	});
 
 	useEffect(() => {
-		fetchAvaliableTime();
-	}, [fetchAvaliableTime]);
+		if (!showForm) {
+			fetchAvaliableTime();
+		}
+	}, [fetchAvaliableTime, showForm]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectAvaliableTime(null);
