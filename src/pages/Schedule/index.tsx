@@ -56,7 +56,10 @@ export default function SchedulePage() {
 	});
 
 	useEffect(() => {
-		fetchSchedules();
+		if (!showForm) {
+			fetchSchedules();
+		}
+
 		const loadTimeSlots = async () => {
 			setTimeSlots([]);
 
@@ -81,12 +84,14 @@ export default function SchedulePage() {
 		selectedSchedule,
 		selectedSchedule?.date,
 		setTimeSlots,
+		showForm,
 	]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectedSchedule(null);
 		setShowForm(true);
-	}, []);
+		reset();
+	}, [reset]);
 
 	const handleEditClick = useCallback(
 		(scheduleId: number) => {

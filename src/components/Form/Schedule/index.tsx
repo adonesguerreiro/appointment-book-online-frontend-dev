@@ -51,7 +51,6 @@ export default function ScheduleForm({
 		handleSubmit,
 		register,
 		reset,
-		setValue,
 		control,
 		formState: { errors },
 	} = useForm<FormDataSchedule>({
@@ -67,6 +66,7 @@ export default function ScheduleForm({
 		const fetchData = async () => {
 			if (!token) return;
 			const companyId = decodeToken(token);
+
 			try {
 				const [customersData, servicesData] = await Promise.all([
 					getCustomers(companyId.id),
@@ -78,11 +78,11 @@ export default function ScheduleForm({
 
 				if (selectedSchedule) {
 					reset({
-						customerId: selectedSchedule?.customerId,
-						serviceId: selectedSchedule?.serviceId,
-						date: selectedSchedule?.date,
-						status: selectedSchedule?.status,
-						timeSlotAvailable: extractTimeFromDate(selectedSchedule!.date),
+						customerId: selectedSchedule.customerId,
+						serviceId: selectedSchedule.serviceId,
+						date: selectedSchedule.date,
+						status: selectedSchedule.status,
+						timeSlotAvailable: extractTimeFromDate(selectedSchedule.date),
 					});
 				}
 			} catch (err) {
@@ -91,7 +91,7 @@ export default function ScheduleForm({
 		};
 
 		fetchData();
-	}, [reset, selectedSchedule, setValue, token]);
+	}, [isEditing, reset, selectedSchedule, token]);
 
 	return (
 		<Card>
