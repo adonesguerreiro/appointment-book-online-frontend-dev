@@ -66,8 +66,10 @@ export default function ServicePage() {
 	});
 
 	useEffect(() => {
-		fetchService();
-	}, [fetchService]);
+		if (!showForm) {
+			fetchService();
+		}
+	}, [fetchService, showForm]);
 
 	const handleNewClick = useCallback(() => {
 		setSelectedService(null);
