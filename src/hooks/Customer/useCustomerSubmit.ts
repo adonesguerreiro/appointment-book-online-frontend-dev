@@ -8,13 +8,13 @@ import { useCustomToast } from "../useCustomToast";
 interface useCustomerSubmitProps {
 	selectedCustomer: FormDataCustomer | null;
 	fetchCustomer: () => Promise<void>;
-	setShowForm: (show: boolean) => void;
+	closeForm: () => void;
 }
 
 export const useCustomerSubmit = ({
 	selectedCustomer,
 	fetchCustomer,
-	setShowForm,
+	closeForm,
 }: useCustomerSubmitProps) => {
 	const { token } = useAuth();
 	const { showToast } = useCustomToast();
@@ -31,7 +31,7 @@ export const useCustomerSubmit = ({
 							status: "success",
 						});
 						fetchCustomer();
-						setShowForm(false);
+						closeForm();
 					}
 				} else {
 					await updateCustomer(Number(selectedCustomer?.id), data);
@@ -40,21 +40,14 @@ export const useCustomerSubmit = ({
 						status: "info",
 					});
 					fetchCustomer();
-					setShowForm(false);
+					closeForm();
 				}
 			} catch (error) {
 				console.error("Erro ao salvar dados", error);
 				handleError(error);
 			}
 		},
-		[
-			fetchCustomer,
-			handleError,
-			selectedCustomer,
-			setShowForm,
-			showToast,
-			token,
-		]
+		[closeForm, fetchCustomer, handleError, selectedCustomer, showToast, token]
 	);
 
 	return { handleSubmitCustomer };

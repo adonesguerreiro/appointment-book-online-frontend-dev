@@ -6,18 +6,18 @@ import { useHandleError } from "../useHandleError";
 
 interface useCustomerDeleteProps {
 	onClose: () => void;
-	setShowForm: (show: boolean) => void;
 	fetchCustomer: () => Promise<void>;
 	selectedCustomer: FormDataCustomer | null;
 	setSelectedCustomer: (customer: FormDataCustomer | null) => void;
+	closeForm: () => void;
 }
 
 export const useCustomerDelete = ({
 	onClose,
-	setShowForm,
 	fetchCustomer,
 	selectedCustomer,
 	setSelectedCustomer,
+	closeForm,
 }: useCustomerDeleteProps) => {
 	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
@@ -36,7 +36,7 @@ export const useCustomerDelete = ({
 					title: "Cliente excluído com sucesso.",
 					status: "success",
 				});
-				setShowForm(false);
+				closeForm();
 				setSelectedCustomer(null);
 				fetchCustomer();
 			}
@@ -46,12 +46,12 @@ export const useCustomerDelete = ({
 			handleError(error);
 		}
 	}, [
+		closeForm,
 		fetchCustomer,
 		handleError,
 		onClose,
 		selectedCustomer,
 		setSelectedCustomer,
-		setShowForm,
 		showToast,
 	]);
 

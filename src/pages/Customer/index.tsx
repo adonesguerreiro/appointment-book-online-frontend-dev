@@ -18,13 +18,14 @@ import { useCustomerOpenDeleteModal } from "../../hooks/Customer/useCustomerOpen
 import { usePagination } from "../../hooks/usePagination";
 import { useCustomerDelete } from "../../hooks/Customer/useCustomerDelete";
 import { useCustomerCancel } from "../../hooks/Customer/useCustomerCancel";
+import { useShowForm } from "../../hooks/useShowForm";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
 		resolver: yupResolver(customerSchema),
 	});
 	const { currentPage, handlePrev, handleNext } = usePagination();
-	const [showForm, setShowForm] = useState(false);
+	const { showForm, openForm, closeForm } = useShowForm();
 	const [selectedCustomer, setSelectedCustomer] =
 		useState<FormDataCustomer | null>(null);
 	const [isEditing, setIsEditing] = useState(false);
@@ -36,13 +37,13 @@ export default function CustomerPage() {
 	const { handleSubmitCustomer } = useCustomerSubmit({
 		selectedCustomer,
 		fetchCustomer,
-		setShowForm,
+		closeForm,
 	});
 
 	const { handleEditCustomer } = useCustomerEdit({
-		setShowForm,
 		setIsEditing,
 		setSelectedCustomer,
+		openForm,
 	});
 
 	const { handleCustomerOpenModalDelete } = useCustomerOpenDeleteModal({
@@ -52,7 +53,7 @@ export default function CustomerPage() {
 
 	const { handleDeleteCustomer } = useCustomerDelete({
 		onClose,
-		setShowForm,
+		closeForm,
 		fetchCustomer,
 		selectedCustomer,
 		setSelectedCustomer,
@@ -60,8 +61,8 @@ export default function CustomerPage() {
 
 	const { handleCancel } = useCustomerCancel({
 		reset,
-		setShowForm,
 		setIsEditing,
+		closeForm,
 	});
 
 	useEffect(() => {
@@ -72,8 +73,8 @@ export default function CustomerPage() {
 
 	const handleNewClick = useCallback(() => {
 		setSelectedCustomer(null);
-		setShowForm(true);
-	}, []);
+		openForm();
+	}, [openForm]);
 
 	const handleEditClick = useCallback(
 		(customerId: number) => {
