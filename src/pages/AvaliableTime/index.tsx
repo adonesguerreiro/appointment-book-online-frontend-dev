@@ -19,6 +19,7 @@ import ModalDelete from "../../components/Modal";
 import { useAvaliableTimeDelete } from "../../hooks/AvaliableTime/useAvaliableTimeDelete";
 import { useAvaliableTimeOpenModalDelete } from "../../hooks/AvaliableTime/useAvaliableTimeOpenDeleteModal";
 import { dayMapping } from "../../utils/dayMapping";
+import { useShowForm } from "../../hooks/useShowForm";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
@@ -26,7 +27,7 @@ export default function AvaliableTimePage() {
 	});
 
 	const { currentPage, handlePrev, handleNext } = usePagination();
-	const [showForm, setShowForm] = useState(false);
+	const { showForm, openForm, closeForm } = useShowForm();
 	const [selectedAvaliableTime, setSelectAvaliableTime] =
 		useState<FormDataAvailableTime | null>();
 	const [isEditing, setIsEditing] = useState(false);
@@ -38,13 +39,13 @@ export default function AvaliableTimePage() {
 	const { handleSubmitAvaliableTime } = useAvaliableTimeSubmit({
 		selectedAvaliableTime,
 		fetchAvaliableTime,
-		setShowForm,
+		closeForm,
 	});
 
 	const { handleEditAvaliableTime } = useAvaliableTimeEdit({
-		setShowForm,
 		setIsEditing,
 		setSelectAvaliableTime,
+		openForm,
 	});
 
 	const { handleAvaliableTimeOpenDeleteModal } =
@@ -55,16 +56,16 @@ export default function AvaliableTimePage() {
 
 	const { handleDeleteAvaliableTime } = useAvaliableTimeDelete({
 		onClose,
-		setShowForm,
 		fetchAvaliableTime,
 		selectedAvaliableTime,
 		setSelectAvaliableTime,
+		closeForm,
 	});
 
 	const { handleCancel } = useAvaliableTimeCancel({
 		reset,
-		setShowForm,
 		setIsEditing,
+		closeForm,
 	});
 
 	useEffect(() => {
@@ -75,8 +76,8 @@ export default function AvaliableTimePage() {
 
 	const handleNewClick = useCallback(() => {
 		setSelectAvaliableTime(null);
-		setShowForm(true);
-	}, []);
+		openForm();
+	}, [openForm]);
 
 	const handleEditClick = useCallback(
 		(avaliableTimeId: number) => {

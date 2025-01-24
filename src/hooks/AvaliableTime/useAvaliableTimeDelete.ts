@@ -6,19 +6,19 @@ import { useHandleError } from "../useHandleError";
 
 interface useAvaliableTimeDeleteProps {
 	onClose: () => void;
-	setShowForm: (show: boolean) => void;
 	fetchAvaliableTime: () => Promise<void>;
 	selectedAvaliableTime?: FormDataAvailableTime | null;
 	setSelectAvaliableTime: (
 		avaliableTimeId: FormDataAvailableTime | null
 	) => void;
+	closeForm: () => void;
 }
 export const useAvaliableTimeDelete = ({
 	onClose,
-	setShowForm,
 	fetchAvaliableTime,
 	selectedAvaliableTime,
 	setSelectAvaliableTime,
+	closeForm,
 }: useAvaliableTimeDeleteProps) => {
 	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
@@ -39,7 +39,7 @@ export const useAvaliableTimeDelete = ({
 					title: "Horário disponível excluído com sucesso.",
 					status: "success",
 				});
-				setShowForm(false);
+				closeForm();
 				setSelectAvaliableTime(null);
 				fetchAvaliableTime();
 			}
@@ -49,12 +49,12 @@ export const useAvaliableTimeDelete = ({
 			handleError(error);
 		}
 	}, [
+		closeForm,
 		fetchAvaliableTime,
 		handleError,
 		onClose,
 		selectedAvaliableTime,
 		setSelectAvaliableTime,
-		setShowForm,
 		showToast,
 	]);
 

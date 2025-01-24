@@ -7,13 +7,13 @@ import { useHandleError } from "../useHandleError";
 interface useAvaliableTimeSubmitProps {
 	selectedAvaliableTime?: FormDataAvailableTime | null;
 	fetchAvaliableTime: () => Promise<void>;
-	setShowForm: (show: boolean) => void;
+	closeForm: () => void;
 }
 
 export const useAvaliableTimeSubmit = ({
 	selectedAvaliableTime,
 	fetchAvaliableTime,
-	setShowForm,
+	closeForm,
 }: useAvaliableTimeSubmitProps) => {
 	const { token } = useAuth();
 	const { showToast } = useCustomToast();
@@ -29,7 +29,7 @@ export const useAvaliableTimeSubmit = ({
 						status: "success",
 					});
 					fetchAvaliableTime();
-					setShowForm(false);
+					closeForm();
 				}
 			} else {
 				await updateAvaliableTime(Number(selectedAvaliableTime?.id), data);
@@ -38,7 +38,7 @@ export const useAvaliableTimeSubmit = ({
 					status: "info",
 				});
 				fetchAvaliableTime();
-				setShowForm(false);
+				closeForm();
 			}
 		} catch (error) {
 			console.error("Erro ao salvar dados", error);
