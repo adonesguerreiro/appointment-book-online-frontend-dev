@@ -7,14 +7,14 @@ import { useAuth } from "../../context/AuthContext";
 
 interface useServiceSubmitProps {
 	fetchService: () => Promise<void>;
-	setShowForm: (show: boolean) => void;
 	selectedService?: FormDataService | null;
+	closeForm: () => void;
 }
 
 export const useServiceSubmit = ({
 	fetchService,
-	setShowForm,
 	selectedService,
+	closeForm,
 }: useServiceSubmitProps) => {
 	const { token } = useAuth();
 	const handleError = useHandleError();
@@ -32,7 +32,7 @@ export const useServiceSubmit = ({
 						});
 
 						fetchService();
-						setShowForm(false);
+						closeForm();
 					}
 				} else {
 					await updateService(Number(selectedService?.id), data);
@@ -41,14 +41,14 @@ export const useServiceSubmit = ({
 						status: "info",
 					});
 					fetchService();
-					setShowForm(false);
+					closeForm();
 				}
 			} catch (error) {
 				console.error("Erro ao salvar dados", error);
 				handleError(error);
 			}
 		},
-		[fetchService, handleError, selectedService, setShowForm, showToast, token]
+		[closeForm, fetchService, handleError, selectedService, showToast, token]
 	);
 
 	return { handleSubmitService };

@@ -18,32 +18,31 @@ import { useServiceOpenDeleteModal } from "../../hooks/Service/useServiceOpenDel
 import { usePagination } from "../../hooks/usePagination";
 import { useServiceDelete } from "../../hooks/Service/useServiceDelete";
 import { useServiceCancel } from "../../hooks/Service/useServiceCancel";
+import { useShowForm } from "../../hooks/useShowForm";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
 	});
 	const { currentPage, handlePrev, handleNext } = usePagination();
-
-	const [showForm, setShowForm] = useState(false);
+	const { showForm, openForm, closeForm } = useShowForm();
 	const [selectedService, setSelectedService] =
 		useState<FormDataService | null>();
 	const [isEditing, setIsEditing] = useState(false);
-
 	const { isOpen, onOpen, onClose } = useDisclosure();
-
 	const { fetchService, services, totalPages, loading } =
 		useService(currentPage);
+
 	const { handleSubmitService } = useServiceSubmit({
 		fetchService,
-		setShowForm,
+		closeForm,
 		selectedService,
 	});
 
 	const { handleEditService } = useServiceEdit({
 		setIsEditing,
 		setSelectedService,
-		setShowForm,
+		openForm,
 	});
 
 	const { handleServiceOpenModalDelete } = useServiceOpenDeleteModal({
@@ -53,16 +52,16 @@ export default function ServicePage() {
 
 	const { handleDeleteService } = useServiceDelete({
 		onClose,
-		setShowForm,
 		fetchService,
 		selectedService,
 		setSelectedService,
+		closeForm,
 	});
 
 	const { handleCancel } = useServiceCancel({
 		reset,
-		setShowForm,
 		setIsEditing,
+		closeForm,
 	});
 
 	useEffect(() => {
@@ -73,8 +72,8 @@ export default function ServicePage() {
 
 	const handleNewClick = useCallback(() => {
 		setSelectedService(null);
-		setShowForm(true);
-	}, []);
+		openForm();
+	}, [openForm]);
 
 	const handleEditClick = useCallback(
 		(serviceId: number) => {

@@ -6,17 +6,17 @@ import { useHandleError } from "../useHandleError";
 
 interface useServiceDeleteProps {
 	onClose: () => void;
-	setShowForm: (show: boolean) => void;
 	fetchService: () => Promise<void>;
 	selectedService?: FormDataService | null;
 	setSelectedService: (service: FormDataService | null) => void;
+	closeForm: () => void;
 }
 export const useServiceDelete = ({
 	onClose,
-	setShowForm,
 	fetchService,
 	selectedService,
 	setSelectedService,
+	closeForm,
 }: useServiceDeleteProps) => {
 	const { showToast } = useCustomToast();
 	const handleError = useHandleError();
@@ -35,7 +35,7 @@ export const useServiceDelete = ({
 					title: "Serviço excluído com sucesso.",
 					status: "success",
 				});
-				setShowForm(false);
+				closeForm();
 				setSelectedService(null);
 				fetchService();
 			}
@@ -45,12 +45,12 @@ export const useServiceDelete = ({
 			handleError(error);
 		}
 	}, [
+		closeForm,
 		fetchService,
 		handleError,
 		onClose,
 		selectedService,
 		setSelectedService,
-		setShowForm,
 		showToast,
 	]);
 
