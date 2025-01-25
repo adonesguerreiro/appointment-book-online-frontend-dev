@@ -4,15 +4,15 @@ import { getUnavailableTimeById } from "../../services/api";
 
 interface useUnavaliableTimeProps {
 	setIsEditing: (editing: boolean) => void;
-	setShowForm: (show: boolean) => void;
 	setSelectedUnavailableTime: (
 		unavailableTime: FormDataUnavailableTime
 	) => void;
+	openForm: () => void;
 }
 export const useUnavaliableTimeEdit = ({
 	setIsEditing,
-	setShowForm,
 	setSelectedUnavailableTime,
+	openForm,
 }: useUnavaliableTimeProps) => {
 	const handleEditUnavailableTime = useCallback(
 		async (unavailableTimeId: number) => {
@@ -22,12 +22,12 @@ export const useUnavaliableTimeEdit = ({
 					unavailableTimeId
 				);
 				setSelectedUnavailableTime(unavailableTimeData.data);
-				setShowForm(true);
+				openForm();
 			} catch (error) {
 				console.error("Erro ao buscar dados", error);
 			}
 		},
-		[setIsEditing, setSelectedUnavailableTime, setShowForm]
+		[openForm, setIsEditing, setSelectedUnavailableTime]
 	);
 
 	return {

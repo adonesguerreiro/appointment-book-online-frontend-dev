@@ -5,17 +5,17 @@ import { deleteUnavailableTime } from "../../services/api";
 
 interface useUnavailableTimeDeleteProps {
 	onClose: () => void;
-	setShowForm: (show: boolean) => void;
 	fetchUnavaliableTime: () => Promise<void>;
 	selectedUnavailableTime?: FormDataUnavailableTime | null;
 	setSelectedUnavailableTime: (time: FormDataUnavailableTime | null) => void;
+	closeForm: () => void;
 }
 export const useUnavaliableTimeDelete = ({
 	onClose,
-	setShowForm,
 	fetchUnavaliableTime,
 	selectedUnavailableTime,
 	setSelectedUnavailableTime,
+	closeForm,
 }: useUnavailableTimeDeleteProps) => {
 	const { showToast } = useCustomToast();
 
@@ -35,7 +35,7 @@ export const useUnavaliableTimeDelete = ({
 					title: "Horário indisponível excluído com sucesso.",
 					status: "success",
 				});
-				setShowForm(false);
+				closeForm();
 				setSelectedUnavailableTime(null);
 				fetchUnavaliableTime();
 			}
@@ -43,11 +43,11 @@ export const useUnavaliableTimeDelete = ({
 			console.error("Erro ao excluir horário disponível", error);
 		}
 	}, [
+		closeForm,
 		fetchUnavaliableTime,
 		onClose,
 		selectedUnavailableTime,
 		setSelectedUnavailableTime,
-		setShowForm,
 		showToast,
 	]);
 

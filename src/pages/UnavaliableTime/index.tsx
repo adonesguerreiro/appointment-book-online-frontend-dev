@@ -18,33 +18,31 @@ import { useUnavaliableTimeEdit } from "../../hooks/UnavaliableTime/useUnavaliab
 import { useUnavaliableTimeOpenModalDelete } from "../../hooks/UnavaliableTime/useUnavaliableTimeOpenDeleteModal";
 import { useUnavaliableTimeDelete } from "../../hooks/UnavaliableTime/useUnavaliableTimeDelete";
 import { useUnavailableTimeCancel } from "../../hooks/UnavaliableTime/useUnavaliableTimeCancel";
+import { useShowForm } from "../../hooks/useShowForm";
 
 export default function UnavaliableTimePage() {
-	const [showForm, setShowForm] = useState(false);
+	const { showForm, openForm, closeForm } = useShowForm();
 	const [selectedUnavailableTime, setSelectedUnavailableTime] =
 		useState<FormDataUnavailableTime | null>(null);
 	const [isEditing, setIsEditing] = useState(false);
-
 	const { reset } = useForm<FormDataUnavailableTime>({
 		resolver: yupResolver(unavailableTimeSchema),
 	});
-
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { fetchUnavaliableTime, unavaliables, totalPages, loading } =
 		useUnavaliableTime(currentPage);
-
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { handleSubmitUnavailableTime } = useUnavaliableTimeSubmit({
 		fetchUnavaliableTime,
-		setShowForm,
 		selectedUnavailableTime,
+		closeForm,
 	});
 
 	const { handleEditUnavailableTime } = useUnavaliableTimeEdit({
 		setIsEditing,
-		setShowForm,
 		setSelectedUnavailableTime,
+		openForm,
 	});
 
 	const { handleUnavaliableTimeOpenModalDelete } =
@@ -55,16 +53,16 @@ export default function UnavaliableTimePage() {
 
 	const { handleDeleteUnavailableTime } = useUnavaliableTimeDelete({
 		onClose,
-		setShowForm,
 		fetchUnavaliableTime,
 		selectedUnavailableTime,
 		setSelectedUnavailableTime,
+		closeForm,
 	});
 
 	const { handleCancel } = useUnavailableTimeCancel({
 		reset,
-		setShowForm,
 		setIsEditing,
+		closeForm,
 	});
 
 	useEffect(() => {
@@ -73,8 +71,8 @@ export default function UnavaliableTimePage() {
 
 	const handleNewClick = useCallback(() => {
 		setSelectedUnavailableTime(null);
-		setShowForm(true);
-	}, []);
+		openForm();
+	}, [openForm]);
 
 	const handleEditClick = useCallback(
 		(unavailableTimeId: number) => {

@@ -11,12 +11,12 @@ import { useHandleError } from "../useHandleError";
 interface useUnavaliableTimeSubmitProps {
 	selectedUnavailableTime: FormDataUnavailableTime | null;
 	fetchUnavaliableTime: () => Promise<void>;
-	setShowForm: (show: boolean) => void;
+	closeForm: () => void;
 }
 export const useUnavaliableTimeSubmit = ({
 	fetchUnavaliableTime,
-	setShowForm,
 	selectedUnavailableTime,
+	closeForm,
 }: useUnavaliableTimeSubmitProps) => {
 	const { token } = useAuth();
 	const handleError = useHandleError();
@@ -33,7 +33,7 @@ export const useUnavaliableTimeSubmit = ({
 							status: "success",
 						});
 						fetchUnavaliableTime();
-						setShowForm(false);
+						closeForm();
 					}
 				} else {
 					await updateUnavailableTime(
@@ -45,7 +45,7 @@ export const useUnavaliableTimeSubmit = ({
 						status: "info",
 					});
 					fetchUnavaliableTime();
-					setShowForm(false);
+					closeForm();
 				}
 			} catch (error) {
 				console.error("Erro ao salvar dados", error);
@@ -53,10 +53,10 @@ export const useUnavaliableTimeSubmit = ({
 			}
 		},
 		[
+			closeForm,
 			fetchUnavaliableTime,
 			handleError,
 			selectedUnavailableTime,
-			setShowForm,
 			showToast,
 			token,
 		]
