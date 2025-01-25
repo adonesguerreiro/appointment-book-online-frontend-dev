@@ -3,14 +3,14 @@ import { FormDataCustomer } from "../../interface/FormDataCustomer";
 
 interface useCustomerCancelProps {
 	reset: UseFormReset<FormDataCustomer>;
-	setIsEditing: (editing: boolean) => void;
 	closeForm: () => void;
+	stopEditing: () => void;
 }
 
 export const useCustomerCancel = ({
 	reset,
-	setIsEditing,
 	closeForm,
+	stopEditing,
 }: useCustomerCancelProps) => {
 	const handleCancel = () => {
 		reset({
@@ -18,7 +18,7 @@ export const useCustomerCancel = ({
 			mobile: "",
 		});
 		closeForm();
-		setIsEditing(false);
+		stopEditing();
 	};
 
 	return { handleCancel };

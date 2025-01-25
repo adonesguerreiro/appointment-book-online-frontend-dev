@@ -2,19 +2,19 @@ import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { getCustomerById } from "../../services/api";
 
 interface useCustomerEditProps {
-	setIsEditing: (editing: boolean) => void;
 	setSelectedCustomer: (schedule: FormDataCustomer | null) => void;
 	openForm: () => void;
+	startEditing: () => void;
 }
 
 export const useCustomerEdit = ({
-	setIsEditing,
 	setSelectedCustomer,
 	openForm,
+	startEditing,
 }: useCustomerEditProps) => {
 	const handleEditCustomer = async (customerId: number) => {
 		try {
-			setIsEditing(true);
+			startEditing();
 			const customerData = await getCustomerById(customerId);
 			setSelectedCustomer(customerData.data);
 			openForm();

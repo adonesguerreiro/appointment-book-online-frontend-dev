@@ -19,6 +19,7 @@ import { usePagination } from "../../hooks/usePagination";
 import { useCustomerDelete } from "../../hooks/Customer/useCustomerDelete";
 import { useCustomerCancel } from "../../hooks/Customer/useCustomerCancel";
 import { useShowForm } from "../../hooks/useShowForm";
+import { useEditMode } from "../../hooks/useEditMode";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
@@ -26,9 +27,9 @@ export default function CustomerPage() {
 	});
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();
+	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedCustomer, setSelectedCustomer] =
 		useState<FormDataCustomer | null>(null);
-	const [isEditing, setIsEditing] = useState(false);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { customers, totalPages, loading, fetchCustomer } =
@@ -41,9 +42,9 @@ export default function CustomerPage() {
 	});
 
 	const { handleEditCustomer } = useCustomerEdit({
-		setIsEditing,
 		setSelectedCustomer,
 		openForm,
+		startEditing,
 	});
 
 	const { handleCustomerOpenModalDelete } = useCustomerOpenDeleteModal({
@@ -61,8 +62,8 @@ export default function CustomerPage() {
 
 	const { handleCancel } = useCustomerCancel({
 		reset,
-		setIsEditing,
 		closeForm,
+		stopEditing,
 	});
 
 	useEffect(() => {
