@@ -3,21 +3,21 @@ import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime
 import { getUnavailableTimeById } from "../../services/api";
 
 interface useUnavaliableTimeProps {
-	setIsEditing: (editing: boolean) => void;
 	setSelectedUnavailableTime: (
 		unavailableTime: FormDataUnavailableTime
 	) => void;
 	openForm: () => void;
+	startEditing: () => void;
 }
 export const useUnavaliableTimeEdit = ({
-	setIsEditing,
 	setSelectedUnavailableTime,
 	openForm,
+	startEditing,
 }: useUnavaliableTimeProps) => {
 	const handleEditUnavailableTime = useCallback(
 		async (unavailableTimeId: number) => {
 			try {
-				setIsEditing(true);
+				startEditing();
 				const unavailableTimeData = await getUnavailableTimeById(
 					unavailableTimeId
 				);
@@ -27,7 +27,7 @@ export const useUnavaliableTimeEdit = ({
 				console.error("Erro ao buscar dados", error);
 			}
 		},
-		[openForm, setIsEditing, setSelectedUnavailableTime]
+		[openForm, setSelectedUnavailableTime, startEditing]
 	);
 
 	return {

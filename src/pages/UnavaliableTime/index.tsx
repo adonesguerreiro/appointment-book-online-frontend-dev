@@ -19,12 +19,13 @@ import { useUnavaliableTimeOpenModalDelete } from "../../hooks/UnavaliableTime/u
 import { useUnavaliableTimeDelete } from "../../hooks/UnavaliableTime/useUnavaliableTimeDelete";
 import { useUnavailableTimeCancel } from "../../hooks/UnavaliableTime/useUnavaliableTimeCancel";
 import { useShowForm } from "../../hooks/useShowForm";
+import { useEditMode } from "../../hooks/useEditMode";
 
 export default function UnavaliableTimePage() {
 	const { showForm, openForm, closeForm } = useShowForm();
+	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedUnavailableTime, setSelectedUnavailableTime] =
 		useState<FormDataUnavailableTime | null>(null);
-	const [isEditing, setIsEditing] = useState(false);
 	const { reset } = useForm<FormDataUnavailableTime>({
 		resolver: yupResolver(unavailableTimeSchema),
 	});
@@ -40,9 +41,9 @@ export default function UnavaliableTimePage() {
 	});
 
 	const { handleEditUnavailableTime } = useUnavaliableTimeEdit({
-		setIsEditing,
 		setSelectedUnavailableTime,
 		openForm,
+		startEditing,
 	});
 
 	const { handleUnavaliableTimeOpenModalDelete } =
@@ -61,8 +62,8 @@ export default function UnavaliableTimePage() {
 
 	const { handleCancel } = useUnavailableTimeCancel({
 		reset,
-		setIsEditing,
 		closeForm,
+		stopEditing,
 	});
 
 	useEffect(() => {

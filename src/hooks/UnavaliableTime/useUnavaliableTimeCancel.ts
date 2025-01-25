@@ -3,14 +3,14 @@ import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime
 
 interface useUnavailableTimeCancelProps {
 	reset: UseFormReset<FormDataUnavailableTime>;
-	setIsEditing: (editing: boolean) => void;
 	closeForm: () => void;
+	stopEditing: () => void;
 }
 
 export const useUnavailableTimeCancel = ({
 	reset,
-	setIsEditing,
 	closeForm,
+	stopEditing,
 }: useUnavailableTimeCancelProps) => {
 	const handleCancel = () => {
 		reset({
@@ -19,7 +19,7 @@ export const useUnavailableTimeCancel = ({
 			endTime: "",
 		});
 		closeForm();
-		setIsEditing(false);
+		stopEditing();
 	};
 
 	return { handleCancel };
