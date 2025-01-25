@@ -3,20 +3,20 @@ import { FormDataService } from "../../interface/FormDataService";
 import { getServicesById } from "../../services/api";
 
 interface useServiceEditProps {
-	setIsEditing: (editing: boolean) => void;
 	setSelectedService: (unavailableTime: FormDataService) => void;
 	openForm: () => void;
+	startEditing: () => void;
 }
 
 export const useServiceEdit = ({
-	setIsEditing,
 	setSelectedService,
 	openForm,
+	startEditing,
 }: useServiceEditProps) => {
 	const handleEditService = useCallback(
 		async (serviceId: number) => {
 			try {
-				setIsEditing(true);
+				startEditing();
 				const serviceData = await getServicesById(serviceId);
 				setSelectedService(serviceData.data);
 				openForm();
@@ -24,7 +24,7 @@ export const useServiceEdit = ({
 				console.error("Erro ao buscar dados", error);
 			}
 		},
-		[openForm, setIsEditing, setSelectedService]
+		[openForm, setSelectedService, startEditing]
 	);
 
 	return {

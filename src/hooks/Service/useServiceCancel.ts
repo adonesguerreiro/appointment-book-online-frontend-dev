@@ -3,14 +3,14 @@ import { FormDataService } from "../../interface/FormDataService";
 
 interface useServiceCancelProps {
 	reset: UseFormReset<FormDataService>;
-	setIsEditing: (editing: boolean) => void;
 	closeForm: () => void;
+	stopEditing: () => void;
 }
 
 export const useServiceCancel = ({
 	reset,
 	closeForm,
-	setIsEditing,
+	stopEditing,
 }: useServiceCancelProps) => {
 	const handleCancel = () => {
 		reset({
@@ -19,7 +19,7 @@ export const useServiceCancel = ({
 			price: 0,
 		});
 		closeForm();
-		setIsEditing(false);
+		stopEditing();
 	};
 
 	return { handleCancel };

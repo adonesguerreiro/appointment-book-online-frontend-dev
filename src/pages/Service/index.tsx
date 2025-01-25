@@ -19,6 +19,7 @@ import { usePagination } from "../../hooks/usePagination";
 import { useServiceDelete } from "../../hooks/Service/useServiceDelete";
 import { useServiceCancel } from "../../hooks/Service/useServiceCancel";
 import { useShowForm } from "../../hooks/useShowForm";
+import { useEditMode } from "../../hooks/useEditMode";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -26,10 +27,11 @@ export default function ServicePage() {
 	});
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();
+	const { isEditing, startEditing, stopEditing } = useEditMode();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [selectedService, setSelectedService] =
 		useState<FormDataService | null>();
-	const [isEditing, setIsEditing] = useState(false);
-	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	const { fetchService, services, totalPages, loading } =
 		useService(currentPage);
 
@@ -40,9 +42,9 @@ export default function ServicePage() {
 	});
 
 	const { handleEditService } = useServiceEdit({
-		setIsEditing,
 		setSelectedService,
 		openForm,
+		startEditing,
 	});
 
 	const { handleServiceOpenModalDelete } = useServiceOpenDeleteModal({
@@ -60,8 +62,8 @@ export default function ServicePage() {
 
 	const { handleCancel } = useServiceCancel({
 		reset,
-		setIsEditing,
 		closeForm,
+		stopEditing,
 	});
 
 	useEffect(() => {
