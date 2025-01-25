@@ -4,17 +4,17 @@ import { FormDataSchedule } from "../../interface/FormDataSchedule";
 interface useScheduleCancelProps {
 	reset: UseFormReset<FormDataSchedule>;
 	setSelectedDate: (date: string) => void;
-	setIsEditing: (editing: boolean) => void;
 	setSelectedSchedule: (schedule: FormDataSchedule | null) => void;
 	closeForm: () => void;
+	stopEditing: () => void;
 }
 
 export const useScheduleCancel = ({
-	setIsEditing,
 	setSelectedSchedule,
 	setSelectedDate,
 	reset,
 	closeForm,
+	stopEditing,
 }: useScheduleCancelProps) => {
 	const handleCancel = () => {
 		reset({
@@ -25,7 +25,7 @@ export const useScheduleCancel = ({
 			timeSlotAvailable: "",
 		});
 		closeForm();
-		setIsEditing(false);
+		stopEditing();
 		setSelectedSchedule(null);
 		setSelectedDate("");
 	};

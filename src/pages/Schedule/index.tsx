@@ -18,6 +18,7 @@ import { useScheduleSubmit } from "../../hooks/Schedule/useScheduleSubmit";
 import { useScheduleEdit } from "../../hooks/Schedule/useScheduleEdit";
 import { useScheduleCancel } from "../../hooks/Schedule/useScheduleCancel";
 import { useShowForm } from "../../hooks/useShowForm";
+import { useEditMode } from "../../hooks/useEditMode";
 
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({
@@ -28,12 +29,11 @@ export default function SchedulePage() {
 	const { fetchSchedules, schedules, totalPages, loading } =
 		useSchedules(currentPage);
 	const { timeSlots, setTimeSlots, fetchDataTimeSlot } = useTimeSlots();
+	const { isEditing, startEditing, stopEditing } = useEditMode();
+	const { isOpen, onClose } = useDisclosure();
 	const [selectedDate, setSelectedDate] = useState<string>();
 	const [selectedSchedule, setSelectedSchedule] =
 		useState<FormDataSchedule | null>();
-	const [isEditing, setIsEditing] = useState(false);
-
-	const { isOpen, onClose } = useDisclosure();
 
 	const { handleSubmitSchedule } = useScheduleSubmit({
 		selectedSchedule,
@@ -42,17 +42,17 @@ export default function SchedulePage() {
 	});
 
 	const { handleEditSchedule } = useScheduleEdit({
-		setIsEditing,
 		setSelectedSchedule,
 		openForm,
+		startEditing,
 	});
 
 	const { handleCancel } = useScheduleCancel({
 		reset,
 		setSelectedDate,
-		setIsEditing,
 		setSelectedSchedule,
 		closeForm,
+		stopEditing,
 	});
 
 	useEffect(() => {

@@ -2,19 +2,19 @@ import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { getScheduleById } from "../../services/api";
 
 interface useScheduleSubmitEditProps {
-	setIsEditing: (editing: boolean) => void;
 	setSelectedSchedule: (schedule: FormDataSchedule | null) => void;
 	openForm: () => void;
+	startEditing: () => void;
 }
 
 export const useScheduleEdit = ({
-	setIsEditing,
 	setSelectedSchedule,
 	openForm,
+	startEditing,
 }: useScheduleSubmitEditProps) => {
 	const handleEditSchedule = async (scheduleId: number) => {
 		try {
-			setIsEditing(true);
+			startEditing();
 			const scheduleData = await getScheduleById(scheduleId);
 			setSelectedSchedule(scheduleData.data);
 			openForm();
