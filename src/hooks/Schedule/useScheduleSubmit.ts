@@ -8,13 +8,13 @@ import { useCustomToast } from "../useCustomToast";
 interface useScheduleSubmitProps {
 	selectedSchedule?: FormDataSchedule | null;
 	fetchSchedules: () => Promise<void>;
-	setShowForm: (show: boolean) => void;
+	closeForm: () => void;
 }
 
 export const useScheduleSubmit = ({
 	selectedSchedule,
 	fetchSchedules,
-	setShowForm,
+	closeForm,
 }: useScheduleSubmitProps) => {
 	const { token } = useAuth();
 	const handleError = useHandleError();
@@ -31,7 +31,7 @@ export const useScheduleSubmit = ({
 							status: "success",
 						});
 						fetchSchedules();
-						setShowForm(false);
+						closeForm();
 					}
 				} else {
 					await updateSchedule(Number(selectedSchedule?.id), data);
@@ -40,21 +40,14 @@ export const useScheduleSubmit = ({
 						status: "info",
 					});
 					fetchSchedules();
-					setShowForm(false);
+					closeForm();
 				}
 			} catch (error) {
 				console.error("Erro ao salvar dados", error);
 				handleError(error);
 			}
 		},
-		[
-			token,
-			selectedSchedule,
-			showToast,
-			fetchSchedules,
-			setShowForm,
-			handleError,
-		]
+		[token, selectedSchedule, showToast, fetchSchedules, closeForm, handleError]
 	);
 
 	return {

@@ -17,18 +17,18 @@ import { usePagination } from "../../hooks/usePagination";
 import { useScheduleSubmit } from "../../hooks/Schedule/useScheduleSubmit";
 import { useScheduleEdit } from "../../hooks/Schedule/useScheduleEdit";
 import { useScheduleCancel } from "../../hooks/Schedule/useScheduleCancel";
+import { useShowForm } from "../../hooks/useShowForm";
 
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
 	});
+	const { showForm, openForm, closeForm } = useShowForm();
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { fetchSchedules, schedules, totalPages, loading } =
 		useSchedules(currentPage);
 	const { timeSlots, setTimeSlots, fetchDataTimeSlot } = useTimeSlots();
-
 	const [selectedDate, setSelectedDate] = useState<string>();
-	const [showForm, setShowForm] = useState(false);
 	const [selectedSchedule, setSelectedSchedule] =
 		useState<FormDataSchedule | null>();
 	const [isEditing, setIsEditing] = useState(false);
@@ -38,21 +38,21 @@ export default function SchedulePage() {
 	const { handleSubmitSchedule } = useScheduleSubmit({
 		selectedSchedule,
 		fetchSchedules,
-		setShowForm,
+		closeForm,
 	});
 
 	const { handleEditSchedule } = useScheduleEdit({
-		setShowForm,
 		setIsEditing,
 		setSelectedSchedule,
+		openForm,
 	});
 
 	const { handleCancel } = useScheduleCancel({
 		reset,
 		setSelectedDate,
-		setShowForm,
 		setIsEditing,
 		setSelectedSchedule,
+		closeForm,
 	});
 
 	useEffect(() => {
@@ -89,9 +89,9 @@ export default function SchedulePage() {
 
 	const handleNewClick = useCallback(() => {
 		setSelectedSchedule(null);
-		setShowForm(true);
+		openForm();
 		reset();
-	}, [reset]);
+	}, [openForm, reset]);
 
 	const handleEditClick = useCallback(
 		(scheduleId: number) => {
