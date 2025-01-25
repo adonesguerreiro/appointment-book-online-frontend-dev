@@ -2,19 +2,19 @@ import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 import { getAvaliableTimeById } from "../../services/api";
 
 interface useAvaliableTimeEditProps {
-	setIsEditing: (editing: boolean) => void;
 	setSelectAvaliableTime: (avaliableTime: FormDataAvailableTime) => void;
 	openForm: () => void;
+	startEditing: () => void;
 }
 
 export const useAvaliableTimeEdit = ({
-	setIsEditing,
 	setSelectAvaliableTime,
 	openForm,
+	startEditing,
 }: useAvaliableTimeEditProps) => {
 	const handleEditAvaliableTime = async (avaliableTimeId: number) => {
 		try {
-			setIsEditing(true);
+			startEditing();
 			const avaliableTimeData = await getAvaliableTimeById(avaliableTimeId);
 			setSelectAvaliableTime(avaliableTimeData.data);
 			openForm();

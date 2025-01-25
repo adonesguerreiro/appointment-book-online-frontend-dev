@@ -3,14 +3,14 @@ import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 
 interface useAvaliableTimeCancelProps {
 	reset: UseFormReset<FormDataAvailableTime>;
-	setIsEditing: (editing: boolean) => void;
 	closeForm: () => void;
+	stopEditing: () => void;
 }
 
 export const useAvaliableTimeCancel = ({
 	reset,
-	setIsEditing,
 	closeForm,
+	stopEditing,
 }: useAvaliableTimeCancelProps) => {
 	const handleCancel = () => {
 		reset({
@@ -20,7 +20,7 @@ export const useAvaliableTimeCancel = ({
 			interval: 0,
 		});
 		closeForm();
-		setIsEditing(false);
+		stopEditing();
 	};
 
 	return { handleCancel };

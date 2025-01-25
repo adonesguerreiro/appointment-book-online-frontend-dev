@@ -20,6 +20,7 @@ import { useAvaliableTimeDelete } from "../../hooks/AvaliableTime/useAvaliableTi
 import { useAvaliableTimeOpenModalDelete } from "../../hooks/AvaliableTime/useAvaliableTimeOpenDeleteModal";
 import { dayMapping } from "../../utils/dayMapping";
 import { useShowForm } from "../../hooks/useShowForm";
+import { useEditMode } from "../../hooks/useEditMode";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
@@ -28,9 +29,9 @@ export default function AvaliableTimePage() {
 
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();
+	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedAvaliableTime, setSelectAvaliableTime] =
 		useState<FormDataAvailableTime | null>();
-	const [isEditing, setIsEditing] = useState(false);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { availableTime, totalPages, loading, fetchAvaliableTime } =
@@ -43,9 +44,9 @@ export default function AvaliableTimePage() {
 	});
 
 	const { handleEditAvaliableTime } = useAvaliableTimeEdit({
-		setIsEditing,
 		setSelectAvaliableTime,
 		openForm,
+		startEditing,
 	});
 
 	const { handleAvaliableTimeOpenDeleteModal } =
@@ -64,8 +65,8 @@ export default function AvaliableTimePage() {
 
 	const { handleCancel } = useAvaliableTimeCancel({
 		reset,
-		setIsEditing,
 		closeForm,
+		stopEditing,
 	});
 
 	useEffect(() => {
