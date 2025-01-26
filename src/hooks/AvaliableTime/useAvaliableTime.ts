@@ -14,11 +14,11 @@ export const useAvaliableTime = (currentPage: number) => {
 	const [totalPages, setTotalPages] = useState(0);
 	const { token, logout } = useAuth();
 	const navigate = useNavigate();
-	const { loading, setLoading } = useLoading();
+	const { loading, startLoading, stopLoading } = useLoading();
 
 	const fetchAvaliableTime = useCallback(async () => {
 		if (!token) return;
-		setLoading(true);
+		startLoading();
 
 		try {
 			const companyId = decodeToken(token);
@@ -32,9 +32,9 @@ export const useAvaliableTime = (currentPage: number) => {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
-			setLoading(false);
+			stopLoading();
 		}
-	}, [token, setLoading, currentPage, logout, navigate]);
+	}, [token, startLoading, currentPage, logout, navigate, stopLoading]);
 
 	return { availableTime, totalPages, loading, fetchAvaliableTime };
 };

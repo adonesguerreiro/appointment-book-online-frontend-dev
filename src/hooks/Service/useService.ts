@@ -11,11 +11,11 @@ export const useService = (currentPage: number) => {
 	const [totalPages, setTotalPages] = useState(0);
 	const [services, setServices] = useState<FormDataService[]>([]);
 	const navigate = useNavigate();
-	const { loading, setLoading } = useLoading();
+	const { loading, startLoading, stopLoading } = useLoading();
 	const { token, logout } = useAuth();
 	const fetchService = useCallback(async () => {
 		if (!token) return;
-		setLoading(true);
+		startLoading();
 
 		try {
 			const companyId = decodeToken(token);
@@ -26,9 +26,9 @@ export const useService = (currentPage: number) => {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
-			setLoading(false);
+			stopLoading();
 		}
-	}, [token, setLoading, currentPage, logout, navigate]);
+	}, [token, startLoading, currentPage, logout, navigate, stopLoading]);
 
 	return { fetchService, services, totalPages, loading };
 };

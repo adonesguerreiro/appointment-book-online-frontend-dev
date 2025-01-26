@@ -14,10 +14,10 @@ export const useUnavaliableTime = (currentPage: number) => {
 	const [totalPages, setTotalPages] = useState(0);
 	const navigate = useNavigate();
 	const { token, logout } = useAuth();
-	const { loading, setLoading } = useLoading();
+	const { loading, startLoading, stopLoading } = useLoading();
 	const fetchUnavaliableTime = useCallback(async () => {
 		if (!token) return;
-		setLoading(true);
+		startLoading();
 
 		try {
 			const companyId = decodeToken(token);
@@ -28,9 +28,9 @@ export const useUnavaliableTime = (currentPage: number) => {
 			handleAuthError(error, logout, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
-			setLoading(false);
+			stopLoading();
 		}
-	}, [token, setLoading, currentPage, logout, navigate]);
+	}, [token, startLoading, currentPage, logout, navigate, stopLoading]);
 
 	return { fetchUnavaliableTime, unavaliables, totalPages, loading };
 };
