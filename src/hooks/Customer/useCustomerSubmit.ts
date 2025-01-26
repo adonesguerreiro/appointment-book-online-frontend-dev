@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { createCustomer, updateCustomer } from "../../services/api";
 import { useHandleError } from "../useHandleError";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useCustomToast } from "../useCustomToast";
 
 interface useCustomerSubmitProps {

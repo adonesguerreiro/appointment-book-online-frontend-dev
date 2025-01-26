@@ -20,7 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { scheduleSchema } from "../../../validators/scheduleSchema";
 import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../hooks/useAuth";
 import { getCustomers, getServices } from "../../../services/api";
 import DatePicker from "react-datepicker";
 import { ptBR } from "date-fns/locale";

@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 import { createAvaliableTime, updateAvaliableTime } from "../../services/api";
 import { useCustomToast } from "../useCustomToast";

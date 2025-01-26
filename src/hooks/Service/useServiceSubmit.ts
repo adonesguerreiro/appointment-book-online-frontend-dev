@@ -3,7 +3,7 @@ import { FormDataService } from "../../interface/FormDataService";
 import { createService, updateService } from "../../services/api";
 import { useCustomToast } from "../useCustomToast";
 import { useHandleError } from "../useHandleError";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 interface useServiceSubmitProps {
 	fetchService: () => Promise<void>;

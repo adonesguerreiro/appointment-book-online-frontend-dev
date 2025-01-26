@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "../useLoading";
 import { useCustomToast } from "../useCustomToast";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { updateUser } from "../../services/api";
 import { useHandleError } from "../useHandleError";
 import { FormDataUser } from "../../interface/FormDataUser";

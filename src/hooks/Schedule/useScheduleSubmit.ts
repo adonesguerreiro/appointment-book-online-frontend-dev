@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { createSchedule, updateSchedule } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useHandleError } from "../useHandleError";
 import { useCustomToast } from "../useCustomToast";
 

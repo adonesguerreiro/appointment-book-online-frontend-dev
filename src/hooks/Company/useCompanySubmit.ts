@@ -1,7 +1,7 @@
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { updateCompany, updateAddress } from "../../services/api";
 import { viaCep } from "../../services/viaCep";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useLoading } from "../useLoading";
 import { useCustomToast } from "../useCustomToast";
 import { yupResolver } from "@hookform/resolvers/yup";

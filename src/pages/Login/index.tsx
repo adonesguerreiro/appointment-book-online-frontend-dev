@@ -20,7 +20,7 @@ import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { auth } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
 

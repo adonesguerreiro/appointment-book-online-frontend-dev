@@ -4,7 +4,7 @@ import {
 	createUnavailableTime,
 	updateUnavailableTime,
 } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useCustomToast } from "../useCustomToast";
 import { useHandleError } from "../useHandleError";
 
