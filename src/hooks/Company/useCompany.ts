@@ -1,5 +1,5 @@
 import { getCompany } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { decodeToken } from "../../utils/decodeToken";
 import { UseFormReset } from "react-hook-form";

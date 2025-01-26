@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { getSchedules } from "../../services/api";
 import { decodeToken } from "../../utils/decodeToken";

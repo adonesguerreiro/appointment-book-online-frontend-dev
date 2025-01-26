@@ -1,6 +1,6 @@
 import { FormDataUser } from "./../../interface/FormDataUser";
 import { useCallback } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { getUser } from "../../services/api";
 import { decodeToken } from "../../utils/decodeToken";
 import { UseFormReset } from "react-hook-form";

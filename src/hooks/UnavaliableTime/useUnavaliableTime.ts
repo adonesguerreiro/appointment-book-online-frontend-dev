@@ -3,7 +3,7 @@ import { getUnavailableTimes } from "../../services/api";
 import { useLoading } from "../useLoading";
 import { decodeToken } from "../../utils/decodeToken";
 import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../utils/handleAuthError";
 

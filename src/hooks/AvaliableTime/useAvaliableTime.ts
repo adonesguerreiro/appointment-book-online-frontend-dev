@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { getAvaliableTimes } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useLoading } from "../useLoading";

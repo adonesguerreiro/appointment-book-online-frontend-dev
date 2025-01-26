@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../useAuth";
 import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { getCustomers } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
