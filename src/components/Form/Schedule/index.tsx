@@ -59,12 +59,16 @@ export default function ScheduleForm({
 	const [customers, setCustomers] = useState<FormDataSchedule[]>([]);
 	const [services, setServices] = useState<FormDataSchedule[]>([]);
 
-	const { token } = useAuth();
+	const { token, logout } = useAuth();
 	// console.log("Erros:", errors);
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (!token) return;
+			if (!token) {
+				logout();
+				return;
+			}
+
 			const companyId = decodeToken(token);
 
 			try {
@@ -91,7 +95,7 @@ export default function ScheduleForm({
 		};
 
 		fetchData();
-	}, [isEditing, reset, selectedSchedule, token]);
+	}, [isEditing, logout, reset, selectedSchedule, token]);
 
 	return (
 		<Card>

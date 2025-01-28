@@ -15,9 +15,12 @@ export const useAvaliableTime = (currentPage: number) => {
 	const { token, logout } = useAuth();
 	const navigate = useNavigate();
 	const { loading, startLoading, stopLoading } = useLoading();
-
 	const fetchAvaliableTime = useCallback(async () => {
-		if (!token) return;
+		if (!token) {
+			logout();
+			return;
+		}
+
 		startLoading();
 
 		try {

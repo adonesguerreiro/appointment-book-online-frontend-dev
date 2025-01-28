@@ -16,7 +16,10 @@ export const useUnavaliableTime = (currentPage: number) => {
 	const { token, logout } = useAuth();
 	const { loading, startLoading, stopLoading } = useLoading();
 	const fetchUnavaliableTime = useCallback(async () => {
-		if (!token) return;
+		if (!token) {
+			logout();
+			return;
+		}
 		startLoading();
 
 		try {

@@ -14,7 +14,11 @@ export const useService = (currentPage: number) => {
 	const { loading, startLoading, stopLoading } = useLoading();
 	const { token, logout } = useAuth();
 	const fetchService = useCallback(async () => {
-		if (!token) return;
+		if (!token) {
+			logout();
+			return;
+		}
+
 		startLoading();
 
 		try {

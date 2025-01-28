@@ -15,7 +15,11 @@ export const useCustomer = (currentPage: number) => {
 	const { loading, startLoading, stopLoading } = useLoading();
 
 	const fetchCustomer = useCallback(async () => {
-		if (!token) return;
+		if (!token) {
+			logout();
+			return;
+		}
+		
 		startLoading();
 
 		try {

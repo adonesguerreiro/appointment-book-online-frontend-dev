@@ -12,7 +12,11 @@ export const useTimeSlots = () => {
 
 	const fetchDataTimeSlot = useCallback(
 		async (date: string) => {
-			if (!token || Array.isArray(date)) return;
+			if (!token) {
+				logout();
+				return;
+			}
+			if (Array.isArray(date)) return;
 
 			try {
 				const companyId = decodeToken(token);

@@ -19,7 +19,7 @@ export const useCompanySubmit = ({
 	postalCodeData,
 	setError,
 }: useCompanySubmitProps) => {
-	const { token } = useAuth();
+	const { token, logout } = useAuth();
 	const { loading, setLoading } = useLoading();
 	const { showToast } = useCustomToast();
 
@@ -27,9 +27,11 @@ export const useCompanySubmit = ({
 
 	const handleSubmitCompany = useCallback(
 		async (data: FormDataCompany) => {
+			if (!token) {
+				logout();
+				return;
+			}
 			setLoading(true);
-
-			if (!token) return;
 
 			try {
 				if (postalCodeData !== data.postalCode) {
@@ -73,6 +75,7 @@ export const useCompanySubmit = ({
 		},
 		[
 			handleError,
+			logout,
 			postalCodeData,
 			setError,
 			setLoading,

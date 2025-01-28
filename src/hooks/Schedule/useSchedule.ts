@@ -15,7 +15,10 @@ export const useSchedules = (currentPage: number) => {
 	const { loading, startLoading, stopLoading } = useLoading();
 
 	const fetchSchedules = useCallback(async () => {
-		if (!token) return;
+		if (!token) {
+			logout();
+			return;
+		}
 
 		startLoading();
 		try {
