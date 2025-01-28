@@ -4,72 +4,83 @@ import { viaCep } from "../../services/viaCep";
 import { useAuth } from "../../hooks/useAuth";
 import { useLoading } from "../useLoading";
 import { useCustomToast } from "../useCustomToast";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, UseFormSetValue } from "react-hook-form";
-import { companySchema } from "../../validators/companySchema";
+import { UseFormSetError, UseFormSetValue } from "react-hook-form";
 import { useHandleError } from "../useHandleError";
+import { useCallback } from "react";
 
 interface useCompanySubmitProps {
 	setValue: UseFormSetValue<FormDataCompany>;
 	postalCodeData: string;
+	setError: UseFormSetError<FormDataCompany>;
 }
 
 export const useCompanySubmit = ({
 	setValue,
 	postalCodeData,
+	setError,
 }: useCompanySubmitProps) => {
 	const { token } = useAuth();
 	const { loading, setLoading } = useLoading();
 	const { showToast } = useCustomToast();
-	const { setError } = useForm<FormDataCompany>({
-		resolver: yupResolver(companySchema),
-	});
+
 	const handleError = useHandleError();
 
-	const handleSubmitCompany = async (data: FormDataCompany) => {
-		setLoading(true);
+	const handleSubmitCompany = useCallback(
+		async (data: FormDataCompany) => {
+			setLoading(true);
 
-		if (!token) return;
+			if (!token) return;
 
-		try {
-			if (postalCodeData !== data.postalCode) {
-				const existingCep = await viaCep(data.postalCode);
-				if (existingCep != "CEP inválido") {
+			try {
+				if (postalCodeData !== data.postalCode) {
+					const existingCep = await viaCep(data.postalCode);
+
+					if (existingCep === "CEP inválido") {
+						setValue("city", "");
+						setValue("state", "");
+						setValue("postalCode", "");
+						setError("postalCode", {
+							type: "manual",
+							message: existingCep,
+						});
+						return;
+					}
+
 					data.city = existingCep.localidade;
 					data.state = existingCep.uf;
 					setValue("city", existingCep.localidade);
 					setValue("state", existingCep.uf);
-					setLoading(false);
-				} else {
-					setValue("city", "");
-					setValue("state", "");
-					setError("postalCode", {
-						type: "manual",
-						message: existingCep as string,
-					});
-					return;
 				}
-			}
 
-			const updatedCompany = await updateCompany(data);
-			const addressCompanyId =
-				updatedCompany.data.companyUpdated.addresses[0].id;
-			const updatedAddress = await updateAddress(addressCompanyId, data);
-			if (updatedCompany.status === 200 && updatedAddress.status === 200) {
-				showToast({
-					title: "Alterado com sucesso!",
-					status: "success",
-				});
+				const updatedCompany = await updateCompany(data);
+				const addressCompanyId =
+					updatedCompany.data.companyUpdated.addresses[0].id;
+				const updatedAddress = await updateAddress(addressCompanyId, data);
+				if (updatedCompany.status === 200 && updatedAddress.status === 200) {
+					showToast({
+						title: "Alterado com sucesso!",
+						status: "success",
+					});
+				}
+			} catch (error) {
+				console.error("Erro ao salvar dados", error);
+				handleError(error);
+				setLoading(false);
+				return;
+			} finally {
+				setLoading(false);
 			}
-		} catch (error) {
-			console.error("Erro ao salvar dados", error);
-			handleError(error);
-			setLoading(false);
-			return;
-		} finally {
-			setLoading(false);
-		}
-	};
+		},
+		[
+			handleError,
+			postalCodeData,
+			setError,
+			setLoading,
+			setValue,
+			showToast,
+			token,
+		]
+	);
 
 	return {
 		handleSubmitCompany,

@@ -3,7 +3,7 @@ export interface FormDataAddress {
 	number: string;
 	complement?: string;
 	neighborhood: string;
-	city: string;
-	state: string;
+	city?: string;
+	state?: string;
 	postalCode: string;
 }

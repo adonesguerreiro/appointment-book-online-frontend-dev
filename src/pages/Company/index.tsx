@@ -31,9 +31,11 @@ export default function CompanyPage() {
 		register,
 		reset,
 		setValue,
+		setError,
 		formState: { errors },
 	} = useForm<FormDataCompany>({
 		resolver: yupResolver(companySchema),
+		mode: "onChange",
 	});
 	const [postalCodeData, setPostalCodeData] = useState<string>();
 
@@ -41,6 +43,7 @@ export default function CompanyPage() {
 	const { handleSubmitCompany, loading } = useCompanySubmit({
 		setValue,
 		postalCodeData: postalCodeData || "",
+		setError,
 	});
 	const { handleCancel } = useCompanyCancel({ reset });
 

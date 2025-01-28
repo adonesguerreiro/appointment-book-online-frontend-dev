@@ -25,11 +25,15 @@ export const companySchema = yup.object().shape({
 	number: yup.string().required("Número é obrigatório."),
 	complement: yup.string(),
 	neighborhood: yup.string().required("Bairro é obrigatório."),
-	city: yup.string().required("Cidade é obrigatório."),
-	state: yup.string().required("Estado é obrigatório."),
+	city: yup.string().optional(),
+	state: yup.string().optional(),
 	postalCode: yup
 		.string()
 		.required("CEP é obrigatório.")
 		.transform((value) => value.replace(/[^\d]/g, ""))
-		.test("validatePostalCode", "CEP inválido", (value) => value.length === 8),
+		.test(
+			"validatePostalCode",
+			"CEP incompleto",
+			(value) => value.length === 8
+		),
 });
