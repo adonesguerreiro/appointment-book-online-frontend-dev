@@ -179,7 +179,7 @@ export default function ScheduleForm({
 													value={field.value}
 												/>
 											}
-											// minDate={new Date()}
+											minDate={new Date()}
 											dateFormat="dd/MM/yyyy"
 										/>
 									)}

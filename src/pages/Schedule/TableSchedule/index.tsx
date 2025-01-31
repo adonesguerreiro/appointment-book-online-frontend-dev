@@ -12,6 +12,7 @@ import {
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
 import { EditIcon } from "@chakra-ui/icons";
 import { formatDate } from "../../../utils/formatDate";
+import { statusMapping } from "../../../utils/statusMapping";
 
 interface TableScheduleProps {
 	schedules: FormDataSchedule[];
@@ -21,12 +22,6 @@ export default function TableSchedule({
 	schedules,
 	onEditClick,
 }: TableScheduleProps) {
-	const statusMapping: { [key: string]: string } = {
-		SCHEDULED: "Agendado",
-		CANCELLED: "Cancelado",
-		ATTENDED: "Atendido",
-	};
-
 	return (
 		<>
 			<Flex
@@ -45,7 +40,7 @@ export default function TableSchedule({
 									<Th>Cliente</Th>
 									<Th>Serviço</Th>
 									<Th>Data</Th>
-									<Th>Horário</Th>
+									<Th>Status</Th>
 									<Th>Ações</Th>
 								</Tr>
 							</Thead>

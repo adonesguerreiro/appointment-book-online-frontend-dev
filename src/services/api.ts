@@ -28,6 +28,14 @@ api.interceptors.request.use((config) => {
 	return config;
 });
 
+export const getDashboard = (
+	companyId: number,
+	month?: string,
+	year?: string
+) => {
+	return api.get(`/dashboard/company/${companyId}/month/${month}/year/${year}`);
+};
+
 export const getAllUsers = () => {
 	return api.get("/users");
 };
