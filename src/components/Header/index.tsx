@@ -2,27 +2,27 @@ import {
 	Box,
 	Button,
 	Flex,
-	Heading,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
 	Spacer,
 	WrapItem,
+	Image,
 } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/react";
-
 import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import Logo from "../../assets/logo.svg";
 
 export default function Header() {
 	const navigate = useNavigate();
 	const { logout } = useAuth();
 
 	const handleLogout = () => {
-		logout(); // Realiza o logout
-		navigate("/login"); // Redireciona para a página de login
+		logout();
+		navigate("/login");
 	};
 
 	const goToUserProfile = () => {
@@ -47,11 +47,12 @@ export default function Header() {
 			py={2}
 			boxShadow="md">
 			<Flex align="center">
-				<Heading
-					as="h1"
-					size="lg">
-					Logo
-				</Heading>
+				<Image
+					src={Logo}
+					alt="logo"
+					width="3rem"
+					height="3rem"
+				/>
 				<Spacer />
 				<Menu>
 					<MenuButton

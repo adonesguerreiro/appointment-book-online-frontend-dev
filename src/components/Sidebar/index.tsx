@@ -1,4 +1,4 @@
-import { Box, Link, VStack, Text, Grid } from "@chakra-ui/react";
+import { Box, Link, VStack, Grid } from "@chakra-ui/react";
 import { MdDashboard, MdEventAvailable, MdEventBusy } from "react-icons/md";
 import {
 	FaChevronDown,
@@ -31,12 +31,8 @@ export default function Sidebar() {
 			p="4">
 			<VStack
 				align="start"
-				spacing="8">
-				<Text
-					fontSize="2xl"
-					fontWeight="bold">
-					Menu
-				</Text>
+				spacing="8"
+				paddingTop="5rem">
 				<Grid
 					_hover={{
 						width: "14.25rem",
