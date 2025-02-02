@@ -87,7 +87,7 @@ export default function UnavailableTimeForm({
 													placeholder="Selecione uma data"
 												/>
 											}
-											// minDate={new Date()}
+											minDate={new Date()}
 											dateFormat="dd/MM/yyyy"
 										/>
 									)}
