@@ -29,7 +29,7 @@ export const useAvaliableTime = (currentPage: number) => {
 				companyId.id,
 				currentPage
 			);
-			setAvailableTime(avaliableTimeData.data.availableTimes);
+			setAvailableTime(avaliableTimeData.data.avaliableTimes);
 			setTotalPages(avaliableTimeData.data.totalPages);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);

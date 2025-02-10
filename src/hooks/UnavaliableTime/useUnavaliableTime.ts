@@ -25,7 +25,7 @@ export const useUnavaliableTime = (currentPage: number) => {
 		try {
 			const companyId = decodeToken(token);
 			const { data } = await getUnavailableTimes(companyId.id, currentPage);
-			setUnavaliables(data.unavailableTimes);
+			setUnavaliables(data.unavaliableTimes);
 			setTotalPages(data.totalPages);
 		} catch (error) {
 			handleAuthError(error, logout, navigate);

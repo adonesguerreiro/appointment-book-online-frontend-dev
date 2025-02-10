@@ -129,59 +129,59 @@ export const deleteCustomer = (customerId: number) => {
 };
 
 export const getAvaliableTimes = (companyId: number, currentPage: number) => {
-	return api.get(`/available-times/company/${companyId}`, {
+	return api.get(`/avaliable-times/company/${companyId}`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
 
 export const getAvaliableTimesSlots = (companyId: number, date: string) => {
-	return api.get(`/available-times/company/${companyId}/?date=${date}`);
+	return api.get(`/avaliable-times/company/${companyId}/?date=${date}`);
 };
 
 export const getAvaliableTimeById = (avaliableTimeId: number) => {
-	return api.get(`/available-times/${avaliableTimeId}`);
+	return api.get(`/avaliable-times/${avaliableTimeId}`);
 };
 
 export const createAvaliableTime = (avalibleTime: FormDataAvailableTime) => {
-	return api.post("/available-times", avalibleTime);
+	return api.post("/avaliable-times", avalibleTime);
 };
 
 export const updateAvaliableTime = (
 	avaliableTimeId: number,
 	avalibleTime: FormDataAvailableTime
 ) => {
-	return api.put(`/available-times/${avaliableTimeId}`, avalibleTime);
+	return api.put(`/avaliable-times/${avaliableTimeId}`, avalibleTime);
 };
 
 export const deleteAvaliableTime = (avaliableTimeId: number) => {
-	return api.delete(`/available-times/${avaliableTimeId}`);
+	return api.delete(`/avaliable-times/${avaliableTimeId}`);
 };
 
 export const getUnavailableTimes = (companyId: number, currentPage: number) => {
-	return api.get(`/unavailable-times/company/${companyId}`, {
+	return api.get(`/unavaliable-times/company/${companyId}`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
 
 export const getUnavailableTimeById = (unavailableTimeId: number) => {
-	return api.get(`/unavailable-times/${unavailableTimeId}`);
+	return api.get(`/unavaliable-times/${unavailableTimeId}`);
 };
 
 export const createUnavailableTime = (
 	unavailableTime: FormDataUnavailableTime
 ) => {
-	return api.post("/unavailable-times", unavailableTime);
+	return api.post("/unavaliable-times", unavailableTime);
 };
 
 export const updateUnavailableTime = (
 	unavailableTimeId: number,
 	unavailableTime: FormDataUnavailableTime
 ) => {
-	return api.put(`/unavailable-times/${unavailableTimeId}`, unavailableTime);
+	return api.put(`/unavaliable-times/${unavailableTimeId}`, unavailableTime);
 };
 
 export const deleteUnavailableTime = (unavailableTimeId: number) => {
-	return api.delete(`/unavailable-times/${unavailableTimeId}`);
+	return api.delete(`/unavaliable-times/${unavailableTimeId}`);
 };
 
 export default api;
