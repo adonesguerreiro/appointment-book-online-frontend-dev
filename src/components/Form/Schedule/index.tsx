@@ -73,7 +73,7 @@ export default function ScheduleForm({
 
 			try {
 				const [customersData, servicesData] = await Promise.all([
-					getCustomers(companyId.id),
+					getCustomers(),
 					getServices(companyId.id),
 				]);
 

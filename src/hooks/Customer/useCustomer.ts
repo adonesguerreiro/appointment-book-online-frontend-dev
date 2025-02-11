@@ -5,7 +5,6 @@ import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { getCustomers } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useLoading } from "../useLoading";
-import { decodeToken } from "../../utils/decodeToken";
 
 export const useCustomer = (currentPage: number) => {
 	const [customers, setCustomers] = useState<FormDataCustomer[]>([]);
@@ -19,12 +18,11 @@ export const useCustomer = (currentPage: number) => {
 			logout();
 			return;
 		}
-		
+
 		startLoading();
 
 		try {
-			const companyId = decodeToken(token);
-			const { data } = await getCustomers(companyId.id, currentPage);
+			const { data } = await getCustomers(currentPage);
 			setCustomers(data.customers);
 			setTotalPages(data.totalPages);
 		} catch (error) {

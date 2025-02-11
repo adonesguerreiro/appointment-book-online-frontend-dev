@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { getUnavailableTimes } from "../../services/api";
 import { useLoading } from "../useLoading";
-import { decodeToken } from "../../utils/decodeToken";
 import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime";
 import { useAuth } from "../useAuth";
 import { useNavigate } from "react-router-dom";
@@ -23,8 +22,7 @@ export const useUnavaliableTime = (currentPage: number) => {
 		startLoading();
 
 		try {
-			const companyId = decodeToken(token);
-			const { data } = await getUnavailableTimes(companyId.id, currentPage);
+			const { data } = await getUnavailableTimes(currentPage);
 			setUnavaliables(data.unavaliableTimes);
 			setTotalPages(data.totalPages);
 		} catch (error) {

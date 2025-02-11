@@ -5,7 +5,6 @@ import { getAvaliableTimes } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useLoading } from "../useLoading";
 import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
-import { decodeToken } from "../../utils/decodeToken";
 
 export const useAvaliableTime = (currentPage: number) => {
 	const [availableTime, setAvailableTime] = useState<FormDataAvailableTime[]>(
@@ -24,11 +23,7 @@ export const useAvaliableTime = (currentPage: number) => {
 		startLoading();
 
 		try {
-			const companyId = decodeToken(token);
-			const avaliableTimeData = await getAvaliableTimes(
-				companyId.id,
-				currentPage
-			);
+			const avaliableTimeData = await getAvaliableTimes(currentPage);
 			setAvailableTime(avaliableTimeData.data.avaliableTimes);
 			setTotalPages(avaliableTimeData.data.totalPages);
 		} catch (error) {

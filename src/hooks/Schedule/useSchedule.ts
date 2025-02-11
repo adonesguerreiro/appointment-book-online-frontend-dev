@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../useAuth";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { getSchedules } from "../../services/api";
-import { decodeToken } from "../../utils/decodeToken";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useLoading } from "../useLoading";
 
@@ -22,8 +21,7 @@ export const useSchedules = (currentPage: number) => {
 
 		startLoading();
 		try {
-			const companyId = decodeToken(token);
-			const { data } = await getSchedules(companyId.id, currentPage);
+			const { data } = await getSchedules(currentPage);
 			setSchedules(data.schedules);
 			setTotalPages(data.totalPages);
 		} catch (error) {

@@ -5,7 +5,6 @@ import { FormDataService } from "../../interface/FormDataService";
 import { getServices } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useLoading } from "../useLoading";
-import { decodeToken } from "../../utils/decodeToken";
 
 export const useService = (currentPage: number) => {
 	const [totalPages, setTotalPages] = useState(0);
@@ -22,8 +21,7 @@ export const useService = (currentPage: number) => {
 		startLoading();
 
 		try {
-			const companyId = decodeToken(token);
-			const { data } = await getServices(companyId.id, currentPage);
+			const { data } = await getServices(currentPage);
 			setServices(data.services);
 			setTotalPages(data.totalPages);
 		} catch (error) {

@@ -60,8 +60,8 @@ export const updateAddress = (addressId: number, address: FormDataAddress) => {
 	return api.put(`/addresses/${addressId}`, address);
 };
 
-export const getServices = (companyId: number, currentPage?: number) => {
-	return api.get(`/services/company/${companyId}`, {
+export const getServices = (currentPage: number) => {
+	return api.get(`/services`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
@@ -82,8 +82,8 @@ export const deleteService = (serviceId: number) => {
 	return api.delete(`/services/${serviceId}`);
 };
 
-export const getSchedules = async (companyId: number, currentPage: number) => {
-	return api.get(`/schedules/company/${companyId}`, {
+export const getSchedules = async (currentPage: number) => {
+	return api.get(`/schedules`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
@@ -103,8 +103,8 @@ export const updateSchedule = (
 	return api.put(`/schedules/${scheduleId}`, schedule);
 };
 
-export const getCustomers = (companyId: number, currentPage?: number) => {
-	return api.get(`/customers/company/${companyId}`, {
+export const getCustomers = (currentPage?: number) => {
+	return api.get(`/customers`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
@@ -128,8 +128,8 @@ export const deleteCustomer = (customerId: number) => {
 	return api.delete(`/customers/${customerId}`);
 };
 
-export const getAvaliableTimes = (companyId: number, currentPage: number) => {
-	return api.get(`/avaliable-times/company/${companyId}`, {
+export const getAvaliableTimes = (currentPage: number) => {
+	return api.get(`/avaliable-times`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
@@ -157,8 +157,8 @@ export const deleteAvaliableTime = (avaliableTimeId: number) => {
 	return api.delete(`/avaliable-times/${avaliableTimeId}`);
 };
 
-export const getUnavailableTimes = (companyId: number, currentPage: number) => {
-	return api.get(`/unavaliable-times/company/${companyId}`, {
+export const getUnavailableTimes = (currentPage: number) => {
+	return api.get(`/unavaliable-times`, {
 		params: { page: currentPage, limit: 10 },
 	});
 };
