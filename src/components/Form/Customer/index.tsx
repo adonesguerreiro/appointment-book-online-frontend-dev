@@ -42,7 +42,6 @@ export default function CustomerForm({
 		formState: { errors },
 	} = useForm<FormDataCustomer>({
 		resolver: yupResolver(customerSchema),
-		defaultValues: { customerName: "", mobile: "" },
 	});
 
 	useEffect(() => {
@@ -87,6 +86,7 @@ export default function CustomerForm({
 								<Input
 									as={InputMask}
 									mask="(99) 99999-9999"
+									defaultValue={isEditing ? "mobile" : ""}
 									placeholder="(99) 99999-9999"
 									type="tel"
 									id="mobile"

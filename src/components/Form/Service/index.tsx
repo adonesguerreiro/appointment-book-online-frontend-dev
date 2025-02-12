@@ -43,7 +43,6 @@ export default function ServiceForm({
 		formState: { errors },
 	} = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
-		defaultValues: { serviceName: "", duration: "", price: 0 },
 	});
 
 	useEffect(() => {
@@ -89,6 +88,7 @@ export default function ServiceForm({
 								<Input
 									as={InputMask}
 									mask="99:99"
+									defaultValue={isEditing? "duration" : ""}
 									placeholder="45:00"
 									type="text"
 									id="duration"

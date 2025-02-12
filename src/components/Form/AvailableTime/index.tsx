@@ -42,13 +42,6 @@ export default function AvaliableTimeForm({
 		formState: { errors },
 	} = useForm<FormDataAvailableTime>({
 		resolver: yupResolver(availableTimeSchema),
-		defaultValues: {
-			day: "",
-			period: "",
-			startTime: "",
-			endTime: "",
-			interval: 0,
-		},
 	});
 
 	useEffect(() => {
@@ -119,6 +112,7 @@ export default function AvaliableTimeForm({
 								<Input
 									as={InputMask}
 									mask="99:99"
+									defaultValue={isEditing ? "startTime" : ""}
 									placeholder="08:00"
 									type="text"
 									id="startTime"
@@ -138,6 +132,7 @@ export default function AvaliableTimeForm({
 								<Input
 									as={InputMask}
 									mask="99:99"
+									defaultValue={isEditing ? "endTime" : ""}
 									placeholder="19:00"
 									type="text"
 									id="endTime"
