@@ -3,7 +3,6 @@ import { useAuth } from "../useAuth";
 import { getAvaliableTimesSlots } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useNavigate } from "react-router-dom";
-import { decodeToken } from "../../utils/decodeToken";
 
 export const useTimeSlots = () => {
 	const navigate = useNavigate();
@@ -19,12 +18,8 @@ export const useTimeSlots = () => {
 			if (Array.isArray(date)) return;
 
 			try {
-				const companyId = decodeToken(token);
-				const timeSlots = await getAvaliableTimesSlots(
-					companyId.id,
-					date.split("T")[0]
-				);
-				setTimeSlots(timeSlots.data.availableTimes);
+				const timeSlots = await getAvaliableTimesSlots(date.split("T")[0]);
+				setTimeSlots(timeSlots.data.avaliableTimes);
 			} catch (error) {
 				handleAuthError(error, logout, navigate);
 				console.error("Erro ao buscar dados", error);

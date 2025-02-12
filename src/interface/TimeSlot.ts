@@ -1,5 +1,5 @@
-import { AvailableTimeSlot } from "./AvailableTimeSlot";
+import { AvaliableTimeSlot } from "./AvailableTimeSlot";
 
 export interface TimeSlot {
-	availableTimeSlot: AvailableTimeSlot[];
+	avaliableTimeSlot: AvaliableTimeSlot[];
 }

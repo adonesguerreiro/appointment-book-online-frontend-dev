@@ -1,7 +1,6 @@
 import { getCompany } from "../../services/api";
 import { useAuth } from "../useAuth";
 import { Dispatch, SetStateAction, useCallback } from "react";
-import { decodeToken } from "../../utils/decodeToken";
 import { UseFormReset } from "react-hook-form";
 import { FormDataCompany } from "../../interface/FormDataCompany";
 
@@ -19,22 +18,21 @@ export const useCompany = ({ reset, setPostalCodeData }: useCompanyProps) => {
 		}
 
 		try {
-			const companyId = decodeToken(token);
-			const { data } = await getCompany(companyId.id);
+			const { data } = await getCompany();
 			reset({
 				name: data.name,
 				email: data.email,
 				mobile: data.mobile,
 				cnpj: data.cnpj,
-				street: data.addresses[0].street,
-				number: data.addresses[0].number,
-				complement: data.addresses[0].complement,
-				neighborhood: data.addresses[0].neighborhood,
-				city: data.addresses[0].city,
-				state: data.addresses[0].state,
-				postalCode: data.addresses[0].postalCode,
+				street: data.addresses.street,
+				number: data.addresses.number,
+				complement: data.addresses.complement,
+				neighborhood: data.addresses.neighborhood,
+				city: data.addresses.city,
+				state: data.addresses.state,
+				postalCode: data.addresses.postalCode,
 			});
-			setPostalCodeData(data.addresses[0].postalCode);
+			setPostalCodeData(data.addresses.postalCode);
 		} catch (error) {
 			console.error("Erro ao buscar dados", error);
 		}

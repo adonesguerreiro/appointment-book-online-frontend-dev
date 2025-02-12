@@ -28,28 +28,24 @@ api.interceptors.request.use((config) => {
 	return config;
 });
 
-export const getDashboard = (
-	companyId: number,
-	month?: string,
-	year?: string
-) => {
-	return api.get(`/dashboard/company/${companyId}/month/${month}/year/${year}`);
+export const getDashboard = (month?: string, year?: string) => {
+	return api.get(`/dashboard/month/${month}/year/${year}`);
 };
 
 export const getAllUsers = () => {
 	return api.get("/users");
 };
 
-export const getUser = (userId: number) => {
-	return api.get(`/users/${userId}`);
+export const getUserById = () => {
+	return api.get(`/users/id`);
 };
 
 export const updateUser = (user: FormDataUser) => {
 	return api.put(`/users`, user);
 };
 
-export const getCompany = (companyId: number) => {
-	return api.get(`/companies/${companyId}`);
+export const getCompany = () => {
+	return api.get(`/companies/id`);
 };
 
 export const updateCompany = (company: FormDataCompany) => {
@@ -60,7 +56,7 @@ export const updateAddress = (addressId: number, address: FormDataAddress) => {
 	return api.put(`/addresses/${addressId}`, address);
 };
 
-export const getServices = (currentPage: number) => {
+export const getServices = (currentPage?: number) => {
 	return api.get(`/services`, {
 		params: { page: currentPage, limit: 10 },
 	});
@@ -134,8 +130,8 @@ export const getAvaliableTimes = (currentPage: number) => {
 	});
 };
 
-export const getAvaliableTimesSlots = (companyId: number, date: string) => {
-	return api.get(`/avaliable-times/company/${companyId}/?date=${date}`);
+export const getAvaliableTimesSlots = (date: string) => {
+	return api.get(`/avaliable-times?date=${date}`);
 };
 
 export const getAvaliableTimeById = (avaliableTimeId: number) => {

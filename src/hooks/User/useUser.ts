@@ -1,8 +1,7 @@
 import { FormDataUser } from "./../../interface/FormDataUser";
 import { useCallback } from "react";
 import { useAuth } from "../useAuth";
-import { getUser } from "../../services/api";
-import { decodeToken } from "../../utils/decodeToken";
+import { getUserById } from "../../services/api";
 import { UseFormReset } from "react-hook-form";
 
 interface useUserProps {
@@ -16,10 +15,8 @@ export const useUser = ({ reset }: useUserProps) => {
 		if (!token) {
 			return;
 		}
-
 		try {
-			const userId = decodeToken(token);
-			const { data } = await getUser(userId.id);
+			const { data } = await getUserById();
 			reset({
 				name: data.name,
 				email: data.email,

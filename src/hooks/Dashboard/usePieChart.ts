@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { getDashboard } from "../../services/api";
-import { decodeToken } from "../../utils/decodeToken";
 import { statusMapping } from "../../utils/statusMapping";
 import { useAuth } from "../useAuth";
 
@@ -17,9 +16,8 @@ export const usePieChart = () => {
 				return;
 			}
 
-			const companyId = decodeToken(token);
 			try {
-				const { data } = await getDashboard(companyId.id, month, year);
+				const { data } = await getDashboard(month, year);
 				if (data.scheduleByStatus.length === 0) return;
 
 				const transformedData = data.scheduleByStatus.map(

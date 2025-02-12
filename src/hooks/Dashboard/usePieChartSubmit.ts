@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { FormDataDashboard } from "../../interface/FormDataDashboard";
 import { getDashboard } from "../../services/api";
-import { decodeToken } from "../../utils/decodeToken";
 import { useAuth } from "../useAuth";
 import { useCustomToast } from "../useCustomToast";
 import { useHandleError } from "../useHandleError";
@@ -22,9 +21,7 @@ export const usePieCharSubmit = ({ fetchDataPieChart }: UsePieCharSubmit) => {
 					logout();
 					return;
 				}
-				const companyId = decodeToken(token);
 				const filterScheduleByStatus = await getDashboard(
-					companyId.id,
 					data.month,
 					data.year
 				);

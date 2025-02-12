@@ -26,7 +26,6 @@ import DatePicker from "react-datepicker";
 import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../../interface/TimeSlot";
 import { extractTimeFromDate } from "../../../utils/extractTimeFromDate";
-import { decodeToken } from "../../../utils/decodeToken";
 
 interface ScheduleFormProps {
 	onSubmit: (data: FormDataSchedule) => void;
@@ -69,12 +68,10 @@ export default function ScheduleForm({
 				return;
 			}
 
-			const companyId = decodeToken(token);
-
 			try {
 				const [customersData, servicesData] = await Promise.all([
 					getCustomers(),
-					getServices(companyId.id),
+					getServices(),
 				]);
 
 				setCustomers(customersData.data.customers);
@@ -86,7 +83,7 @@ export default function ScheduleForm({
 						serviceId: selectedSchedule.serviceId,
 						date: selectedSchedule.date,
 						status: selectedSchedule.status,
-						timeSlotAvailable: extractTimeFromDate(selectedSchedule.date),
+						timeSlotAvaliable: extractTimeFromDate(selectedSchedule.date),
 					});
 				}
 			} catch (err) {
@@ -191,7 +188,7 @@ export default function ScheduleForm({
 							</Grid>
 						</FormControl>
 
-						<FormControl isInvalid={!!errors.timeSlotAvailable}>
+						<FormControl isInvalid={!!errors.timeSlotAvaliable}>
 							<Grid>
 								<FormLabel>Horário</FormLabel>
 								<Select
@@ -202,14 +199,14 @@ export default function ScheduleForm({
 										position: "relative",
 										zIndex: 10,
 									}}
-									{...register("timeSlotAvailable")}>
+									{...register("timeSlotAvaliable")}>
 									{timeSlots.length > 0 ? (
 										timeSlots.map((slot, index) =>
-											slot.availableTimeSlot.map((availableSlot, subIndex) => (
+											slot.avaliableTimeSlot.map((avaliableSlot, subIndex) => (
 												<option
 													key={`${index}-${subIndex}`}
-													value={availableSlot.timeSlot}>
-													{availableSlot.timeSlot}
+													value={avaliableSlot.timeSlot}>
+													{avaliableSlot.timeSlot}
 												</option>
 											))
 										)
@@ -217,9 +214,9 @@ export default function ScheduleForm({
 										<option value="">Sem horários disponíveis</option>
 									)}
 								</Select>
-								{errors.availableTimeSlot && (
+								{errors.avaliableTimeSlot && (
 									<FormErrorMessage>
-										{errors.availableTimeSlot.message}
+										{errors.avaliableTimeSlot.message}
 									</FormErrorMessage>
 								)}
 							</Grid>

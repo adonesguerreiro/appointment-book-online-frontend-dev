@@ -11,12 +11,12 @@ export const scheduleSchema = yup.object().shape({
 	serviceId: yup.string().required("Nome do serviço é obrigatório"),
 	serviceName: yup.string().optional(),
 	date: yup.string().required("Data é obrigatória"),
-	timeSlotAvailable: yup
+	timeSlotAvaliable: yup
 		.string()
 		.required("Horário é obrigatório")
 		.test("valid-service", "Selecione um horário válido", function (value) {
 			return value !== "Sem horários disponíveis";
 		}),
-	availableTimeSlot: yup.array().optional(),
+	avaliableTimeSlot: yup.array().optional(),
 	status: yup.string().required("Status é obrigatório"),
 });
