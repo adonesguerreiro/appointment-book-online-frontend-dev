@@ -17,6 +17,7 @@ import Header from "./components/Header";
 import SchedulePage from "./pages/Schedule";
 import DashboardPage from "./pages/Dashboard";
 import CustomerPage from "./pages/Customer";
+import ForgotPasswordPage from "./pages/ForgotPassword";
 
 const isAuthenticated = () => {
 	return localStorage.getItem("token") !== null;
@@ -33,19 +34,27 @@ export default function App() {
 					path="/login"
 					element={<LoginPage />}
 				/>
+				<Route
+					path="/forgot-your-password"
+					element={<ForgotPasswordPage />}
+				/>
 
 				<Route
 					path="/"
 					element={
-						<>
-							<Header />
-							<Sidebar />
-							<Box
-								flex="1"
-								p="10">
-								<DashboardPage />
-							</Box>
-						</>
+						<ProtectedRoute
+							element={
+								<>
+									<Header />
+									<Sidebar />
+									<Box
+										flex="1"
+										p="10">
+										<DashboardPage />
+									</Box>
+								</>
+							}
+						/>
 					}
 				/>
 

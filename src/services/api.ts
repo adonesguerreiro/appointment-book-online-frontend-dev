@@ -1,3 +1,4 @@
+import { FormDataForgotPassword } from "./../interface/FormDataForgotPassword";
 import axios from "axios";
 import { FormDataLogin } from "../interface/FormDataLogin";
 import { FormDataService } from "../interface/FormDataService";
@@ -20,6 +21,10 @@ export const auth = (auth: FormDataLogin) => {
 	});
 };
 
+export const forgotPassword = ({ email }: FormDataForgotPassword) => {
+	return api.post("/forgot-password", { email });
+};
+
 api.interceptors.request.use((config) => {
 	const token = localStorage.getItem("token");
 	if (token) {
@@ -30,10 +35,6 @@ api.interceptors.request.use((config) => {
 
 export const getDashboard = (month?: string, year?: string) => {
 	return api.get(`/dashboard/month/${month}/year/${year}`);
-};
-
-export const getAllUsers = () => {
-	return api.get("/users");
 };
 
 export const getUserById = () => {

@@ -1,10 +1,8 @@
 import {
 	Card,
 	CardHeader,
-	Heading,
 	CardBody,
 	Box,
-	Text,
 	Flex,
 	FormControl,
 	FormLabel,
@@ -13,53 +11,53 @@ import {
 	FormErrorMessage,
 	Container,
 	Spinner,
-	Link,
 } from "@chakra-ui/react";
-import { MdArrowForward } from "react-icons/md";
+import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import { FormDataLogin } from "../../interface/FormDataLogin";
-import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { auth } from "../../services/api";
-import { useAuth } from "../../hooks/useAuth";
+import { forgotPassword } from "../../services/api";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
+import HeadingComponent from "../../components/Heading";
+import { useNavigate } from "react-router-dom";
+import { forgotPasswordSchema } from "../../validators/forgotPasswordSchema";
+import { FormDataForgotPassword } from "../../interface/FormDataForgotPassword";
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
+	const { showToast } = useCustomToast();
 	const { loading, setLoading } = useLoading();
 	const {
 		handleSubmit,
 		register,
 		formState: { errors },
-	} = useForm<FormDataLogin>({
-		resolver: yupResolver(loginSchema),
+	} = useForm({
+		resolver: yupResolver(forgotPasswordSchema),
 	});
 
-	const { showToast } = useCustomToast();
-	const { setToken } = useAuth();
+	const navigate = useNavigate();
+	// console.log("Erros:", errors);
 
-	const onSubmit = async (data: FormDataLogin) => {
+	const onSubmit = async (data: FormDataForgotPassword) => {
 		try {
 			setLoading(true);
-			const authorization = await auth(data);
-			const { token } = authorization.data;
-			setToken(token);
-			showToast({
-				title: "Autenticado com sucesso!",
-				status: "success",
-			});
-			setTimeout(() => {
+			const resetMyPassword = await forgotPassword(data);
+			if (resetMyPassword.status === 200) {
 				setLoading(false);
-				window.location.href = "/";
-			}, 1000);
-		} catch (e) {
-			console.error("Error authenticating user:", e);
+				showToast({
+					title:
+						"Solicitação de redefinição de senha enviada com sucesso, verifique o email.",
+					status: "success",
+				});
+				navigate("/login");
+			}
+		} catch (error) {
+			console.error("Error reseting password:", error);
+			setLoading(false);
 			showToast({
-				title: "Falha na autenticação!",
+				title: "Falha ao redefinir senha!",
 				status: "error",
 			});
 		}
-		setLoading(false);
 	};
 
 	return (
@@ -74,19 +72,7 @@ export default function LoginPage() {
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
-						<Heading
-							as="h1"
-							size="lg"
-							fontWeight="semibold">
-							Seja bem vindo de volta
-						</Heading>
-						<Box>
-							<Text
-								as="h2"
-								fontSize="lg">
-								Por favor, entre com suas credenciais
-							</Text>
-						</Box>
+						<HeadingComponent title="Informe seu email para recuperar acesso" />
 					</CardHeader>
 
 					<CardBody
@@ -97,11 +83,8 @@ export default function LoginPage() {
 							placeItems="center">
 							<form onSubmit={handleSubmit(onSubmit)}>
 								<FormControl
-									display="grid"
-									alignItems="center"
 									width="25.0625rem"
 									padding="0.625rem"
-									gap="0.625rem"
 									isInvalid={!!errors}>
 									<FormLabel>Email</FormLabel>
 									<Input
@@ -114,24 +97,20 @@ export default function LoginPage() {
 									{errors.email && (
 										<FormErrorMessage>{errors.email.message}</FormErrorMessage>
 									)}
-
-									<FormLabel>Senha</FormLabel>
-									<Input
-										type="password"
-										placeholder="Insira sua senha"
-										id="password"
-										isInvalid={!!errors.password}
-										{...register("password")}
-									/>
-									{errors.password && (
-										<FormErrorMessage>
-											{errors.password.message}
-										</FormErrorMessage>
-									)}
 								</FormControl>
 								<Flex
 									justifyContent="space-between"
 									alignItems="center">
+									<Button
+										colorScheme="teal"
+										size="lg"
+										leftIcon={<MdArrowBack />}
+										type="button"
+										onClick={() => {
+											navigate("/login");
+										}}>
+										Login
+									</Button>
 									<Button
 										colorScheme="teal"
 										size="lg"
@@ -144,11 +123,8 @@ export default function LoginPage() {
 												mr="2"
 											/>
 										) : null}
-										{loading ? "Autenticando" : "Entrar"}
+										{loading ? "Verificando" : "Enviar"}
 									</Button>
-									<Box>
-										<Link href="/forgot-your-password">Esqueceu a senha?</Link>
-									</Box>
 								</Flex>
 							</form>
 						</Box>
