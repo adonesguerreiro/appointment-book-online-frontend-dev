@@ -147,7 +147,7 @@ export default function LoginPage() {
 										{loading ? "Autenticando" : "Entrar"}
 									</Button>
 									<Box>
-										<Link href="/forgot-your-password">Esqueceu a senha?</Link>
+										<Link href="/forgot-password">Esqueceu a senha?</Link>
 									</Box>
 								</Flex>
 							</form>

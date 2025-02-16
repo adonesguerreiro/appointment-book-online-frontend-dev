@@ -9,6 +9,7 @@ import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
 import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
+import { FormDataResetPassword } from "../interface/FormDataResetPassword";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,
@@ -23,6 +24,12 @@ export const auth = (auth: FormDataLogin) => {
 
 export const forgotPassword = ({ email }: FormDataForgotPassword) => {
 	return api.post("/forgot-password", { email });
+};
+
+export const resetPassword = (token: string, data: FormDataResetPassword) => {
+	return api.post(`/reset-password?token=${token}`, {
+		newPassword: data.newPassword,
+	});
 };
 
 api.interceptors.request.use((config) => {
