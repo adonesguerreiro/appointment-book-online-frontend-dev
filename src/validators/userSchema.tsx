@@ -8,4 +8,5 @@ export const userSchema = yup.object().shape({
 	confirmPassword: yup
 		.string()
 		.oneOf([yup.ref("newPassword")], "As senhas devem coincidir"),
+	avatar: yup.string().optional(),
 });

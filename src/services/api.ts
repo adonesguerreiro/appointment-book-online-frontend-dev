@@ -40,6 +40,14 @@ api.interceptors.request.use((config) => {
 	return config;
 });
 
+export const updateUpload = (data: FormData) => {
+	return api.put("/upload", data, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
+};
+
 export const getDashboard = (month?: string, year?: string) => {
 	return api.get(`/dashboard/month/${month}/year/${year}`);
 };

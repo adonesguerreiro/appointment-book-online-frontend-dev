@@ -17,17 +17,20 @@ import { FormDataUser } from "../../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "../../validators/userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useUser } from "../../hooks/User/useUser";
 import { useUserSubmit } from "../../hooks/User/useUserSubmit";
 import HeadingComponent from "../../components/Heading";
 import { useUserCancel } from "../../hooks/User/useUserCancel";
+import { useDropzone } from "react-dropzone";
+// import { useUserSubmitUpload } from "../../hooks/User/useUserSubmitUpload";
 
 export default function UserPage() {
 	const {
 		handleSubmit,
 		register,
 		reset,
+		getValues,
 		formState: { errors },
 	} = useForm<FormDataUser>({
 		resolver: yupResolver(userSchema),
@@ -37,6 +40,22 @@ export default function UserPage() {
 	const { fetchDataUser } = useUser({ reset });
 	const { handleCancel } = useUserCancel();
 	const { handleSubmitUser, loading } = useUserSubmit();
+	// const { handleSubmitUserUpload } = useUserSubmitUpload();
+	const [avatar, setAvatar] = useState<File | string>("");
+
+	const inputRef = useRef(null);
+	const onDrop = useCallback((acceptedFiles: string | unknown[]) => {
+		if (acceptedFiles.length > 0) {
+			const file = acceptedFiles[0];
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setAvatar(reader.result as string);
+			};
+			reader.readAsDataURL(file as Blob);
+		}
+	}, []);
+
+	const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
 	useEffect(() => {
 		fetchDataUser();
@@ -63,11 +82,45 @@ export default function UserPage() {
 							display="grid"
 							placeItems="center"
 							onSubmit={handleSubmit(handleSubmitUser)}>
-							<Avatar
-								size="lg"
-								name="Adones"
-								src="https://avatars.githubusercontent.com/u/60514105?v=4"
-							/>
+							<FormLabel>Foto de perfil</FormLabel>
+							<Box
+								{...getRootProps()}
+								position="relative"
+								cursor="pointer"
+								w="fit-content">
+								<Avatar
+									size="xl"
+									id="avatar"
+									name={getValues("name") || ""}
+									src={(avatar as string) || (getValues("avatarUrl") as string)}
+								/>
+								<Input
+									ref={inputRef}
+									{...getInputProps({ size: undefined })}
+									id="avatarUrl"
+									type="file"
+									accept="image/*"
+									position="absolute"
+									top={0}
+									left={0}
+									width="100%"
+									height="100%"
+									opacity={0}
+									cursor="pointer"
+									onChange={(e) => {
+										const file = e.target.files?.[0];
+										if (file) {
+											if (avatar) {
+												URL.revokeObjectURL(avatar as string);
+											}
+											const objectUrl = URL.createObjectURL(file);
+											setAvatar(objectUrl);
+											reset({ avatarUrl: file });
+										}
+									}}
+								/>
+							</Box>
+
 							<FormControl
 								display="grid"
 								alignItems="center"

@@ -24,6 +24,7 @@ import { auth } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
+import { useHandleError } from "../../hooks/useHandleError";
 
 export default function LoginPage() {
 	const { loading, setLoading } = useLoading();
@@ -37,6 +38,8 @@ export default function LoginPage() {
 
 	const { showToast } = useCustomToast();
 	const { setToken } = useAuth();
+
+	const handleError = useHandleError();
 
 	const onSubmit = async (data: FormDataLogin) => {
 		try {
@@ -52,12 +55,9 @@ export default function LoginPage() {
 				setLoading(false);
 				window.location.href = "/";
 			}, 1000);
-		} catch (e) {
+		} catch (e: unknown) {
 			console.error("Error authenticating user:", e);
-			showToast({
-				title: "Falha na autenticação!",
-				status: "error",
-			});
+			handleError(e);
 		}
 		setLoading(false);
 	};

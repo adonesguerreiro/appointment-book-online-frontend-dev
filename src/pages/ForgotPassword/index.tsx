@@ -40,8 +40,8 @@ export default function ForgotPasswordPage() {
 	const onSubmit = async (data: FormDataForgotPassword) => {
 		try {
 			setLoading(true);
-			const resetMyPassword = await forgotPassword(data);
-			if (resetMyPassword.status === 200) {
+			const forgotMyPassword = await forgotPassword(data);
+			if (forgotMyPassword.status === 200) {
 				setLoading(false);
 				showToast({
 					title:

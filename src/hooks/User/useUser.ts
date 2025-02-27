@@ -18,6 +18,7 @@ export const useUser = ({ reset }: useUserProps) => {
 		try {
 			const { data } = await getUserById();
 			reset({
+				avatarUrl: data.avatarUrl,
 				name: data.name,
 				email: data.email,
 			});
