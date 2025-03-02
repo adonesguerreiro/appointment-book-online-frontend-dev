@@ -17,13 +17,12 @@ import { FormDataUser } from "../../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "../../validators/userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useUser } from "../../hooks/User/useUser";
 import { useUserSubmit } from "../../hooks/User/useUserSubmit";
 import HeadingComponent from "../../components/Heading";
 import { useUserCancel } from "../../hooks/User/useUserCancel";
-import { useDropzone } from "react-dropzone";
-// import { useUserSubmitUpload } from "../../hooks/User/useUserSubmitUpload";
+import { useAvatar } from "../../hooks/useAvatar";
 
 export default function UserPage() {
 	const {
@@ -40,28 +39,21 @@ export default function UserPage() {
 	const { fetchDataUser } = useUser({ reset });
 	const { handleCancel } = useUserCancel();
 	const { handleSubmitUser, loading } = useUserSubmit();
-	// const { handleSubmitUserUpload } = useUserSubmitUpload();
-	const [avatar, setAvatar] = useState<File | string>("");
-
-	const inputRef = useRef(null);
-	const onDrop = useCallback((acceptedFiles: string | unknown[]) => {
-		if (acceptedFiles.length > 0) {
-			const file = acceptedFiles[0];
-			const reader = new FileReader();
-			reader.onloadend = () => {
-				setAvatar(reader.result as string);
-			};
-			reader.readAsDataURL(file as Blob);
-		}
-	}, []);
-
-	const { getRootProps, getInputProps } = useDropzone({ onDrop });
+	const { avatar, setAvatar } = useAvatar();
 
 	useEffect(() => {
 		fetchDataUser();
-	}, [fetchDataUser]);
+	}, [fetchDataUser, getValues, setAvatar]);
 
 	console.log("Erros:", errors);
+
+	const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			const objectUrl = URL.createObjectURL(file);
+			setAvatar(objectUrl);
+		}
+	};
 
 	return (
 		<Container>
@@ -84,7 +76,6 @@ export default function UserPage() {
 							onSubmit={handleSubmit(handleSubmitUser)}>
 							<FormLabel>Foto de perfil</FormLabel>
 							<Box
-								{...getRootProps()}
 								position="relative"
 								cursor="pointer"
 								w="fit-content">
@@ -95,8 +86,6 @@ export default function UserPage() {
 									src={(avatar as string) || (getValues("avatarUrl") as string)}
 								/>
 								<Input
-									ref={inputRef}
-									{...getInputProps({ size: undefined })}
 									id="avatarUrl"
 									type="file"
 									accept="image/*"
@@ -107,16 +96,9 @@ export default function UserPage() {
 									height="100%"
 									opacity={0}
 									cursor="pointer"
+									{...register("avatarUrl")}
 									onChange={(e) => {
-										const file = e.target.files?.[0];
-										if (file) {
-											if (avatar) {
-												URL.revokeObjectURL(avatar as string);
-											}
-											const objectUrl = URL.createObjectURL(file);
-											setAvatar(objectUrl);
-											reset({ avatarUrl: file });
-										}
+										handleUpload(e);
 									}}
 								/>
 							</Box>

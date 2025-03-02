@@ -15,10 +15,12 @@ import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import Logo from "../../assets/logo.svg";
+import { useAvatar } from "../../hooks/useAvatar";
 
 export default function Header() {
 	const navigate = useNavigate();
 	const { logout } = useAuth();
+	const { avatar } = useAvatar();
 
 	const handleLogout = () => {
 		logout();
@@ -66,8 +68,10 @@ export default function Header() {
 							alignItems="center">
 							<WrapItem>
 								<Avatar
-									name="Adones"
-									src="https://avatars.githubusercontent.com/u/60514105?v=4"
+									// name="Adones"
+									// src="https://avatars.githubusercontent.com/u/60514105?v=4"
+									id="avatarUrl"
+									src={avatar as string}
 								/>
 							</WrapItem>
 							Adones
