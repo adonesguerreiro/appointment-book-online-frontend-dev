@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
-import { LuPlusCircle } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { FormDataCustomer } from "../../../interface/FormDataCustomer";
@@ -105,7 +105,7 @@ export default function CustomerForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<LuPlusCircle />}>
+								rightIcon={<LuPlus />}>
 								Cadastrar
 							</Button>
 						) : (

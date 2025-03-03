@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { CurrencyInput } from "react-currency-mask";
 import { Controller, useForm } from "react-hook-form";
-import { LuPlusCircle } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { FormDataService } from "../../../interface/FormDataService";
@@ -88,7 +88,7 @@ export default function ServiceForm({
 								<Input
 									as={InputMask}
 									mask="99:99"
-									defaultValue={isEditing? "duration" : ""}
+									defaultValue={isEditing ? "duration" : ""}
 									placeholder="45:00"
 									type="text"
 									id="duration"
@@ -138,7 +138,7 @@ export default function ServiceForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<LuPlusCircle />}>
+								rightIcon={<LuPlus />}>
 								Cadastrar
 							</Button>
 						) : (

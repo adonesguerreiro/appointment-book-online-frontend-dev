@@ -1,4 +1,3 @@
-import React from "react";
 import { createContext } from "react";
 
 interface AvatarContextType {
@@ -10,17 +9,3 @@ interface AvatarContextType {
 export const AvatarContext = createContext<AvatarContextType | undefined>(
 	undefined
 );
-
-export function AvatarProvider({ children }: { children: React.ReactNode }) {
-	const [avatar, setAvatar] = React.useState<File | string>("");
-
-	const setInitialAvatar = (url: string) => {
-		if (!avatar) setAvatar(url);
-	};
-
-	return (
-		<AvatarContext.Provider value={{ avatar, setAvatar, setInitialAvatar }}>
-			{children}
-		</AvatarContext.Provider>
-	);
-}

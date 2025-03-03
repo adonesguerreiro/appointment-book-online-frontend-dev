@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { LuPlusCircle } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
 import InputMask from "react-input-mask";
@@ -168,7 +168,7 @@ export default function AvaliableTimeForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<LuPlusCircle />}>
+								rightIcon={<LuPlus />}>
 								Cadastrar
 							</Button>
 						) : (

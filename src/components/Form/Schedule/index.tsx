@@ -12,7 +12,7 @@ import {
 	Select,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
-import { LuPlusCircle } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
@@ -254,7 +254,7 @@ export default function ScheduleForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<LuPlusCircle />}>
+								rightIcon={<LuPlus />}>
 								Cadastrar
 							</Button>
 						) : (

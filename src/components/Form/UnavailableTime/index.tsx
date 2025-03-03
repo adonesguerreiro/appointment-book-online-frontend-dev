@@ -14,7 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { Controller, useForm } from "react-hook-form";
-import { LuPlusCircle } from "react-icons/lu";
+import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableTime";
 import { unavailableTimeSchema } from "../../../validators/unavailableTimeSchema";
@@ -145,7 +145,7 @@ export default function UnavailableTimeForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<LuPlusCircle />}>
+								rightIcon={<LuPlus />}>
 								Cadastrar
 							</Button>
 						) : (
