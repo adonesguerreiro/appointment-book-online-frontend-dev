@@ -43,7 +43,7 @@ export default function UserPage() {
 
 	useEffect(() => {
 		fetchDataUser();
-	}, [fetchDataUser, getValues, setAvatar]);
+	}, [fetchDataUser]);
 
 	console.log("Erros:", errors);
 

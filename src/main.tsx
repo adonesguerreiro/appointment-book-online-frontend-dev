@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from "./context/AuthProvider";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { AvatarProvider } from "./context/AvatarContext";
+import { AvatarProvider } from "./context/AvatarProvider";
 
 const colors = {
 	brand: {

@@ -16,11 +16,18 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import Logo from "../../assets/logo.svg";
 import { useAvatar } from "../../hooks/useAvatar";
+import { FormDataUser } from "../../interface/FormDataUser";
+import { useForm } from "react-hook-form";
+import { useUser } from "../../hooks/User/useUser";
+import { useEffect } from "react";
 
 export default function Header() {
 	const navigate = useNavigate();
 	const { logout } = useAuth();
 	const { avatar } = useAvatar();
+	const { reset } = useForm<FormDataUser>();
+
+	const { fetchDataUser } = useUser({ reset });
 
 	const handleLogout = () => {
 		logout();
@@ -34,6 +41,12 @@ export default function Header() {
 	const goToCompany = () => {
 		navigate("/company");
 	};
+
+	useEffect(() => {
+		if (!avatar) {
+			fetchDataUser();
+		}
+	}, [avatar, fetchDataUser]);
 
 	return (
 		<Box
