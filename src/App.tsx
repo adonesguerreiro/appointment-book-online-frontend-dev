@@ -19,6 +19,7 @@ import DashboardPage from "./pages/Dashboard";
 import CustomerPage from "./pages/Customer";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import ResetPasswordPage from "./pages/ResetPassword";
+import BookingPage from "./pages/BookAppointment";
 
 const isAuthenticated = () => {
 	return localStorage.getItem("token") !== null;
@@ -42,6 +43,10 @@ export default function App() {
 				<Route
 					path="/reset-password"
 					element={<ResetPasswordPage />}
+				/>
+				<Route
+					path="/booking"
+					element={<BookingPage />}
 				/>
 
 				<Route
