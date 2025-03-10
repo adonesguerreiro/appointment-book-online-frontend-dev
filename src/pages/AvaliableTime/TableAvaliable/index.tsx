@@ -10,8 +10,9 @@ import {
 	Box,
 } from "@chakra-ui/react";
 import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { dayMapping } from "../../../utils/dayMapping";
+import { TbEdit } from "react-icons/tb";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 interface TableAvailableProps {
 	availables: FormDataAvailableTime[];
@@ -64,13 +65,17 @@ export default function TableAvaliable({
 
 										<Td>
 											<Flex>
-												<EditIcon
+												<Box
+													as={TbEdit}
 													onClick={() => onEditClick(available.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
-												<DeleteIcon
+												<Box
+													as={RiDeleteBin5Line}
 													onClick={() => onDeleteClick(available.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
 											</Flex>
 										</Td>

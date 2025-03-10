@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import Calendar from "react-calendar";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 export default function CustomCalendar() {
 	const currentYear = new Date().getFullYear();
 	return (
@@ -31,6 +30,9 @@ export default function CustomCalendar() {
 				".react-calendar__navigation button": {
 					color: "teal",
 					fontWeight: "bold",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
 				},
 			}}>
 			<Calendar
@@ -40,8 +42,8 @@ export default function CustomCalendar() {
 				onChange={(date) => console.log(date)}
 				value={new Date()}
 				className="react-calendar"
-				prevLabel={<ChevronLeftIcon />}
-				nextLabel={<ChevronRightIcon />}
+				prevLabel={<FaChevronLeft />}
+				nextLabel={<FaChevronRight />}
 				prev2Label={null}
 				next2Label={null}
 			/>

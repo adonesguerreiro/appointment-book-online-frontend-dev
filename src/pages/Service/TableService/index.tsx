@@ -10,8 +10,9 @@ import {
 	Box,
 } from "@chakra-ui/react";
 import { FormDataService } from "../../../interface/FormDataService";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { currencyFormat } from "../../../utils/currencyFormat";
+import { TbEdit } from "react-icons/tb";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 interface TableServiceProps {
 	services: FormDataService[];
@@ -54,13 +55,17 @@ export default function TableService({
 										<Td isNumeric>{currencyFormat(Number(service.price))}</Td>
 										<Td>
 											<Flex>
-												<EditIcon
+												<Box
+													as={TbEdit}
 													onClick={() => onEditClick(service.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
-												<DeleteIcon
+												<Box
+													as={RiDeleteBin5Line}
 													onClick={() => onDeleteClick(service.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
 											</Flex>
 										</Td>

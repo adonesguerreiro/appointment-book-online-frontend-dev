@@ -10,7 +10,8 @@ import {
 	Box,
 } from "@chakra-ui/react";
 import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableTime";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { TbEdit } from "react-icons/tb";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 interface TableUnavailableTimeProps {
 	unavaliables: FormDataUnavailableTime[];
@@ -58,13 +59,17 @@ export default function TableUnavaliable({
 										<Td>{unavaliable.endTime}</Td>
 										<Td>
 											<Flex>
-												<EditIcon
+												<Box
+													as={TbEdit}
 													onClick={() => onEditClick(unavaliable.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
-												<DeleteIcon
+												<Box
+													as={RiDeleteBin5Line}
 													onClick={() => onDeleteClick(unavaliable.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
 											</Flex>
 										</Td>

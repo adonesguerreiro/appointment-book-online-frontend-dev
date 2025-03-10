@@ -10,9 +10,9 @@ import {
 	Box,
 } from "@chakra-ui/react";
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
-import { EditIcon } from "@chakra-ui/icons";
 import { formatDate } from "../../../utils/formatDate";
 import { statusMapping } from "../../../utils/statusMapping";
+import { TbEdit } from "react-icons/tb";
 
 interface TableScheduleProps {
 	schedules: FormDataSchedule[];
@@ -53,9 +53,11 @@ export default function TableSchedule({
 										<Td>{statusMapping[schedule.status]}</Td>
 										<Td>
 											<Flex>
-												<EditIcon
+												<Box
+													as={TbEdit}
 													onClick={() => onEditClick(schedule.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
+													font-size="1.5rem"
 												/>
 											</Flex>
 										</Td>
