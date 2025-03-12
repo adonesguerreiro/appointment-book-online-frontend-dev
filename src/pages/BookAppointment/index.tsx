@@ -20,31 +20,35 @@ import TimeList from "../../components/TimeList";
 import CustomCalendar from "../../components/CustomCalendar";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-
 import InputMask from "react-input-mask";
 import * as yup from "yup";
 import { FaCheckCircle } from "react-icons/fa";
 
-export interface BookingData {
+export interface BookingAppointmentData {
 	customerName: string;
 	mobile: string;
 	serviceName: string;
-	serviceId: string;
+	calendar: Date;
+	time: string;
 }
 
 export default function BookingPage() {
 	const {
 		register,
+		handleSubmit,
+		setValue,
 		formState: { errors },
-	} = useForm<BookingData>({
+	} = useForm<BookingAppointmentData>({
 		resolver: yupResolver(
 			yup.object({
 				customerName: yup.string().required("Nome é obrigatório"),
 				mobile: yup.string().required("Celular é obrigatório"),
 				serviceName: yup.string().required("Serviço é obrigatório"),
-				serviceId: yup.string().required("Serviço é obrigatório"),
+				calendar: yup.date().required("Data é obrigatória"),
+				time: yup.string().required("Hora é obrigatória"),
 			})
 		),
+		mode: "onChange",
 	});
 
 	const services = [
@@ -57,6 +61,10 @@ export default function BookingPage() {
 		{ id: "7", serviceName: "Outro" },
 	];
 
+	const onSubmit = async (data: BookingAppointmentData) => {
+		console.log(data);
+	};
+
 	return (
 		<Container>
 			<Flex
@@ -66,7 +74,9 @@ export default function BookingPage() {
 				gap="10"
 				padding="0.625rem">
 				<HeadingComponent title="Agendar horário" />
-				<Card>
+				<Card
+					as="form"
+					onSubmit={handleSubmit(onSubmit)}>
 					<CardBody
 						width="52.5625rem"
 						padding="1rem">
@@ -84,7 +94,7 @@ export default function BookingPage() {
 						</Flex>
 						<Card
 							padding={4}
-							marginBottom={4}
+							marginBottom={5}
 							width="25rem"
 							mx="auto">
 							<CardBody>
@@ -122,12 +132,12 @@ export default function BookingPage() {
 										)}
 									</Grid>
 								</FormControl>
-								<FormControl isInvalid={!!errors.serviceId}>
+								<FormControl isInvalid={!!errors.serviceName}>
 									<Grid>
 										<FormLabel>Serviço</FormLabel>
 										<Select
 											placeholder="Selecione o serviço"
-											{...register("serviceId")}>
+											{...register("serviceName")}>
 											{services.map((service) => (
 												<option
 													key={service.id}
@@ -136,17 +146,29 @@ export default function BookingPage() {
 												</option>
 											))}
 										</Select>
-										{errors.serviceId && (
+										{errors.serviceName && (
 											<FormErrorMessage>
-												{errors.serviceId.message}
+												{errors.serviceName.message}
 											</FormErrorMessage>
 										)}
 									</Grid>
 								</FormControl>
 							</CardBody>
 						</Card>
-						<CustomCalendar />
-						<TimeList />
+						<Card>
+							<CardBody>
+								<CustomCalendar
+									setValue={setValue}
+									register={register}
+									errors={errors}
+								/>
+								<TimeList
+									setValue={setValue}
+									errors={errors}
+								/>
+							</CardBody>
+						</Card>
+
 						<Box
 							textAlign="right"
 							paddingTop="1rem">
