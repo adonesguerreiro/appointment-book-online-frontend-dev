@@ -2,22 +2,30 @@ import { Flex, FormControl, Input } from "@chakra-ui/react";
 import Calendar from "react-calendar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { BookingAppointmentData } from "../../pages/BookAppointment";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { useEffect } from "react";
+import {
+	FieldErrors,
+	UseFormClearErrors,
+	UseFormRegister,
+	UseFormSetValue,
+} from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useCustomToast } from "../../hooks/useCustomToast";
 
 interface CustomCalendarProps {
-	setValue: UseFormSetValue<BookingAppointmentData>;
 	register: UseFormRegister<BookingAppointmentData>;
 	errors: FieldErrors<BookingAppointmentData>;
+	setValue: UseFormSetValue<BookingAppointmentData>;
+	clearErrors: UseFormClearErrors<BookingAppointmentData>;
 }
 export default function CustomCalendar({
-	setValue,
 	register,
 	errors,
+	setValue,
+	clearErrors,
 }: CustomCalendarProps) {
 	const currentYear = new Date().getFullYear();
 	const { showToast } = useCustomToast();
+	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
 	useEffect(() => {
 		if (errors.calendar) {
@@ -26,8 +34,9 @@ export default function CustomCalendar({
 				status: "warning",
 				duration: 1000,
 			});
+			clearErrors("calendar");
 		}
-	}, [errors.calendar, showToast]);
+	}, [clearErrors, errors.calendar, showToast]);
 
 	return (
 		<Flex
@@ -67,11 +76,10 @@ export default function CustomCalendar({
 					minDate={new Date()}
 					maxDate={new Date(currentYear, 11, 31)}
 					onChange={(date) => {
-						if (date instanceof Date) {
-							setValue("calendar", date);
-						}
+						setValue("calendar", date as Date, { shouldValidate: true });
+						setSelectedDate(date as Date);
 					}}
-					value={new Date()}
+					value={selectedDate}
 					className="react-calendar"
 					prevLabel={<FaChevronLeft />}
 					nextLabel={<FaChevronRight />}

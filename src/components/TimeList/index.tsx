@@ -1,15 +1,27 @@
 import { Box, Button, FormControl, SimpleGrid } from "@chakra-ui/react";
-import { FieldErrors, UseFormSetValue } from "react-hook-form";
+import {
+	FieldErrors,
+	UseFormClearErrors,
+	UseFormRegister,
+	UseFormSetValue,
+} from "react-hook-form";
 import { BookingAppointmentData } from "../../pages/BookAppointment";
 import { useCustomToast } from "../../hooks/useCustomToast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface TimeListProps {
+	register: UseFormRegister<BookingAppointmentData>;
 	setValue: UseFormSetValue<BookingAppointmentData>;
 	errors: FieldErrors<BookingAppointmentData>;
+	clearErrors: UseFormClearErrors<BookingAppointmentData>;
 }
 
-export default function TimeList({ setValue, errors }: TimeListProps) {
+export default function TimeList({
+	register,
+	setValue,
+	errors,
+	clearErrors,
+}: TimeListProps) {
 	const availableTimes = [
 		{ time: "09:00", available: true },
 		{ time: "10:00", available: false },
@@ -19,6 +31,7 @@ export default function TimeList({ setValue, errors }: TimeListProps) {
 	];
 
 	const { showToast } = useCustomToast();
+	const [selectedTime, setSelectedTime] = useState<string>();
 
 	useEffect(() => {
 		if (errors.time) {
@@ -27,8 +40,9 @@ export default function TimeList({ setValue, errors }: TimeListProps) {
 				status: "warning",
 				duration: 1000,
 			});
+			clearErrors("time");
 		}
-	}, [errors.time, showToast]);
+	}, [clearErrors, errors.time, showToast]);
 
 	console.log("Erros:", errors);
 	return (
@@ -43,15 +57,23 @@ export default function TimeList({ setValue, errors }: TimeListProps) {
 						<Button
 							key={index}
 							width="6rem"
-							bg={time.available ? "green.500" : "gray.300"}
+							bg={
+								selectedTime === time.time
+									? "blue.500"
+									: time.available
+									? "green.500"
+									: "gray.300"
+							}
 							color={time.available ? "white" : "black"}
 							_hover={time.available ? { bg: "green.600" } : {}}
 							onClick={() => {
 								setValue("time", time.time);
+								setSelectedTime(time.time);
 							}}
-							_focus={{ bg: "blue.500" }}
+							value={selectedTime}
 							isDisabled={!time.available}
-							id="time">
+							id="time"
+							{...register("time")}>
 							{time.time}
 						</Button>
 					))}
