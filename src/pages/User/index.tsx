@@ -23,6 +23,8 @@ import { useUserSubmit } from "../../hooks/User/useUserSubmit";
 import HeadingComponent from "../../components/Heading";
 import { useUserCancel } from "../../hooks/User/useUserCancel";
 import { useAvatar } from "../../hooks/useAvatar";
+import { useProfilePhoto } from "../../hooks/useProfilePhoto";
+
 
 export default function UserPage() {
 	const {
@@ -30,6 +32,7 @@ export default function UserPage() {
 		register,
 		reset,
 		getValues,
+
 		formState: { errors },
 	} = useForm<FormDataUser>({
 		resolver: yupResolver(userSchema),
@@ -40,20 +43,13 @@ export default function UserPage() {
 	const { handleCancel } = useUserCancel();
 	const { handleSubmitUser, loading } = useUserSubmit();
 	const { avatar, setAvatar } = useAvatar();
+	const { setProfilePhoto } = useProfilePhoto();
 
 	useEffect(() => {
 		fetchDataUser();
-	}, [fetchDataUser]);
+	}, [fetchDataUser, register]);
 
 	console.log("Erros:", errors);
-
-	const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (file) {
-			const objectUrl = URL.createObjectURL(file);
-			setAvatar(objectUrl);
-		}
-	};
 
 	return (
 		<Container>
@@ -96,9 +92,16 @@ export default function UserPage() {
 									height="100%"
 									opacity={0}
 									cursor="pointer"
-									{...register("avatarUrl")}
 									onChange={(e) => {
-										handleUpload(e);
+										const file = e.target.files?.[0];
+										if (file) {
+											if (avatar) {
+												URL.revokeObjectURL(avatar as string);
+											}
+											const fileUrl = URL.createObjectURL(file);
+											setAvatar(fileUrl);
+											setProfilePhoto(file);
+										}
 									}}
 								/>
 							</Box>

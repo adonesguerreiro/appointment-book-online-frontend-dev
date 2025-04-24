@@ -152,6 +152,7 @@ export default function AvaliableTimeForm({
 									type="text"
 									id="interval"
 									maxLength={5}
+									isDisabled={isEditing}
 									{...register("interval")}
 								/>
 								{errors.interval && (

@@ -5,6 +5,7 @@ import { useAuth } from "../useAuth";
 import { updateUpload, updateUser } from "../../services/api";
 import { useHandleError } from "../useHandleError";
 import { FormDataUser } from "../../interface/FormDataUser";
+import { useProfilePhoto } from "../useProfilePhoto";
 
 export const useUserSubmit = () => {
 	const { token } = useAuth();
@@ -12,6 +13,7 @@ export const useUserSubmit = () => {
 	const { showToast } = useCustomToast();
 	const navigate = useNavigate();
 	const { loading, setLoading } = useLoading();
+	const { profilePhoto } = useProfilePhoto();
 
 	const handleSubmitUser = async (data: FormDataUser) => {
 		setLoading(true);
@@ -21,14 +23,16 @@ export const useUserSubmit = () => {
 				formData.append("name", data.name);
 				formData.append("email", data.email);
 				formData.append("password", data.password || "");
+				data.avatarUrl = profilePhoto;
 				if (data.avatarUrl instanceof File) {
 					formData.append("avatarUrl", data.avatarUrl);
 				}
+				console.log([...formData.entries()]);
 
-				const updatedUser = await updateUser(data);
 				const updateUploadUser = await updateUpload(formData);
+				const updatedUser = await updateUser(data);
 
-				if (updatedUser.status === 200 && updateUploadUser.status === 200) {
+				if (updatedUser.status === 200 || updateUploadUser?.status === 200) {
 					showToast({
 						title: "Salvo com sucesso!",
 						status: "success",

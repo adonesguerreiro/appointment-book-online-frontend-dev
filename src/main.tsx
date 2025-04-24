@@ -5,6 +5,7 @@ import App from "./App";
 import { AuthProvider } from "./context/AuthProvider";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AvatarProvider } from "./context/AvatarProvider";
+import { ProfilePhotoProvider } from "./context/ProfilePhotoProvider";
 
 const colors = {
 	brand: {
@@ -22,13 +23,15 @@ const rootElement = document.getElementById("root");
 ReactDOM.createRoot(rootElement!).render(
 	<React.StrictMode>
 		<AuthProvider>
-			<AvatarProvider>
-				<ChakraProvider theme={theme}>
-					<QueryClientProvider client={queryClient}>
-						<App />
-					</QueryClientProvider>
-				</ChakraProvider>
-			</AvatarProvider>
+			<ProfilePhotoProvider>
+				<AvatarProvider>
+					<ChakraProvider theme={theme}>
+						<QueryClientProvider client={queryClient}>
+							<App />
+						</QueryClientProvider>
+					</ChakraProvider>
+				</AvatarProvider>
+			</ProfilePhotoProvider>
 		</AuthProvider>
 	</React.StrictMode>
 );
