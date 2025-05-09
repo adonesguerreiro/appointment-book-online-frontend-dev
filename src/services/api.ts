@@ -32,6 +32,10 @@ export const resetPassword = (token: string, data: FormDataResetPassword) => {
 	});
 };
 
+export const publicGetCompany = (slugCompany: string, date?: Date) => {
+	return api.get(`/public/${slugCompany}?date=${date}`);
+};
+
 api.interceptors.request.use((config) => {
 	const token = localStorage.getItem("token");
 	if (token) {

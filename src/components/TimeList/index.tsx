@@ -1,4 +1,12 @@
-import { Box, Button, FormControl, SimpleGrid } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Flex,
+	FormControl,
+	GridItem,
+	SimpleGrid,
+	Text,
+} from "@chakra-ui/react";
 import {
 	FieldErrors,
 	UseFormClearErrors,
@@ -8,12 +16,14 @@ import {
 import { BookingAppointmentData } from "../../pages/BookAppointment";
 import { useCustomToast } from "../../hooks/useCustomToast";
 import { useEffect, useState } from "react";
+import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
 
 interface TimeListProps {
 	register: UseFormRegister<BookingAppointmentData>;
 	setValue: UseFormSetValue<BookingAppointmentData>;
 	errors: FieldErrors<BookingAppointmentData>;
 	clearErrors: UseFormClearErrors<BookingAppointmentData>;
+	avaliableTimeSlot: AvaliableTimeSlot[];
 }
 
 export default function TimeList({
@@ -21,15 +31,8 @@ export default function TimeList({
 	setValue,
 	errors,
 	clearErrors,
+	avaliableTimeSlot,
 }: TimeListProps) {
-	const availableTimes = [
-		{ time: "09:00", available: true },
-		{ time: "10:00", available: false },
-		{ time: "11:00", available: true },
-		{ time: "14:00", available: true },
-		{ time: "15:00", available: false },
-	];
-
 	const { showToast } = useCustomToast();
 	const [selectedTime, setSelectedTime] = useState<string>();
 
@@ -44,39 +47,46 @@ export default function TimeList({
 		}
 	}, [clearErrors, errors.time, showToast]);
 
-	console.log("Erros:", errors);
 	return (
 		<Box padding="0.625rem">
 			<FormControl isInvalid={!!errors.time}>
 				<SimpleGrid
+					placeItems="center"
 					columns={3}
 					spacing={3}
-					padding={3}
-					justifyItems="center">
-					{availableTimes.map((time, index) => (
-						<Button
-							key={index}
-							width="6rem"
-							bg={
-								selectedTime === time.time
-									? "blue.500"
-									: time.available
-									? "green.500"
-									: "gray.300"
-							}
-							color={time.available ? "white" : "black"}
-							_hover={time.available ? { bg: "green.600" } : {}}
-							onClick={() => {
-								setValue("time", time.time);
-								setSelectedTime(time.time);
-							}}
-							value={selectedTime}
-							isDisabled={!time.available}
-							id="time"
-							{...register("time")}>
-							{time.time}
-						</Button>
-					))}
+					padding={3}>
+					{avaliableTimeSlot.length > 0 ? (
+						avaliableTimeSlot.map((avaliableTimeSlot, index) => (
+							<Button
+								key={index}
+								width="6rem"
+								bg={
+									selectedTime === avaliableTimeSlot.timeSlot
+										? "blue.500"
+										: avaliableTimeSlot.timeSlot
+										? "green.500"
+										: "gray.300"
+								}
+								color={avaliableTimeSlot.timeSlot ? "white" : "black"}
+								_hover={avaliableTimeSlot.timeSlot ? { bg: "green.600" } : {}}
+								onClick={() => {
+									setValue("time", avaliableTimeSlot.timeSlot);
+									setSelectedTime(avaliableTimeSlot.timeSlot);
+								}}
+								value={selectedTime}
+								isDisabled={!avaliableTimeSlot.timeSlot}
+								id="time"
+								{...register("time")}>
+								{avaliableTimeSlot.timeSlot}
+							</Button>
+						))
+					) : (
+						<GridItem colSpan={3}>
+							<Flex justifyContent="center">
+								<Text>Não há horário para data selecionada.</Text>
+							</Flex>
+						</GridItem>
+					)}
 				</SimpleGrid>
 			</FormControl>
 		</Box>

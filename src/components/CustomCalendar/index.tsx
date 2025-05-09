@@ -8,7 +8,7 @@ import {
 	UseFormRegister,
 	UseFormSetValue,
 } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCustomToast } from "../../hooks/useCustomToast";
 
 interface CustomCalendarProps {
@@ -16,16 +16,19 @@ interface CustomCalendarProps {
 	errors: FieldErrors<BookingAppointmentData>;
 	setValue: UseFormSetValue<BookingAppointmentData>;
 	clearErrors: UseFormClearErrors<BookingAppointmentData>;
+	selectedDate: Date | null;
+	setSelectedDate: (date: Date) => void;
 }
 export default function CustomCalendar({
 	register,
 	errors,
 	setValue,
 	clearErrors,
+	selectedDate,
+	setSelectedDate,
 }: CustomCalendarProps) {
 	const currentYear = new Date().getFullYear();
 	const { showToast } = useCustomToast();
-	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
 	useEffect(() => {
 		if (errors.calendar) {
@@ -36,7 +39,7 @@ export default function CustomCalendar({
 			});
 			clearErrors("calendar");
 		}
-	}, [clearErrors, errors.calendar, showToast]);
+	}, [clearErrors, errors.calendar, selectedDate, showToast]);
 
 	return (
 		<Flex
@@ -79,7 +82,7 @@ export default function CustomCalendar({
 						setValue("calendar", date as Date, { shouldValidate: true });
 						setSelectedDate(date as Date);
 					}}
-					value={selectedDate}
+					value={selectedDate || undefined}
 					className="react-calendar"
 					prevLabel={<FaChevronLeft />}
 					nextLabel={<FaChevronRight />}

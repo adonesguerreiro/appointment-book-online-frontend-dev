@@ -8,6 +8,12 @@ import { useForm } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { bookAppointmentSchema } from "../../validators/bookAppointmentSchema";
 import BookingAppointment from "../../components/Form/BookAppointment";
+import { publicGetCompany } from "../../services/api";
+import { useEffect, useState } from "react";
+import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
+import { FormDataService } from "../../interface/FormDataService";
+import { FormDataUser } from "../../interface/FormDataUser";
+import { useParams } from "react-router-dom";
 
 export interface BookingAppointmentData {
 	customerName: string;
@@ -15,6 +21,12 @@ export interface BookingAppointmentData {
 	serviceName: string;
 	calendar: Date;
 	time: string;
+}
+
+export interface PublicCompany {
+	avaliableTimeSlot: AvaliableTimeSlot[];
+	services: FormDataService[];
+	users: FormDataUser[];
 }
 
 export default function BookingPage() {
@@ -29,9 +41,30 @@ export default function BookingPage() {
 		mode: "onChange",
 	});
 
+	const [companyData, setCompanyData] = useState<PublicCompany | null>(null);
+	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
 	const onSubmit = async (data: BookingAppointmentData) => {
 		console.log(data);
 	};
+	const { slugCompany } = useParams();
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				if (!selectedDate) {
+					const { data } = await publicGetCompany(slugCompany!);
+					setCompanyData(data.company);
+				} else {
+					const { data } = await publicGetCompany(slugCompany!, selectedDate);
+					setCompanyData(data.company);
+				}
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		};
+
+		fetchData();
+	}, [setCompanyData, companyData, selectedDate, slugCompany]);
 
 	return (
 		<Container>
@@ -51,6 +84,8 @@ export default function BookingPage() {
 						<BookingAppointment
 							register={register}
 							errors={errors}
+							users={companyData?.users || []}
+							services={companyData?.services || []}
 						/>
 						<Card>
 							<CardBody>
@@ -59,12 +94,15 @@ export default function BookingPage() {
 									register={register}
 									errors={errors}
 									clearErrors={clearErrors}
+									selectedDate={selectedDate}
+									setSelectedDate={setSelectedDate}
 								/>
 								<TimeList
-								register={register}
+									register={register}
 									setValue={setValue}
 									errors={errors}
 									clearErrors={clearErrors}
+									avaliableTimeSlot={companyData?.avaliableTimeSlot || []}
 								/>
 							</CardBody>
 						</Card>

@@ -15,26 +15,22 @@ import {
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { BookingAppointmentData } from "../../../pages/BookAppointment";
 import InputMask from "react-input-mask";
+import { FormDataService } from "../../../interface/FormDataService";
+import { FormDataUser } from "../../../interface/FormDataUser";
 
 interface BookingAppointmentProps {
 	register: UseFormRegister<BookingAppointmentData>;
 	errors: FieldErrors<BookingAppointmentData>;
+	users: FormDataUser[];
+	services: FormDataService[];
 }
 
 export default function BookingAppointment({
 	errors,
 	register,
+	users,
+	services,
 }: BookingAppointmentProps) {
-	const services = [
-		{ id: "1", serviceName: "Consulta" },
-		{ id: "2", serviceName: "Exame" },
-		{ id: "3", serviceName: "Curso" },
-		{ id: "4", serviceName: "Palestra" },
-		{ id: "5", serviceName: "Treinamento" },
-		{ id: "6", serviceName: "Workshop" },
-		{ id: "7", serviceName: "Outro" },
-	];
-
 	return (
 		<>
 			<Flex
@@ -42,11 +38,17 @@ export default function BookingAppointment({
 				align="center"
 				padding="1rem">
 				<Avatar
-					src="https://bit.ly/sage-adebayo"
+					src={
+						typeof users[0]?.avatarUrl === "string"
+							? users[0]?.avatarUrl
+							: users[0]?.avatarUrl
+							? URL.createObjectURL(users[0]?.avatarUrl)
+							: undefined
+					}
 					size="xl"
 				/>
 				<Box ml="3">
-					<Text fontWeight="bold">Segun Adebayo</Text>
+					<Text fontWeight="bold">{users[0]?.name}</Text>
 				</Box>
 			</Flex>
 			<Card
@@ -93,13 +95,17 @@ export default function BookingAppointment({
 							<Select
 								placeholder="Selecione o serviço"
 								{...register("serviceName")}>
-								{services.map((service) => (
-									<option
-										key={service.id}
-										value={service.id}>
-										{service.serviceName}
-									</option>
-								))}
+								{services.length > 0 ? (
+									services.map((service) => (
+										<option
+											key={service.id}
+											value={service.id}>
+											{service.serviceName}
+										</option>
+									))
+								) : (
+									<option value="0">Nenhum serviço encontrado</option>
+								)}
 							</Select>
 							{errors.serviceName && (
 								<FormErrorMessage>

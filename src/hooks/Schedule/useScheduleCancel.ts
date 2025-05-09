@@ -22,7 +22,6 @@ export const useScheduleCancel = ({
 			serviceId: "",
 			date: "",
 			status: "",
-			timeSlotAvailable: "",
 		});
 		closeForm();
 		stopEditing();

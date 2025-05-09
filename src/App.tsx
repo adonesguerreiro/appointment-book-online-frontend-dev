@@ -45,7 +45,7 @@ export default function App() {
 					element={<ResetPasswordPage />}
 				/>
 				<Route
-					path="/booking"
+					path="/public/:slugCompany"
 					element={<BookingPage />}
 				/>
 
