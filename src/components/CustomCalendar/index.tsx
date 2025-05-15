@@ -82,7 +82,7 @@ export default function CustomCalendar({
 						setValue("calendar", date as Date, { shouldValidate: true });
 						setSelectedDate(date as Date);
 					}}
-					value={selectedDate || undefined}
+					value={selectedDate}
 					className="react-calendar"
 					prevLabel={<FaChevronLeft />}
 					nextLabel={<FaChevronRight />}

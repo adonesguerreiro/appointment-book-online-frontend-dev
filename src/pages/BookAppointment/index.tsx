@@ -42,7 +42,7 @@ export default function BookingPage() {
 	});
 
 	const [companyData, setCompanyData] = useState<PublicCompany | null>(null);
-	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
 	const onSubmit = async (data: BookingAppointmentData) => {
 		console.log(data);
@@ -51,12 +51,12 @@ export default function BookingPage() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				if (!selectedDate) {
-					const { data } = await publicGetCompany(slugCompany!);
-					setCompanyData(data.company);
+				if (selectedDate) {
+					const { data } = await publicGetCompany(slugCompany!, selectedDate!);
+					setCompanyData(data.timeSlots);
 				} else {
-					const { data } = await publicGetCompany(slugCompany!, selectedDate);
-					setCompanyData(data.company);
+					const { data } = await publicGetCompany(slugCompany!);
+					setCompanyData(data.timeSlots);
 				}
 			} catch (error) {
 				console.error("Erro ao buscar dados", error);

@@ -32,8 +32,14 @@ export const resetPassword = (token: string, data: FormDataResetPassword) => {
 	});
 };
 
-export const publicGetCompany = (slugCompany: string, date?: Date) => {
-	return api.get(`/public/${slugCompany}?date=${date}`);
+export const publicGetCompany = (
+	slugCompany: string,
+	date?: Date,
+	currentPage?: number
+) => {
+	return api.get(`/public/${slugCompany}?date=${date}`, {
+		params: { page: currentPage, limit: 10 },
+	});
 };
 
 api.interceptors.request.use((config) => {
