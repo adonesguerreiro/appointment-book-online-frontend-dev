@@ -73,7 +73,7 @@ export default function BookingAppointment({
 							)}
 						</Grid>
 					</FormControl>
-					<FormControl isInvalid={!!errors.mobile}>
+					<FormControl isInvalid={!!errors.customerPhone}>
 						<Grid>
 							<FormLabel>Celular</FormLabel>
 							<Input
@@ -81,20 +81,22 @@ export default function BookingAppointment({
 								mask="(99) 99999-9999"
 								placeholder="(99) 99999-9999"
 								type="tel"
-								id="mobile"
-								{...register("mobile")}
+								id="customerPhone"
+								{...register("customerPhone")}
 							/>
-							{errors.mobile && (
-								<FormErrorMessage>{errors.mobile.message}</FormErrorMessage>
+							{errors.customerPhone && (
+								<FormErrorMessage>
+									{errors.customerPhone.message}
+								</FormErrorMessage>
 							)}
 						</Grid>
 					</FormControl>
-					<FormControl isInvalid={!!errors.serviceName}>
+					<FormControl isInvalid={!!errors.serviceId}>
 						<Grid>
 							<FormLabel>Serviço</FormLabel>
 							<Select
 								placeholder="Selecione o serviço"
-								{...register("serviceName")}>
+								{...register("serviceId")}>
 								{services.length > 0 ? (
 									services.map((service) => (
 										<option
@@ -107,10 +109,8 @@ export default function BookingAppointment({
 									<option value="0">Nenhum serviço encontrado</option>
 								)}
 							</Select>
-							{errors.serviceName && (
-								<FormErrorMessage>
-									{errors.serviceName.message}
-								</FormErrorMessage>
+							{errors.serviceId && (
+								<FormErrorMessage>{errors.serviceId.message}</FormErrorMessage>
 							)}
 						</Grid>
 					</FormControl>

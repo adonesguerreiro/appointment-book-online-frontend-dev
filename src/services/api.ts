@@ -10,6 +10,7 @@ import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
 import { FormDataResetPassword } from "../interface/FormDataResetPassword";
+import { BookingAppointmentData } from "../pages/BookAppointment";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,
@@ -40,6 +41,13 @@ export const publicGetCompany = (
 	return api.get(`/public/${slugCompany}?date=${date}`, {
 		params: { page: currentPage, limit: 10 },
 	});
+};
+
+export const publicBookAppointment = (
+	bookingData: BookingAppointmentData,
+	slugCompany: string
+) => {
+	return api.post(`/public/booking/${slugCompany}`, bookingData);
 };
 
 api.interceptors.request.use((config) => {

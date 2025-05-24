@@ -8,17 +8,18 @@ import { useForm } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { bookAppointmentSchema } from "../../validators/bookAppointmentSchema";
 import BookingAppointment from "../../components/Form/BookAppointment";
-import { publicGetCompany } from "../../services/api";
+import { publicBookAppointment, publicGetCompany } from "../../services/api";
 import { useEffect, useState } from "react";
 import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
 import { FormDataService } from "../../interface/FormDataService";
 import { FormDataUser } from "../../interface/FormDataUser";
 import { useParams } from "react-router-dom";
+import { useCustomToast } from "../../hooks/useCustomToast";
 
 export interface BookingAppointmentData {
 	customerName: string;
-	mobile: string;
-	serviceName: string;
+	customerPhone: string;
+	serviceId: string;
 	calendar: Date;
 	time: string;
 }
@@ -44,10 +45,27 @@ export default function BookingPage() {
 	const [companyData, setCompanyData] = useState<PublicCompany | null>(null);
 	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-	const onSubmit = async (data: BookingAppointmentData) => {
-		console.log(data);
-	};
+	const { showToast } = useCustomToast();
 	const { slugCompany } = useParams();
+	const onSubmit = async (bookingData: BookingAppointmentData) => {
+		try {
+			const bookingCreated = await publicBookAppointment(
+				bookingData,
+				slugCompany!
+			);
+			if (bookingCreated.status === 200) {
+				showToast({
+					title: "Agendamento realizado com sucesso.",
+					status: "success",
+				});
+			}
+		} catch (error) {
+			console.error("Erro ao agendar horário", error);
+		}
+	};
+
+	console.log("Errors", errors);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
