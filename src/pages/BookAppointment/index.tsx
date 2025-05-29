@@ -1,4 +1,12 @@
-import { Container, Flex, Card, CardBody, Box, Button } from "@chakra-ui/react";
+import {
+	Container,
+	Flex,
+	Card,
+	CardBody,
+	Box,
+	Button,
+	Spinner,
+} from "@chakra-ui/react";
 import HeadingComponent from "../../components/Heading";
 import "react-calendar/dist/Calendar.css";
 import TimeList from "../../components/TimeList";
@@ -8,13 +16,12 @@ import { useForm } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { bookAppointmentSchema } from "../../validators/bookAppointmentSchema";
 import BookingAppointment from "../../components/Form/BookAppointment";
-import { publicBookAppointment, publicGetCompany } from "../../services/api";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
 import { FormDataService } from "../../interface/FormDataService";
 import { FormDataUser } from "../../interface/FormDataUser";
-import { useParams } from "react-router-dom";
-import { useCustomToast } from "../../hooks/useCustomToast";
+import { useBooking } from "../../hooks/Booking/useBooking";
+import { useBookingSubmit } from "../../hooks/Booking/useBookingSubmit";
 
 export interface BookingAppointmentData {
 	customerName: string;
@@ -25,7 +32,7 @@ export interface BookingAppointmentData {
 }
 
 export interface PublicCompany {
-	avaliableTimeSlot: AvaliableTimeSlot[];
+	avaliableTimeSlots: AvaliableTimeSlot[];
 	services: FormDataService[];
 	users: FormDataUser[];
 }
@@ -35,56 +42,26 @@ export default function BookingPage() {
 		register,
 		handleSubmit,
 		setValue,
-		formState: { errors },
+		reset,
+		formState: { errors, isSubmitting },
 		clearErrors,
 	} = useForm<BookingAppointmentData>({
 		resolver: yupResolver(bookAppointmentSchema),
 		mode: "onChange",
 	});
 
-	const [companyData, setCompanyData] = useState<PublicCompany | null>(null);
-	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+	const { fetchBooking, companyData, selectedDate, setSelectedDate, loading } =
+		useBooking();
 
-	const { showToast } = useCustomToast();
-	const { slugCompany } = useParams();
-	const onSubmit = async (bookingData: BookingAppointmentData) => {
-		try {
-			const bookingCreated = await publicBookAppointment(
-				bookingData,
-				slugCompany!
-			);
-			if (bookingCreated.status === 200) {
-				showToast({
-					title: "Agendamento realizado com sucesso.",
-					status: "success",
-				});
-			}
-		} catch (error) {
-			console.error("Erro ao agendar horário", error);
-		}
-	};
-
-	console.log("Errors", errors);
+	const { handleSubmitBooking } = useBookingSubmit(reset, fetchBooking);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				if (selectedDate) {
-					const { data } = await publicGetCompany(slugCompany!, selectedDate!);
-					setCompanyData(data.timeSlots);
-				} else {
-					const { data } = await publicGetCompany(slugCompany!);
-					setCompanyData(data.timeSlots);
-				}
-			} catch (error) {
-				console.error("Erro ao buscar dados", error);
-			}
-		};
+		fetchBooking();
+	}, [fetchBooking]);
 
-		fetchData();
-	}, [setCompanyData, companyData, selectedDate, slugCompany]);
-
-	return (
+	return loading ? (
+		<Spinner />
+	) : (
 		<Container>
 			<Flex
 				display="flex"
@@ -95,7 +72,7 @@ export default function BookingPage() {
 				<HeadingComponent title="Agendar horário" />
 				<Card
 					as="form"
-					onSubmit={handleSubmit(onSubmit)}>
+					onSubmit={handleSubmit(handleSubmitBooking)}>
 					<CardBody
 						width="52.5625rem"
 						padding="1rem">
@@ -120,7 +97,8 @@ export default function BookingPage() {
 									setValue={setValue}
 									errors={errors}
 									clearErrors={clearErrors}
-									avaliableTimeSlot={companyData?.avaliableTimeSlot || []}
+									avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
+									isSubmitting={isSubmitting}
 								/>
 							</CardBody>
 						</Card>

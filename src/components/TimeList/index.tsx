@@ -24,6 +24,7 @@ interface TimeListProps {
 	errors: FieldErrors<BookingAppointmentData>;
 	clearErrors: UseFormClearErrors<BookingAppointmentData>;
 	avaliableTimeSlot: AvaliableTimeSlot[];
+	isSubmitting: boolean;
 }
 
 export default function TimeList({
@@ -32,8 +33,10 @@ export default function TimeList({
 	errors,
 	clearErrors,
 	avaliableTimeSlot,
+	isSubmitting,
 }: TimeListProps) {
 	const { showToast } = useCustomToast();
+
 	const [selectedTime, setSelectedTime] = useState<string>();
 
 	useEffect(() => {
@@ -45,7 +48,10 @@ export default function TimeList({
 			});
 			clearErrors("time");
 		}
-	}, [clearErrors, errors.time, showToast]);
+		if (isSubmitting) {
+			setSelectedTime(undefined);
+		}
+	}, [clearErrors, errors.time, isSubmitting, showToast]);
 
 	return (
 		<Box padding="0.625rem">
@@ -63,9 +69,7 @@ export default function TimeList({
 								bg={
 									selectedTime === avaliableTimeSlot.timeSlot
 										? "blue.500"
-										: avaliableTimeSlot.timeSlot
-										? "green.500"
-										: "gray.300"
+										: "green.500"
 								}
 								color={avaliableTimeSlot.timeSlot ? "white" : "black"}
 								_hover={avaliableTimeSlot.timeSlot ? { bg: "green.600" } : {}}
