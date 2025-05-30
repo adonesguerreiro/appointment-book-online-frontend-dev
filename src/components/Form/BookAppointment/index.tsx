@@ -21,14 +21,14 @@ import { FormDataUser } from "../../../interface/FormDataUser";
 interface BookingAppointmentProps {
 	register: UseFormRegister<BookingAppointmentData>;
 	errors: FieldErrors<BookingAppointmentData>;
-	users: FormDataUser[];
+	user: FormDataUser;
 	services: FormDataService[];
 }
 
 export default function BookingAppointment({
 	errors,
 	register,
-	users,
+	user,
 	services,
 }: BookingAppointmentProps) {
 	return (
@@ -39,16 +39,16 @@ export default function BookingAppointment({
 				padding="1rem">
 				<Avatar
 					src={
-						typeof users[0]?.avatarUrl === "string"
-							? users[0]?.avatarUrl
-							: users[0]?.avatarUrl
-							? URL.createObjectURL(users[0]?.avatarUrl)
+						typeof user?.avatarUrl === "string"
+							? user?.avatarUrl
+							: user?.avatarUrl
+							? URL.createObjectURL(user?.avatarUrl)
 							: undefined
 					}
 					size="xl"
 				/>
 				<Box ml="3">
-					<Text fontWeight="bold">{users[0]?.name}</Text>
+					<Text fontWeight="bold">{user?.name}</Text>
 				</Box>
 			</Flex>
 			<Card

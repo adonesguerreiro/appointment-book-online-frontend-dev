@@ -34,7 +34,7 @@ export interface BookingAppointmentData {
 export interface PublicCompany {
 	avaliableTimeSlots: AvaliableTimeSlot[];
 	services: FormDataService[];
-	users: FormDataUser[];
+	user: FormDataUser;
 }
 
 export default function BookingPage() {
@@ -59,6 +59,8 @@ export default function BookingPage() {
 		fetchBooking();
 	}, [fetchBooking]);
 
+	console.log("companyData", companyData?.user);
+
 	return loading ? (
 		<Spinner />
 	) : (
@@ -79,7 +81,7 @@ export default function BookingPage() {
 						<BookingAppointment
 							register={register}
 							errors={errors}
-							users={companyData?.users || []}
+							user={companyData?.user || {}}
 							services={companyData?.services || []}
 						/>
 						<Card>
