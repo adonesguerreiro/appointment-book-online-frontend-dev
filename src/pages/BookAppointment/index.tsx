@@ -22,6 +22,7 @@ import { FormDataService } from "../../interface/FormDataService";
 import { FormDataUser } from "../../interface/FormDataUser";
 import { useBooking } from "../../hooks/Booking/useBooking";
 import { useBookingSubmit } from "../../hooks/Booking/useBookingSubmit";
+import EmptyState from "../../components/EmptyState";
 
 export interface BookingAppointmentData {
 	customerName: string;
@@ -59,7 +60,7 @@ export default function BookingPage() {
 		fetchBooking();
 	}, [fetchBooking]);
 
-	console.log("companyData", companyData?.user);
+	console.log("companyData", companyData!);
 
 	return loading ? (
 		<Spinner />
@@ -78,45 +79,55 @@ export default function BookingPage() {
 					<CardBody
 						width="52.5625rem"
 						padding="1rem">
-						<BookingAppointment
-							register={register}
-							errors={errors}
-							user={companyData?.user || {}}
-							services={companyData?.services || []}
-						/>
-						<Card>
-							<CardBody>
-								<CustomCalendar
-									setValue={setValue}
+						{companyData?.user.blocked ? (
+							<Flex
+								justify="center"
+								align="center"
+								padding="1rem">
+								<EmptyState />
+							</Flex>
+						) : (
+							<>
+								<BookingAppointment
 									register={register}
 									errors={errors}
-									clearErrors={clearErrors}
-									selectedDate={selectedDate}
-									setSelectedDate={setSelectedDate}
+									user={companyData?.user || {}}
+									services={companyData?.services || []}
 								/>
-								<TimeList
-									register={register}
-									setValue={setValue}
-									errors={errors}
-									clearErrors={clearErrors}
-									avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
-									isSubmitting={isSubmitting}
-								/>
-							</CardBody>
-						</Card>
-
-						<Box
-							textAlign="right"
-							paddingTop="1rem">
-							<Button
-								colorScheme="teal"
-								size="lg"
-								type="submit"
-								margin="0.5rem"
-								rightIcon={<FaCheckCircle />}>
-								Agendar consulta
-							</Button>
-						</Box>
+								<Card>
+									<CardBody>
+										<CustomCalendar
+											setValue={setValue}
+											register={register}
+											errors={errors}
+											clearErrors={clearErrors}
+											selectedDate={selectedDate}
+											setSelectedDate={setSelectedDate}
+										/>
+										<TimeList
+											register={register}
+											setValue={setValue}
+											errors={errors}
+											clearErrors={clearErrors}
+											avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
+											isSubmitting={isSubmitting}
+										/>
+									</CardBody>
+								</Card>
+								<Box
+									textAlign="right"
+									paddingTop="1rem">
+									<Button
+										colorScheme="teal"
+										size="lg"
+										type="submit"
+										margin="0.5rem"
+										rightIcon={<FaCheckCircle />}>
+										Agendar consulta
+									</Button>
+								</Box>
+							</>
+						)}
 					</CardBody>
 				</Card>
 			</Flex>
