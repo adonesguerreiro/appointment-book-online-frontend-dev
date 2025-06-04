@@ -1,3 +1,4 @@
+import { isValidMobilePhone } from "@brazilian-utils/brazilian-utils";
 import * as yup from "yup";
 
 export const customerSchema = yup.object().shape({
@@ -6,6 +7,14 @@ export const customerSchema = yup.object().shape({
 		then: (schema) => schema.required("Id é obrigatório"),
 		otherwise: (schema) => schema.optional(),
 	}),
-	customerName: yup.string().required("Nome do cliente é obrigatório"),
-	mobile: yup.string().required("Número do celular é obrigatório"),
+	customerName: yup
+		.string()
+		.max(255, "Nome do cliente deve ter no máximo 255 caracteres")
+		.required("Nome do cliente é obrigatório"),
+	mobile: yup
+		.string()
+		.required("Número do celular é obrigatório")
+		.test("is-valid-mobile", "Número de celular inválido", (value) =>
+			isValidMobilePhone(value)
+		),
 });

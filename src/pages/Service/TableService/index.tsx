@@ -13,6 +13,7 @@ import { FormDataService } from "../../../interface/FormDataService";
 import { currencyFormat } from "../../../utils/currencyFormat";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { formatMinutesInHours } from "../../../utils/formatMinutesInHours";
 
 interface TableServiceProps {
 	services: FormDataService[];
@@ -51,8 +52,8 @@ export default function TableService({
 								{services.map((service, index) => (
 									<Tr key={index}>
 										<Td>{service.serviceName}</Td>
-										<Td>{service.duration}</Td>
-										<Td isNumeric>{currencyFormat(Number(service.price))}</Td>
+										<Td>{formatMinutesInHours(service.duration)}</Td>
+										<Td isNumeric>{currencyFormat(service.price)}</Td>
 										<Td>
 											<Flex>
 												<Box

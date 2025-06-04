@@ -11,7 +11,11 @@ import FilterDashBoard from "./Filter";
 import { usePieCharSubmit } from "../../hooks/Dashboard/usePieChartSubmit";
 
 export default function DashboardPage() {
-	const { register, handleSubmit } = useForm<FormDataDashboard>({
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormDataDashboard>({
 		resolver: yupResolver(dashboardSchema),
 	});
 
@@ -37,6 +41,7 @@ export default function DashboardPage() {
 						register={register}
 						handleSubmit={handleSubmit}
 						handleSubmitPieChart={handleSubmitPieChart}
+						errors={errors}
 					/>
 					<Box
 						mb={4}

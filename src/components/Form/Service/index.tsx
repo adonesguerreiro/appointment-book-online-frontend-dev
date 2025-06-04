@@ -84,7 +84,7 @@ export default function ServiceForm({
 
 						<FormControl isInvalid={!!errors.duration}>
 							<Grid>
-								<FormLabel>Duração</FormLabel>
+								<FormLabel>Duração do serviço (minutos)</FormLabel>
 								<Input
 									as={InputMask}
 									mask="99:99"
