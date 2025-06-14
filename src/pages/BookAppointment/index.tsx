@@ -60,25 +60,20 @@ export default function BookingPage() {
 		fetchBooking();
 	}, [fetchBooking]);
 
-	console.log("companyData", companyData!);
-
 	return loading ? (
 		<Spinner />
 	) : (
-		<Container>
+		<Container
+		w={{ base: "85%", md: "90%", lg: "800px" }}>
 			<Flex
 				display="flex"
 				direction="column"
-				align="center"
-				gap="10"
-				padding="0.625rem">
+				align="center">
 				<HeadingComponent title="Agendar horário" />
 				<Card
 					as="form"
 					onSubmit={handleSubmit(handleSubmitBooking)}>
-					<CardBody
-						width="52.5625rem"
-						padding="1rem">
+					<CardBody>
 						{companyData?.user.blocked ? (
 							<Flex
 								justify="center"
