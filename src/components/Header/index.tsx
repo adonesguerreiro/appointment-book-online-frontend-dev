@@ -1,5 +1,4 @@
 import {
-	Box,
 	Button,
 	Flex,
 	Menu,
@@ -9,6 +8,7 @@ import {
 	Spacer,
 	WrapItem,
 	Image,
+	Container,
 } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/react";
 import { FaChevronDown } from "react-icons/fa";
@@ -49,18 +49,16 @@ export default function Header() {
 	}, [avatar, fetchDataUser]);
 
 	return (
-		<Box
+		<Container
 			as="header"
 			bg="blackAlpha.900"
 			position="fixed"
+			width="calc(100% - 15.625rem)"
+			maxW="100%"
 			top="0"
 			right="0"
-			width="87%"
-			zIndex={2}
-			color="white"
 			px={4}
-			py={2}
-			boxShadow="md">
+			py={2}>
 			<Flex align="center">
 				<Image
 					src={Logo}
@@ -81,8 +79,6 @@ export default function Header() {
 							alignItems="center">
 							<WrapItem>
 								<Avatar
-									// name="Adones"
-									// src="https://avatars.githubusercontent.com/u/60514105?v=4"
 									id="avatarUrl"
 									src={avatar as string}
 								/>
@@ -118,6 +114,6 @@ export default function Header() {
 					</MenuList>
 				</Menu>
 			</Flex>
-		</Box>
+		</Container>
 	);
 }
