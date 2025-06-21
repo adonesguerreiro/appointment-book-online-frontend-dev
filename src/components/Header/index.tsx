@@ -53,7 +53,7 @@ export default function Header() {
 			as="header"
 			bg="blackAlpha.900"
 			position="fixed"
-			width="calc(100% - 15.625rem)"
+			width={{ base: "calc(100% - 5rem)", md: "calc(100% - 15.625rem)" }}
 			maxW="100%"
 			top="0"
 			right="0"
