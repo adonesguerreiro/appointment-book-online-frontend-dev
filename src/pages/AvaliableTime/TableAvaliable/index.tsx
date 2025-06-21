@@ -69,13 +69,13 @@ export default function TableAvaliable({
 													as={TbEdit}
 													onClick={() => onEditClick(available.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
-													font-size="1.5rem"
+													fontSize="1.5rem"
 												/>
 												<Box
 													as={RiDeleteBin5Line}
 													onClick={() => onDeleteClick(available.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
-													font-size="1.5rem"
+													fontSize="1.5rem"
 												/>
 											</Flex>
 										</Td>

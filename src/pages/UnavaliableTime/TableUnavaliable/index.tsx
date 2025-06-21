@@ -63,13 +63,13 @@ export default function TableUnavaliable({
 													as={TbEdit}
 													onClick={() => onEditClick(unavaliable.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
-													font-size="1.5rem"
+													fontSize="1.5rem"
 												/>
 												<Box
 													as={RiDeleteBin5Line}
 													onClick={() => onDeleteClick(unavaliable.id!)}
 													_hover={{ color: "red", cursor: "pointer" }}
-													font-size="1.5rem"
+													fontSize="1.5rem"
 												/>
 											</Flex>
 										</Td>

@@ -5,8 +5,8 @@ export interface FormDataSchedule {
 	customerPhone?: string;
 	serviceId: string;
 	serviceName?: string;
-	status?: string;
-	date: string | Date;
+	status: string;
+	date: string;
 	timeSlotAvaliable: string;
 	avaliableTimeSlot?: string[];
 }

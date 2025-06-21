@@ -57,7 +57,7 @@ export default function TableSchedule({
 													as={TbEdit}
 													onClick={() => onEditClick(schedule.id!)}
 													_hover={{ color: "blue", cursor: "pointer" }}
-													font-size="1.5rem"
+													fontSize="1.5rem"
 												/>
 											</Flex>
 										</Td>
