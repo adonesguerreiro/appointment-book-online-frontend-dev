@@ -19,13 +19,14 @@ import { FormDataSchedule } from "../../../interface/FormDataSchedule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { scheduleSchema } from "../../../validators/scheduleSchema";
 import InputMask from "react-input-mask";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { getCustomers, getServices } from "../../../services/api";
 import DatePicker from "react-datepicker";
 import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../../interface/TimeSlot";
 import { extractTimeFromDate } from "../../../utils/extractTimeFromDate";
+import { useScheduleServiceEdit } from "../../../hooks/Schedule/useScheduleServiceEdit";
+import { useScheduleCustomerEdit } from "../../../hooks/Schedule/useScheduleCustomerEdit";
 
 interface ScheduleFormProps {
 	onSubmit: (data: FormDataSchedule) => void;
@@ -55,44 +56,48 @@ export default function ScheduleForm({
 	} = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
 	});
-	const [customers, setCustomers] = useState<FormDataSchedule[]>([]);
-	const [services, setServices] = useState<FormDataSchedule[]>([]);
 
 	const { token, logout } = useAuth();
+	const { allServices } = useScheduleServiceEdit(
+		selectedSchedule ?? ({} as FormDataSchedule)
+	);
+	const { allCustomers } = useScheduleCustomerEdit(
+		selectedSchedule ?? ({} as FormDataSchedule)
+	);
+
 	// console.log("Erros:", errors);
-
 	useEffect(() => {
-		const fetchData = async () => {
-			if (!token) {
-				logout();
-				return;
-			}
+		if (!token) {
+			logout();
+			return;
+		}
 
-			try {
-				const [customersData, servicesData] = await Promise.all([
-					getCustomers(),
-					getServices(),
-				]);
+		const customerReady =
+			selectedSchedule?.customerId &&
+			allCustomers.some((c) => c.id === selectedSchedule.customerId);
 
-				setCustomers(customersData.data.customers);
-				setServices(servicesData.data.services);
+		const serviceReady =
+			selectedSchedule?.serviceId &&
+			allServices.some((s) => s.id === selectedSchedule.serviceId);
 
-				if (selectedSchedule) {
-					reset({
-						customerId: selectedSchedule.customerId,
-						serviceId: selectedSchedule.serviceId,
-						date: selectedSchedule.date,
-						status: selectedSchedule.status,
-						timeSlotAvaliable: extractTimeFromDate(selectedSchedule.date),
-					});
-				}
-			} catch (err) {
-				console.error("Erro ao buscar dados", err);
-			}
-		};
-
-		fetchData();
-	}, [isEditing, logout, reset, selectedSchedule, token]);
+		if (isEditing && selectedSchedule && customerReady && serviceReady) {
+			reset({
+				customerId: selectedSchedule.customerId,
+				serviceId: selectedSchedule.serviceId,
+				date: selectedSchedule.date,
+				status: selectedSchedule.status,
+				timeSlotAvaliable: extractTimeFromDate(selectedSchedule.date),
+			});
+		}
+	}, [
+		selectedSchedule,
+		allCustomers,
+		allServices,
+		reset,
+		token,
+		logout,
+		isEditing,
+	]);
 
 	return (
 		<Card>
@@ -110,7 +115,7 @@ export default function ScheduleForm({
 								<Select
 									placeholder="Selecione o cliente"
 									{...register("customerId")}>
-									{customers.map((customer) => (
+									{allCustomers.map((customer) => (
 										<option
 											key={customer.id}
 											value={customer.id}>
@@ -133,7 +138,7 @@ export default function ScheduleForm({
 								<Select
 									placeholder="Selecione o serviço"
 									{...register("serviceId")}>
-									{services.map((service) => (
+									{allServices?.map((service) => (
 										<option
 											key={service.id}
 											value={service.id}>

@@ -1,6 +1,6 @@
 export interface FormDataSchedule {
 	id?: number;
-	customerId?: string;
+	customerId: string;
 	customerName?: string;
 	customerPhone?: string;
 	serviceId: string;

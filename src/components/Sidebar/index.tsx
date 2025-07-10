@@ -73,8 +73,9 @@ export default function Sidebar() {
 			position="fixed"
 			left="0"
 			top="0"
-			w={{ base: "auto", md: "15.625rem" }}
+			w={{ base: "7rem", md: "15.625rem" }}
 			h="full"
+			mt={{ base: "4rem", md: "0" }}
 			bg="blackAlpha.900"
 			color="white"
 			p="4">
@@ -129,13 +130,7 @@ export default function Sidebar() {
 					)
 				)}
 
-				<Grid
-					_hover={{
-						height: "2.75rem",
-						borderRadius: "0.625rem",
-						padding: "0.625rem",
-						background: "blue.800",
-					}}>
+				<Grid>
 					<Link
 						display="flex"
 						alignItems="center"
@@ -156,14 +151,14 @@ export default function Sidebar() {
 									key={item.name}
 									display="flex"
 									alignItems="center"
-									justifyContent="space-between"
+									gap="0.625rem"
 									_hover={{ textDecoration: "none", color: "teal.300" }}
 									onClick={() => navigate(item.path)}>
 									{item.icon}
 									{item.name}
 								</Link>
 							) : (
-								!showSubmenu &&
+								showSubmenu &&
 								isMobile && (
 									<Popover
 										trigger="click"
