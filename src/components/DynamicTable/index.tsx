@@ -14,7 +14,7 @@ interface ColumnConfig<T> {
 	label: string;
 	key: keyof T;
 	hideOnMobile?: boolean;
-	render?: (value: string, row: T) => React.ReactNode;
+	render?: (value: string | number, row: T) => React.ReactNode;
 }
 
 interface DynamicTableProps<T> {
@@ -32,12 +32,12 @@ export default function DynamicTable<T extends object>({
 		<>
 			<Flex
 				direction="column"
-				align={{ base: "flex-start", md: "center" }}
-				justify={{ base: "flex-start", md: "center" }}
+				alignItems={{ base: "flex-start", md: "center", lg: "center" }}
+				justifyContent={{ base: "flex-start", md: "center", lg: "center" }}
 				gap="10"
-				padding="0.625rem">
+				>
 				<Box
-					width="full"
+					width="60.25rem"
 					ml={{ base: "0", md: "15rem" }}>
 					<TableContainer>
 						<Table

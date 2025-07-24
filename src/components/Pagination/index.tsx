@@ -15,11 +15,12 @@ export default function Pagination({
 }: PaginationProps) {
 	return (
 		<Flex
-			justify="center"
-			align="center"
+			justifyContent="center"
+			alignItems="center"
+			direction="row"
+			width="full"
 			mt={4}
-			gap={2}
-			wrap="wrap">
+			gap={2}>
 			<Button
 				onClick={handlePrev}
 				isDisabled={currentPage === 1}
