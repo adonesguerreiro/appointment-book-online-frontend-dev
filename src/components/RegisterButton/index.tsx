@@ -16,6 +16,7 @@ export default function RegisterButton({
 			marginLeft="100%">
 			<Button
 				colorScheme="teal"
+				position="initial"
 				size="lg"
 				rightIcon={<FaPlus />}
 				onClick={onNewClick}>

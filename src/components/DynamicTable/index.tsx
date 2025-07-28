@@ -33,12 +33,8 @@ export default function DynamicTable<T extends object>({
 			<Flex
 				direction="column"
 				alignItems={{ base: "flex-start", md: "center", lg: "center" }}
-				justifyContent={{ base: "flex-start", md: "center", lg: "center" }}
-				gap="10"
-				>
-				<Box
-					width="60.25rem"
-					ml={{ base: "0", md: "15rem" }}>
+				justifyContent={{ base: "flex-start", md: "center", lg: "center" }}>
+				<Box width="full">
 					<TableContainer>
 						<Table
 							variant="striped"

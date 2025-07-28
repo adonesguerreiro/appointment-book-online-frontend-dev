@@ -35,7 +35,7 @@ export default function TableService({
 				{
 					key: "price",
 					label: "Preço",
-					hideOnMobile: false,
+					hideOnMobile: true,
 					render: (value) => currencyFormat(value as number),
 				},
 			]}
