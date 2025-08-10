@@ -13,7 +13,6 @@ import AvailableTimePage from "./pages/AvaliableTime";
 import UnavaliableTimePage from "./pages/UnavaliableTime";
 import { Box } from "@chakra-ui/react";
 import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
 import SchedulePage from "./pages/Schedule";
 import DashboardPage from "./pages/Dashboard";
 import CustomerPage from "./pages/Customer";
@@ -55,7 +54,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -74,7 +72,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -93,7 +90,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -112,7 +108,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -131,7 +126,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -150,7 +144,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -169,7 +162,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"
@@ -187,7 +179,6 @@ export default function App() {
 						<ProtectedRoute
 							element={
 								<>
-									<Header />
 									<Sidebar />
 									<Box
 										flex="1"

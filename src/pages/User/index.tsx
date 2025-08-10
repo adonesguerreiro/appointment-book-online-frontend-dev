@@ -25,7 +25,6 @@ import { useUserCancel } from "../../hooks/User/useUserCancel";
 import { useAvatar } from "../../hooks/useAvatar";
 import { useProfilePhoto } from "../../hooks/useProfilePhoto";
 
-
 export default function UserPage() {
 	const {
 		handleSubmit,
@@ -47,7 +46,7 @@ export default function UserPage() {
 
 	useEffect(() => {
 		fetchDataUser();
-	}, [fetchDataUser, register]);
+	}, [fetchDataUser]);
 
 	console.log("Erros:", errors);
 

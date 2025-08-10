@@ -17,20 +17,19 @@ export default function Pagination({
 		<Flex
 			justifyContent="center"
 			alignItems="center"
-			direction="row"
-			width="full"
-			mt={4}
 			gap={2}>
 			<Button
+				fontSize={{ base: "0.875rem", md: "1rem" }}
 				onClick={handlePrev}
 				isDisabled={currentPage === 1}
 				colorScheme="orange">
 				Anterior
 			</Button>
-			<Text>
+			<Text fontSize={{ base: "0.875rem", md: "1rem" }}>
 				Página {currentPage} de {totalPages}
 			</Text>
 			<Button
+				fontSize={{ base: "0.875rem", md: "1rem" }}
 				onClick={handleNext}
 				isDisabled={currentPage === totalPages}
 				colorScheme="orange">
