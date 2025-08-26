@@ -1,5 +1,4 @@
 import { getCompany } from "../../services/api";
-import { useAuth } from "../useAuth";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { UseFormReset } from "react-hook-form";
 import { FormDataCompany } from "../../interface/FormDataCompany";
@@ -10,12 +9,9 @@ interface useCompanyProps {
 }
 
 export const useCompany = ({ reset, setPostalCodeData }: useCompanyProps) => {
-	const { token } = useAuth();
+
 
 	const fetchDataCompany = useCallback(async () => {
-		if (!token) {
-			return;
-		}
 
 		try {
 			const { data } = await getCompany();
@@ -36,7 +32,7 @@ export const useCompany = ({ reset, setPostalCodeData }: useCompanyProps) => {
 		} catch (error) {
 			console.error("Erro ao buscar dados", error);
 		}
-	}, [reset, setPostalCodeData, token]);
+	}, [reset, setPostalCodeData]);
 
 	return {
 		fetchDataCompany,

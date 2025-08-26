@@ -14,6 +14,7 @@ import { BookingAppointmentData } from "../pages/BookAppointment";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,
+	withCredentials: true,
 });
 
 export const auth = (auth: FormDataLogin) => {
@@ -21,6 +22,14 @@ export const auth = (auth: FormDataLogin) => {
 		email: auth.email,
 		password: auth.password,
 	});
+};
+
+export const authMe = () => {
+	return api.get("/session-me");
+};
+
+export const logout = () => {
+	return api.get("/logout");
 };
 
 export const forgotPassword = ({ email }: FormDataForgotPassword) => {
@@ -49,14 +58,6 @@ export const publicBookAppointment = (
 ) => {
 	return api.post(`/public/booking/${slugCompany}`, bookingData);
 };
-
-api.interceptors.request.use((config) => {
-	const token = localStorage.getItem("token");
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
-	}
-	return config;
-});
 
 export const updateUpload = (data: FormData) => {
 	return api.put("/upload", data, {

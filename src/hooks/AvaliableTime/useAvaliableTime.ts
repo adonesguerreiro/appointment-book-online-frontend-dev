@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../useAuth";
 import { getAvaliableTimes } from "../../services/api";
 import { handleAuthError } from "../../utils/handleAuthError";
 import { useLoading } from "../useLoading";
@@ -11,15 +10,9 @@ export const useAvaliableTime = (currentPage: number) => {
 		[]
 	);
 	const [totalPages, setTotalPages] = useState(0);
-	const { token, logout } = useAuth();
 	const navigate = useNavigate();
 	const { loading, startLoading, stopLoading } = useLoading();
 	const fetchAvaliableTime = useCallback(async () => {
-		if (!token) {
-			logout();
-			return;
-		}
-
 		startLoading();
 
 		try {
@@ -27,12 +20,12 @@ export const useAvaliableTime = (currentPage: number) => {
 			setAvailableTime(avaliableTimeData.data.avaliableTimes);
 			setTotalPages(avaliableTimeData.data.totalPages);
 		} catch (error) {
-			handleAuthError(error, logout, navigate);
+			handleAuthError(error, navigate);
 			console.error("Erro ao buscar dados", error);
 		} finally {
 			stopLoading();
 		}
-	}, [token, startLoading, currentPage, logout, navigate, stopLoading]);
+	}, [startLoading, currentPage, navigate, stopLoading]);
 
 	return { availableTime, totalPages, loading, fetchAvaliableTime };
 };

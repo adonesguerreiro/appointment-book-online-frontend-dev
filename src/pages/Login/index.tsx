@@ -21,13 +21,14 @@ import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { auth } from "../../services/api";
-import { useAuth } from "../../hooks/useAuth";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
 import { useHandleError } from "../../hooks/useHandleError";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
 	const { loading, setLoading } = useLoading();
+	const navigate = useNavigate();
 	const {
 		handleSubmit,
 		register,
@@ -37,29 +38,26 @@ export default function LoginPage() {
 	});
 
 	const { showToast } = useCustomToast();
-	const { setToken } = useAuth();
 
 	const handleError = useHandleError();
 
 	const onSubmit = async (data: FormDataLogin) => {
 		try {
 			setLoading(true);
-			const authorization = await auth(data);
-			const { token } = authorization.data;
-			setToken(token);
+			const response = await auth(data);
+			console.log("Autenticado com sucesso!", response.data);
 			showToast({
 				title: "Autenticado com sucesso!",
 				status: "success",
 			});
-			setTimeout(() => {
-				setLoading(false);
-				window.location.href = "/";
-			}, 1000);
+
+			navigate("/");
 		} catch (e: unknown) {
 			console.error("Error authenticating user:", e);
 			handleError(e);
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	return (

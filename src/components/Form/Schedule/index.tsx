@@ -20,7 +20,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { scheduleSchema } from "../../../validators/scheduleSchema";
 import InputMask from "react-input-mask";
 import { useEffect } from "react";
-import { useAuth } from "../../../hooks/useAuth";
 import DatePicker from "react-datepicker";
 import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../../interface/TimeSlot";
@@ -57,7 +56,6 @@ export default function ScheduleForm({
 		resolver: yupResolver(scheduleSchema),
 	});
 
-	const { token, logout } = useAuth();
 	const { allServices } = useScheduleServiceEdit(
 		selectedSchedule ?? ({} as FormDataSchedule)
 	);
@@ -67,11 +65,6 @@ export default function ScheduleForm({
 
 	// console.log("Erros:", errors);
 	useEffect(() => {
-		if (!token) {
-			logout();
-			return;
-		}
-
 		const customerReady =
 			selectedSchedule?.customerId &&
 			allCustomers.some((c) => c.id === selectedSchedule.customerId);
@@ -89,15 +82,7 @@ export default function ScheduleForm({
 				timeSlotAvaliable: extractTimeFromDate(selectedSchedule.date),
 			});
 		}
-	}, [
-		selectedSchedule,
-		allCustomers,
-		allServices,
-		reset,
-		token,
-		logout,
-		isEditing,
-	]);
+	}, [selectedSchedule, allCustomers, allServices, reset, isEditing]);
 
 	return (
 		<Card>

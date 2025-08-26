@@ -1,7 +1,6 @@
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { updateCompany, updateAddress } from "../../services/api";
 import { viaCep } from "../../services/viaCep";
-import { useAuth } from "../../hooks/useAuth";
 import { useLoading } from "../useLoading";
 import { useCustomToast } from "../useCustomToast";
 import { UseFormSetError, UseFormSetValue } from "react-hook-form";
@@ -19,7 +18,6 @@ export const useCompanySubmit = ({
 	postalCodeData,
 	setError,
 }: useCompanySubmitProps) => {
-	const { token, logout } = useAuth();
 	const { loading, setLoading } = useLoading();
 	const { showToast } = useCustomToast();
 
@@ -27,10 +25,6 @@ export const useCompanySubmit = ({
 
 	const handleSubmitCompany = useCallback(
 		async (data: FormDataCompany) => {
-			if (!token) {
-				logout();
-				return;
-			}
 			setLoading(true);
 
 			try {
@@ -73,16 +67,7 @@ export const useCompanySubmit = ({
 				setLoading(false);
 			}
 		},
-		[
-			handleError,
-			logout,
-			postalCodeData,
-			setError,
-			setLoading,
-			setValue,
-			showToast,
-			token,
-		]
+		[handleError, postalCodeData, setError, setLoading, setValue, showToast]
 	);
 
 	return {

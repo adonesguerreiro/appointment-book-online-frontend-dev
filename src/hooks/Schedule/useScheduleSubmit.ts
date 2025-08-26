@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { FormDataSchedule } from "../../interface/FormDataSchedule";
 import { createSchedule, updateSchedule } from "../../services/api";
-import { useAuth } from "../../hooks/useAuth";
 import { useHandleError } from "../useHandleError";
 import { useCustomToast } from "../useCustomToast";
 
@@ -16,14 +15,13 @@ export const useScheduleSubmit = ({
 	fetchSchedules,
 	closeForm,
 }: useScheduleSubmitProps) => {
-	const { token } = useAuth();
 	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
 
 	const handleSubmitSchedule = useCallback(
 		async (data: FormDataSchedule) => {
 			try {
-				if (token && !selectedSchedule) {
+				if ( !selectedSchedule) {
 					const createdSchedule = await createSchedule(data);
 					if (createdSchedule.status === 200) {
 						showToast({
@@ -47,7 +45,7 @@ export const useScheduleSubmit = ({
 				handleError(error);
 			}
 		},
-		[token, selectedSchedule, showToast, fetchSchedules, closeForm, handleError]
+		[selectedSchedule, showToast, fetchSchedules, closeForm, handleError]
 	);
 
 	return {

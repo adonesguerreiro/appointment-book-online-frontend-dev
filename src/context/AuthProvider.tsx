@@ -1,26 +1,28 @@
-import { ReactNode, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { ReactNode, useEffect, useState } from "react";
+import { AuthContext, User } from "./AuthContext";
+import { authMe } from "../services/api";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-	const [token, setTokenState] = useState<string | null>(
-		localStorage.getItem("token")
-	);
+	const [user, setUser] = useState<User | null>(null);
+	const [loading, setLoading] = useState(true);
 
-	const setToken = (newToken: string | null) => {
-		if (newToken) {
-			localStorage.setItem("token", newToken);
-		} else {
-			localStorage.removeItem("token");
+	const refreshUser = async () => {
+		try {
+			const res = await authMe();
+			setUser(res.data);
+		} catch {
+			setUser(null);
+		} finally {
+			setLoading(false);
 		}
-		setTokenState(newToken);
 	};
 
-	const logout = () => {
-		setToken(null);
-	};
+	useEffect(() => {
+		refreshUser();
+	}, []);
 
 	return (
-		<AuthContext.Provider value={{ token, setToken, logout }}>
+		<AuthContext.Provider value={{ user, loading, refreshUser }}>
 			{children}
 		</AuthContext.Provider>
 	);

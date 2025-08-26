@@ -1,20 +1,16 @@
 import { useCallback, useState } from "react";
 import { getDashboard } from "../../services/api";
 import { statusMapping } from "../../utils/statusMapping";
-import { useAuth } from "../useAuth";
+
 
 export const usePieChart = () => {
 	const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
 		[]
 	);
 
-	const { token, logout } = useAuth();
+
 	const fetchDataPieChart = useCallback(
 		async (month: string, year: string) => {
-			if (!token) {
-				logout();
-				return;
-			}
 
 			try {
 				const { data } = await getDashboard(month, year);
@@ -32,8 +28,8 @@ export const usePieChart = () => {
 				console.error("Erro ao buscar os dados do dashboard:", error);
 			}
 		},
-		[logout, token]
+		[]
 	);
 
-	return { fetchDataPieChart, setChartData, chartData, token };
+	return { fetchDataPieChart, setChartData, chartData };
 };

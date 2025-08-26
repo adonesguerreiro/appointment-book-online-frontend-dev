@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { createCustomer, updateCustomer } from "../../services/api";
 import { useHandleError } from "../useHandleError";
-import { useAuth } from "../../hooks/useAuth";
 import { useCustomToast } from "../useCustomToast";
 
 interface useCustomerSubmitProps {
@@ -16,14 +15,13 @@ export const useCustomerSubmit = ({
 	fetchCustomer,
 	closeForm,
 }: useCustomerSubmitProps) => {
-	const { token } = useAuth();
 	const { showToast } = useCustomToast();
 	const handleError = useHandleError();
 
 	const handleSubmitCustomer = useCallback(
 		async (data: FormDataCustomer) => {
 			try {
-				if (token && !selectedCustomer) {
+				if (!selectedCustomer) {
 					const createdCustomer = await createCustomer(data);
 					if (createdCustomer.status === 200) {
 						showToast({
@@ -47,7 +45,7 @@ export const useCustomerSubmit = ({
 				handleError(error);
 			}
 		},
-		[closeForm, fetchCustomer, handleError, selectedCustomer, showToast, token]
+		[closeForm, fetchCustomer, handleError, selectedCustomer, showToast]
 	);
 
 	return { handleSubmitCustomer };

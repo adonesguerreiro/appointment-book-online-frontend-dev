@@ -4,7 +4,6 @@ import {
 	createUnavailableTime,
 	updateUnavailableTime,
 } from "../../services/api";
-import { useAuth } from "../../hooks/useAuth";
 import { useCustomToast } from "../useCustomToast";
 import { useHandleError } from "../useHandleError";
 
@@ -18,14 +17,13 @@ export const useUnavaliableTimeSubmit = ({
 	selectedUnavailableTime,
 	closeForm,
 }: useUnavaliableTimeSubmitProps) => {
-	const { token } = useAuth();
 	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
 
 	const handleSubmitUnavailableTime = useCallback(
 		async (data: FormDataUnavailableTime) => {
 			try {
-				if (token && !selectedUnavailableTime) {
+				if (!selectedUnavailableTime) {
 					const createdUnavailableTime = await createUnavailableTime(data);
 					if (createdUnavailableTime.status === 200) {
 						showToast({
@@ -52,14 +50,7 @@ export const useUnavaliableTimeSubmit = ({
 				handleError(error);
 			}
 		},
-		[
-			closeForm,
-			fetchUnavaliableTime,
-			handleError,
-			selectedUnavailableTime,
-			showToast,
-			token,
-		]
+		[closeForm, fetchUnavaliableTime, handleError, selectedUnavailableTime, showToast]
 	);
 
 	return {

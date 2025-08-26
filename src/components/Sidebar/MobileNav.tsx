@@ -18,10 +18,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import { useAvatar } from "../../hooks/useAvatar";
 import { useUser } from "../../hooks/User/useUser";
 import { FormDataUser } from "../../interface/FormDataUser";
+import { logout } from "../../services/api";
 
 interface MobileProps extends FlexProps {
 	onOpen: () => void;
@@ -29,7 +29,6 @@ interface MobileProps extends FlexProps {
 
 export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 	const navigate = useNavigate();
-	const { logout } = useAuth();
 	const { avatar } = useAvatar();
 
 	const { reset } = useForm<FormDataUser>();
@@ -37,8 +36,8 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 	const { fetchDataUser } = useUser({ reset });
 	const [userName, setUserName] = useState("");
 
-	const handleLogout = () => {
-		logout();
+	const handleLogout = async () => {
+		await logout();
 		navigate("/login");
 	};
 

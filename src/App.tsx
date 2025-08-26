@@ -11,7 +11,7 @@ import CompanyPage from "./pages/Company";
 import ServicePage from "./pages/Service";
 import AvailableTimePage from "./pages/AvaliableTime";
 import UnavaliableTimePage from "./pages/UnavaliableTime";
-import { Box } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import Sidebar from "./components/Sidebar";
 import SchedulePage from "./pages/Schedule";
 import DashboardPage from "./pages/Dashboard";
@@ -19,13 +19,16 @@ import CustomerPage from "./pages/Customer";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import ResetPasswordPage from "./pages/ResetPassword";
 import BookingPage from "./pages/BookAppointment";
-
-const isAuthenticated = () => {
-	return localStorage.getItem("token") !== null;
-};
+import { useAuth } from "./context/AuthContext";
 
 function ProtectedRoute({ element }: { element: JSX.Element }) {
-	return isAuthenticated() ? element : <Navigate to="/login" />;
+	const { user, loading } = useAuth();
+
+	if (loading) {
+		return <Skeleton>Carregando...</Skeleton>;
+	}
+
+	return user ? element : <Navigate to="/login" />;
 }
 export default function App() {
 	return (

@@ -1,11 +1,20 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
-interface AuthContextType {
-	token: string | null;
-	setToken: (token: string | null) => void;
-	logout: () => void;
+export interface User {
+	id: number;
+	companyId: number;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-	undefined
-);
+interface AuthContextType {
+	user: User | null;
+	loading: boolean;
+	refreshUser: () => Promise<void>;
+}
+
+export const AuthContext = createContext<AuthContextType>({
+	user: null,
+	loading: true,
+	refreshUser: async () => {},
+});
+
+export const useAuth = () => useContext(AuthContext);

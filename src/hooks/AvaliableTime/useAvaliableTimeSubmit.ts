@@ -1,4 +1,3 @@
-import { useAuth } from "../../hooks/useAuth";
 import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 import { createAvaliableTime, updateAvaliableTime } from "../../services/api";
 import { useCustomToast } from "../useCustomToast";
@@ -15,13 +14,12 @@ export const useAvaliableTimeSubmit = ({
 	fetchAvaliableTime,
 	closeForm,
 }: useAvaliableTimeSubmitProps) => {
-	const { token } = useAuth();
 	const { showToast } = useCustomToast();
 	const handleError = useHandleError();
 
 	const handleSubmitAvaliableTime = async (data: FormDataAvailableTime) => {
 		try {
-			if (token && !selectedAvaliableTime) {
+			if (!selectedAvaliableTime) {
 				const createdService = await createAvaliableTime(data);
 				if (createdService.status === 200) {
 					showToast({

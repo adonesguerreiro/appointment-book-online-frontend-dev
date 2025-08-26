@@ -1,5 +1,4 @@
 import {
-	Avatar,
 	Box,
 	Button,
 	Card,
@@ -22,16 +21,13 @@ import { useUser } from "../../hooks/User/useUser";
 import { useUserSubmit } from "../../hooks/User/useUserSubmit";
 import HeadingComponent from "../../components/Heading";
 import { useUserCancel } from "../../hooks/User/useUserCancel";
-import { useAvatar } from "../../hooks/useAvatar";
-import { useProfilePhoto } from "../../hooks/useProfilePhoto";
+import CropperComponent from "../../components/Cropper";
 
 export default function UserPage() {
 	const {
 		handleSubmit,
 		register,
 		reset,
-		getValues,
-
 		formState: { errors },
 	} = useForm<FormDataUser>({
 		resolver: yupResolver(userSchema),
@@ -41,8 +37,6 @@ export default function UserPage() {
 	const { fetchDataUser } = useUser({ reset });
 	const { handleCancel } = useUserCancel();
 	const { handleSubmitUser, loading } = useUserSubmit();
-	const { avatar, setAvatar } = useAvatar();
-	const { setProfilePhoto } = useProfilePhoto();
 
 	useEffect(() => {
 		fetchDataUser();
@@ -70,40 +64,7 @@ export default function UserPage() {
 							placeItems="center"
 							onSubmit={handleSubmit(handleSubmitUser)}>
 							<FormLabel>Foto de perfil</FormLabel>
-							<Box
-								position="relative"
-								cursor="pointer"
-								w="fit-content">
-								<Avatar
-									size="xl"
-									id="avatar"
-									name={getValues("name") || ""}
-									src={(avatar as string) || (getValues("avatarUrl") as string)}
-								/>
-								<Input
-									id="avatarUrl"
-									type="file"
-									accept="image/*"
-									position="absolute"
-									top={0}
-									left={0}
-									width="100%"
-									height="100%"
-									opacity={0}
-									cursor="pointer"
-									onChange={(e) => {
-										const file = e.target.files?.[0];
-										if (file) {
-											if (avatar) {
-												URL.revokeObjectURL(avatar as string);
-											}
-											const fileUrl = URL.createObjectURL(file);
-											setAvatar(fileUrl);
-											setProfilePhoto(file);
-										}
-									}}
-								/>
-							</Box>
+							<CropperComponent />
 
 							<FormControl
 								display="grid"

@@ -3,7 +3,7 @@ import { FormDataService } from "../../interface/FormDataService";
 import { createService, updateService } from "../../services/api";
 import { useCustomToast } from "../useCustomToast";
 import { useHandleError } from "../useHandleError";
-import { useAuth } from "../../hooks/useAuth";
+
 
 interface useServiceSubmitProps {
 	fetchService: () => Promise<void>;
@@ -16,14 +16,13 @@ export const useServiceSubmit = ({
 	selectedService,
 	closeForm,
 }: useServiceSubmitProps) => {
-	const { token } = useAuth();
 	const handleError = useHandleError();
 	const { showToast } = useCustomToast();
 
 	const handleSubmitService = useCallback(
 		async (data: FormDataService) => {
 			try {
-				if (token && !selectedService) {
+				if (!selectedService) {
 					const createdService = await createService(data);
 					if (createdService.status === 200) {
 						showToast({
@@ -48,7 +47,7 @@ export const useServiceSubmit = ({
 				handleError(error);
 			}
 		},
-		[closeForm, fetchService, handleError, selectedService, showToast, token]
+		[closeForm, fetchService, handleError, selectedService, showToast]
 	);
 
 	return { handleSubmitService };
