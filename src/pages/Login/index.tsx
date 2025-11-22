@@ -20,11 +20,12 @@ import { useForm } from "react-hook-form";
 import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { auth } from "../../services/api";
+import { auth, refreshToken } from "../../services/api";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
 import { useHandleError } from "../../hooks/useHandleError";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
 	const { loading, setLoading } = useLoading();
@@ -38,14 +39,17 @@ export default function LoginPage() {
 	});
 
 	const { showToast } = useCustomToast();
+	const { refreshUser } = useAuth();
 
 	const handleError = useHandleError();
 
 	const onSubmit = async (data: FormDataLogin) => {
 		try {
 			setLoading(true);
-			const response = await auth(data);
-			console.log("Autenticado com sucesso!", response.data);
+			await auth(data);
+			await refreshToken();
+			await refreshUser();
+
 			showToast({
 				title: "Autenticado com sucesso!",
 				status: "success",

@@ -17,6 +17,40 @@ const api = axios.create({
 	withCredentials: true,
 });
 
+api.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
+
+		if (
+			originalRequest.url === "/session-me" ||
+			originalRequest.url?.includes("/refresh-token")
+		) {
+			return Promise.reject(error);
+		}
+
+		if (error.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+
+			try {
+				await refreshToken();
+				return api(originalRequest);
+			} catch (err) {
+				const publicRoutes = ["/login", "/forgot-password", "/reset-password"];
+				const isPublicRoute = publicRoutes.some((route) =>
+					window.location.pathname.startsWith(route)
+				);
+
+				if (!isPublicRoute) {
+					window.location.href = "/login";
+				}
+				return Promise.reject(err);
+			}
+		}
+
+		return Promise.reject(error);
+	}
+);
 export const auth = (auth: FormDataLogin) => {
 	return api.post("/sessions", {
 		email: auth.email,
@@ -29,7 +63,11 @@ export const authMe = () => {
 };
 
 export const logout = () => {
-	return api.get("/logout");
+	return api.post("/logout");
+};
+
+export const refreshToken = () => {
+	return api.post("/refresh-token");
 };
 
 export const forgotPassword = ({ email }: FormDataForgotPassword) => {

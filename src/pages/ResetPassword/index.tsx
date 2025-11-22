@@ -11,6 +11,7 @@ import {
 	FormErrorMessage,
 	Container,
 	Spinner,
+	Badge,
 } from "@chakra-ui/react";
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPasswordSchema } from "../../validators/resetPasswordSchema";
 import { FormDataResetPassword } from "../../interface/FormDataResetPassword";
 import { resetPassword } from "../../services/api";
+import { useEffect, useState } from "react";
 
 export default function ResetPasswordPage() {
 	const { showToast } = useCustomToast();
@@ -35,7 +37,31 @@ export default function ResetPasswordPage() {
 	});
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-	// console.log("Erros:", errors);
+	const [time, setTime] = useState(5 * 60);
+
+	const minutes = Math.floor(time / 60);
+	const seconds = time % 60;
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setTime((prev) => {
+				if (prev <= 1) {
+					clearInterval(interval);
+					return 0;
+				}
+				return prev - 1;
+			});
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	if (time === 0) {
+		navigate("/login");
+
+		return;
+	}
+
 
 	const onSubmit = async (data: FormDataResetPassword) => {
 		try {
@@ -73,6 +99,11 @@ export default function ResetPasswordPage() {
 				align="center"
 				justify="center"
 				height="90vh">
+				<Badge
+					colorScheme={minutes === 0 ? "red" : "green"}
+					mb="4">
+					Tempo restante: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+				</Badge>
 				<Card>
 					<CardHeader
 						display="grid"

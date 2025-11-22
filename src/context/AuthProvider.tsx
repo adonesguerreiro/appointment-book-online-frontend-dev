@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { AuthContext, User } from "./AuthContext";
 import { authMe } from "../services/api";
 
@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 
-	const refreshUser = async () => {
+	const refreshUser = useCallback(async () => {
 		try {
 			const res = await authMe();
 			setUser(res.data);
@@ -15,11 +15,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, []);
 
 	useEffect(() => {
 		refreshUser();
-	}, []);
+	}, [refreshUser]);
 
 	return (
 		<AuthContext.Provider value={{ user, loading, refreshUser }}>
