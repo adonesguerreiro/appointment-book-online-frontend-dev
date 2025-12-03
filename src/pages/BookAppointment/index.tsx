@@ -86,7 +86,7 @@ export default function BookingPage() {
 								<BookingAppointment
 									register={register}
 									errors={errors}
-									user={companyData?.user || {}}
+									user={companyData?.user || {} as FormDataUser}
 									services={companyData?.services || []}
 								/>
 								<Card>
