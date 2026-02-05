@@ -15,16 +15,15 @@ export const usePieCharSubmit = ({ fetchDataPieChart }: UsePieCharSubmit) => {
 	const handleSubmitPieChart = useCallback(
 		async (data: FormDataDashboard) => {
 			try {
-
 				const filterScheduleByStatus = await getDashboard(
 					data.month,
-					data.year
+					data.year,
 				);
 
 				if (filterScheduleByStatus.status === 200) {
 					showToast({
 						title: "Filtro aplicado com sucesso.",
-						status: "success",
+						type: "success",
 					});
 				}
 
@@ -33,7 +32,7 @@ export const usePieCharSubmit = ({ fetchDataPieChart }: UsePieCharSubmit) => {
 				handleError(error);
 			}
 		},
-		[fetchDataPieChart, handleError, showToast]
+		[fetchDataPieChart, handleError, showToast],
 	);
 
 	return { handleSubmitPieChart };

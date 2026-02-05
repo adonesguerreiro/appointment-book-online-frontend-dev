@@ -1,19 +1,17 @@
 import {
 	Flex,
-	useColorModeValue,
 	IconButton,
-	HStack,
+	Stack,
 	Menu,
-	MenuButton,
 	Avatar,
 	VStack,
 	Box,
-	MenuList,
-	MenuItem,
-	MenuDivider,
 	FlexProps,
 	Text,
+	Portal,
+	Button,
 } from "@chakra-ui/react";
+import { useColorModeValue } from "../../components/ui/color-mode";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
@@ -76,59 +74,76 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 			<IconButton
 				display={{ base: "flex", md: "none" }}
 				onClick={onOpen}
-				variant="link"
+				variant="ghost"
 				aria-label="open menu"
-				icon={<FiMenu />}
 			/>
-
+			<FiMenu />
 			<Text
 				display={{ base: "flex", md: "none" }}
 				fontSize="2xl"
 				fontFamily="monospace"
 				fontWeight="bold"></Text>
 
-			<HStack spacing={{ base: "0", md: "6" }}>
+			<Stack gap={{ base: "0", md: "6" }}>
 				<IconButton
 					size="lg"
-					variant="link"
+					variant="ghost"
 					aria-label="open menu"
-					icon={<FiBell />}
 				/>
+				<FiBell />
 				<Flex alignItems={"center"}>
-					<Menu>
-						<MenuButton
-							py={2}
-							transition="all 0.3s"
-							_focus={{ boxShadow: "none" }}>
-							<HStack>
-								<Avatar
-									size={"sm"}
-									src={avatar as string}
-								/>
-								<VStack
-									display={{ base: "none", md: "flex" }}
-									alignItems="flex-start"
-									spacing="1px"
-									ml="2"
-									color="white">
-									<Text fontSize="sm">Olá, {userName.split(" ")[0]}</Text>
-								</VStack>
-								<Box display={{ base: "none", md: "flex" }}>
-									<FiChevronDown />
-								</Box>
-							</HStack>
-						</MenuButton>
-						<MenuList
-							bg={useColorModeValue("white", "gray.900")}
-							borderColor={useColorModeValue("gray.200", "gray.700")}>
-							<MenuItem onClick={handleUserProfile}>Perfil do usuário</MenuItem>
-							<MenuItem onClick={goToCompany}>Perfil da empresa</MenuItem>
-							<MenuDivider />
-							<MenuItem onClick={handleLogout}>Deslogar</MenuItem>
-						</MenuList>
-					</Menu>
+					<Menu.Root>
+						<Menu.Trigger>
+							<Button
+								py={2}
+								transition="all 0.3s"
+								_focus={{ boxShadow: "none" }}>
+								<Stack>
+									<Avatar.Image
+										sizes={"sm"}
+										src={avatar as string}
+									/>
+									<VStack
+										display={{ base: "none", md: "flex" }}
+										alignItems="flex-start"
+										gap="1"
+										ml="2"
+										color="white">
+										<Text fontSize="sm">Olá, {userName.split(" ")[0]}</Text>
+									</VStack>
+									<Box display={{ base: "none", md: "flex" }}>
+										<FiChevronDown />
+									</Box>
+								</Stack>
+							</Button>
+						</Menu.Trigger>
+						<Portal>
+							<Menu.Positioner>
+								<Menu.Content
+									bg={useColorModeValue("white", "gray.900")}
+									borderColor={useColorModeValue("gray.200", "gray.700")}>
+									<Menu.Item
+										onClick={handleUserProfile}
+										value="profile">
+										Perfil do usuário
+									</Menu.Item>
+									<Menu.Item
+										onClick={goToCompany}
+										value="company">
+										Perfil da empresa
+									</Menu.Item>
+									<Menu.Separator />
+									<Menu.Item
+										onClick={handleLogout}
+										value="logout">
+										Deslogar
+									</Menu.Item>
+								</Menu.Content>
+							</Menu.Positioner>
+						</Portal>
+					</Menu.Root>
 				</Flex>
-			</HStack>
+			</Stack>
 		</Flex>
 	);
 }

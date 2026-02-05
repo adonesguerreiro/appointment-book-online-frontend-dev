@@ -21,7 +21,7 @@ export default function Pagination({
 			<Button
 				fontSize={{ base: "0.875rem", md: "1rem" }}
 				onClick={handlePrev}
-				isDisabled={currentPage === 1}
+				disabled={currentPage === 1}
 				colorScheme="orange">
 				Anterior
 			</Button>
@@ -31,7 +31,7 @@ export default function Pagination({
 			<Button
 				fontSize={{ base: "0.875rem", md: "1rem" }}
 				onClick={handleNext}
-				isDisabled={currentPage === totalPages}
+				disabled={currentPage === totalPages}
 				colorScheme="orange">
 				Próximo
 			</Button>

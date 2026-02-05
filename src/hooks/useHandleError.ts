@@ -17,7 +17,7 @@ export function useHandleError() {
 
 			showToast({
 				title: errorMessage,
-				status: "warning",
+				type: "warning",
 			});
 		} else {
 			console.error("Erro desconhecido", error);

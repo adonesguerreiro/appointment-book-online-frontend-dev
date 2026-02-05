@@ -1,15 +1,4 @@
-import {
-	Flex,
-	Card,
-	CardBody,
-	Box,
-	Grid,
-	FormControl,
-	FormLabel,
-	Input,
-	FormErrorMessage,
-	Button,
-} from "@chakra-ui/react";
+import { Flex, Field, Card, Box, Grid, Input, Button } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
@@ -54,8 +43,8 @@ export default function CustomerForm({
 	}, [selectedCustomer, reset]);
 
 	return (
-		<Card>
-			<CardBody
+		<Card.Root>
+			<Card.Body
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
@@ -63,9 +52,9 @@ export default function CustomerForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.customerName}>
+						<Field.Root invalid={!!errors.customerName}>
 							<Grid>
-								<FormLabel>Nome</FormLabel>
+								<Field.Label>Nome</Field.Label>
 								<Input
 									type="text"
 									placeholder="Nome do cliente"
@@ -73,16 +62,16 @@ export default function CustomerForm({
 									{...register("customerName")}
 								/>
 								{errors.customerName && (
-									<FormErrorMessage>
+									<Field.ErrorText>
 										{errors.customerName.message}
-									</FormErrorMessage>
+									</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.mobile}>
+						<Field.Root invalid={!!errors.mobile}>
 							<Grid>
-								<FormLabel>Celular</FormLabel>
+								<Field.Label>Celular</Field.Label>
 								<Input
 									as={InputMask}
 									mask="(99) 99999-9999"
@@ -93,10 +82,10 @@ export default function CustomerForm({
 									{...register("mobile")}
 								/>
 								{errors.mobile && (
-									<FormErrorMessage>{errors.mobile.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.mobile.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 					</Grid>
 					<Flex justifyContent="flex-end">
 						{!isEditing ? (
@@ -104,18 +93,16 @@ export default function CustomerForm({
 								colorScheme="green"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<LuPlus />}>
-								Cadastrar
+								margin="0.625rem">
+								Cadastrar <LuPlus />
 							</Button>
 						) : (
 							<Button
 								colorScheme="blue"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<TbEditCircle />}>
-								Editar
+								margin="0.625rem">
+								Editar <TbEditCircle />
 							</Button>
 						)}
 
@@ -123,13 +110,12 @@ export default function CustomerForm({
 							colorScheme="gray"
 							size="lg"
 							margin="0.625rem"
-							rightIcon={<MdCancel />}
 							onClick={onCancel}>
-							Cancelar
+							Cancelar <MdCancel />
 						</Button>
 					</Flex>
 				</Box>
-			</CardBody>
-		</Card>
+			</Card.Body>
+		</Card.Root>
 	);
 }

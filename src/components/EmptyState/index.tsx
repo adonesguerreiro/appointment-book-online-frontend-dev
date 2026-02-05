@@ -3,7 +3,7 @@ import { VStack, Text, Image } from "@chakra-ui/react";
 export default function EmptyState() {
 	return (
 		<VStack
-			spacing={4}
+			gap={4}
 			align="center"
 			justify="center"
 			width="25rem"

@@ -1,5 +1,5 @@
 export interface FormDataCustomer {
-	id?: number;
+	id: number;
 	customerName: string;
 	mobile: string;
 }

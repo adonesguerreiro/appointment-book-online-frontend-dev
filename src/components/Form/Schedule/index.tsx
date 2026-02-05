@@ -1,15 +1,12 @@
 import {
 	Flex,
-	Card,
-	CardBody,
 	Box,
 	Grid,
-	FormControl,
-	FormLabel,
 	Input,
-	FormErrorMessage,
 	Button,
-	Select,
+	Card,
+	Field,
+	NativeSelect,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
@@ -57,13 +54,12 @@ export default function ScheduleForm({
 	});
 
 	const { allServices } = useScheduleServiceEdit(
-		selectedSchedule ?? ({} as FormDataSchedule)
+		selectedSchedule ?? ({} as FormDataSchedule),
 	);
 	const { allCustomers } = useScheduleCustomerEdit(
-		selectedSchedule ?? ({} as FormDataSchedule)
+		selectedSchedule ?? ({} as FormDataSchedule),
 	);
 
-	// console.log("Erros:", errors);
 	useEffect(() => {
 		const customerReady =
 			selectedSchedule?.customerId &&
@@ -85,8 +81,8 @@ export default function ScheduleForm({
 	}, [selectedSchedule, allCustomers, allServices, reset, isEditing]);
 
 	return (
-		<Card>
-			<CardBody
+		<Card.Root>
+			<Card.Body
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
@@ -94,54 +90,50 @@ export default function ScheduleForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.customerId}>
+						<Field.Root invalid={!!errors.customerId}>
 							<Grid>
-								<FormLabel>Cliente</FormLabel>
-								<Select
-									placeholder="Selecione o cliente"
-									{...register("customerId")}>
-									{allCustomers.map((customer) => (
-										<option
-											key={customer.id}
-											value={customer.id}>
-											{customer.customerName}
-										</option>
-									))}
-								</Select>
+								<Field.Label>Cliente</Field.Label>
+								<NativeSelect.Root {...register("customerId")}>
+									<NativeSelect.Field placeholder="Selecione o cliente">
+										{allCustomers.map((customer) => (
+											<option
+												key={customer.id}
+												value={customer.id}>
+												{customer.customerName}
+											</option>
+										))}
+									</NativeSelect.Field>
+								</NativeSelect.Root>
 
 								{errors.customerId && (
-									<FormErrorMessage>
-										{errors.customerId.message}
-									</FormErrorMessage>
+									<Field.ErrorText>{errors.customerId.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.serviceId}>
+						<Field.Root invalid={!!errors.serviceId}>
 							<Grid>
-								<FormLabel>Serviço</FormLabel>
-								<Select
-									placeholder="Selecione o serviço"
-									{...register("serviceId")}>
-									{allServices?.map((service) => (
-										<option
-											key={service.id}
-											value={service.id}>
-											{service.serviceName}
-										</option>
-									))}
-								</Select>
+								<Field.Label>Serviço</Field.Label>
+								<NativeSelect.Root {...register("serviceId")}>
+									<NativeSelect.Field placeholder="Selecione o serviço">
+										{allServices?.map((service) => (
+											<option
+												key={service.id}
+												value={service.id}>
+												{service.serviceName}
+											</option>
+										))}
+									</NativeSelect.Field>
+								</NativeSelect.Root>
 								{errors.serviceId && (
-									<FormErrorMessage>
-										{errors.serviceId.message}
-									</FormErrorMessage>
+									<Field.ErrorText>{errors.serviceId.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.date}>
+						<Field.Root invalid={!!errors.date}>
 							<Grid>
-								<FormLabel>Data</FormLabel>
+								<Field.Label>Data</Field.Label>
 								<Controller
 									control={control}
 									{...register("date")}
@@ -150,7 +142,7 @@ export default function ScheduleForm({
 											locale={ptBR}
 											id="date"
 											selected={field.value ? new Date(field.value) : null}
-											onChange={(date) => {
+											onChange={(date: Date | null) => {
 												field.onChange(date?.toISOString());
 												if (date && !isEditing) {
 													onDateChange(date.toISOString().split("T")[0]);
@@ -173,22 +165,16 @@ export default function ScheduleForm({
 								/>
 
 								{errors.date && (
-									<FormErrorMessage>{errors.date.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.date.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.timeSlotAvaliable}>
+						<Field.Root invalid={!!errors.timeSlotAvaliable}>
 							<Grid>
-								<FormLabel>Horário</FormLabel>
-								<Select
+								<Field.Label>Horário</Field.Label>
+								<NativeSelect.Root
 									size="md"
-									sx={{
-										maxHeight: "200px",
-										overflowY: "scroll",
-										position: "relative",
-										zIndex: 10,
-									}}
 									{...register("timeSlotAvaliable")}>
 									{timeSlots.length > 0 ? (
 										timeSlots.map((slot, index) =>
@@ -198,43 +184,44 @@ export default function ScheduleForm({
 													value={avaliableSlot.timeSlot}>
 													{avaliableSlot.timeSlot}
 												</option>
-											))
+											)),
 										)
 									) : (
 										<option value="">Sem horários disponíveis</option>
 									)}
-								</Select>
+								</NativeSelect.Root>
 								{errors.avaliableTimeSlot && (
-									<FormErrorMessage>
+									<Field.ErrorText>
 										{errors.avaliableTimeSlot.message}
-									</FormErrorMessage>
+									</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.status}>
+						<Field.Root invalid={!!errors.status}>
 							<Grid>
-								<FormLabel>Status</FormLabel>
-								<Select
+								<Field.Label>Status</Field.Label>
+								<NativeSelect.Root
 									id="status"
-									placeholder="Selecione o status"
 									{...register("status")}>
-									{!isEditing ? (
-										<option value="SCHEDULED">Agendado</option>
-									) : (
-										<>
+									<NativeSelect.Field placeholder="Selecione o status">
+										{!isEditing ? (
 											<option value="SCHEDULED">Agendado</option>
-											<option value="CANCELLED">Cancelado</option>
-											<option value="ATTENDED">Atendido</option>
-										</>
-									)}
-								</Select>
+										) : (
+											<>
+												<option value="SCHEDULED">Agendado</option>
+												<option value="CANCELLED">Cancelado</option>
+												<option value="ATTENDED">Atendido</option>
+											</>
+										)}
+									</NativeSelect.Field>
+								</NativeSelect.Root>
 
 								{errors.status && (
-									<FormErrorMessage>{errors.status.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.status.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 					</Grid>
 
 					<Flex justifyContent="flex-end">
@@ -243,18 +230,16 @@ export default function ScheduleForm({
 								colorScheme="green"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<LuPlus />}>
-								Cadastrar
+								margin="0.625rem">
+								Cadastrar <LuPlus />
 							</Button>
 						) : (
 							<Button
 								colorScheme="blue"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<TbEditCircle />}>
-								Editar
+								margin="0.625rem">
+								Editar <TbEditCircle />
 							</Button>
 						)}
 
@@ -262,13 +247,12 @@ export default function ScheduleForm({
 							colorScheme="gray"
 							size="lg"
 							margin="0.625rem"
-							rightIcon={<MdCancel />}
 							onClick={onCancel}>
-							Cancelar
+							Cancelar <MdCancel />
 						</Button>
 					</Flex>
 				</Box>
-			</CardBody>
-		</Card>
+			</Card.Body>
+		</Card.Root>
 	);
 }

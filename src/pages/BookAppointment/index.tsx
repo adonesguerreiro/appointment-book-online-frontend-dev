@@ -6,7 +6,9 @@ import {
 	Box,
 	Button,
 	Spinner,
+
 } from "@chakra-ui/react";
+
 import HeadingComponent from "../../components/Heading";
 import "react-calendar/dist/Calendar.css";
 import TimeList from "../../components/TimeList";
@@ -63,14 +65,13 @@ export default function BookingPage() {
 	return loading ? (
 		<Spinner />
 	) : (
-		<Container
-		w={{ base: "85%", md: "90%", lg: "800px" }}>
+		<Container w={{ base: "85%", md: "90%", lg: "800px" }}>
 			<Flex
 				display="flex"
 				direction="column"
 				align="center">
 				<HeadingComponent title="Agendar horário" />
-				<Card
+				<Card.Title
 					as="form"
 					onSubmit={handleSubmit(handleSubmitBooking)}>
 					<CardBody>
@@ -86,29 +87,28 @@ export default function BookingPage() {
 								<BookingAppointment
 									register={register}
 									errors={errors}
-									user={companyData?.user || {} as FormDataUser}
+									user={companyData?.user || ({} as FormDataUser)}
 									services={companyData?.services || []}
 								/>
-								<Card>
-									<CardBody>
-										<CustomCalendar
-											setValue={setValue}
-											register={register}
-											errors={errors}
-											clearErrors={clearErrors}
-											selectedDate={selectedDate}
-											setSelectedDate={setSelectedDate}
-										/>
-										<TimeList
-											register={register}
-											setValue={setValue}
-											errors={errors}
-											clearErrors={clearErrors}
-											avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
-											isSubmitting={isSubmitting}
-										/>
-									</CardBody>
-								</Card>
+								<CardBody>
+									<CustomCalendar
+										setValue={setValue}
+										register={register}
+										errors={errors}
+										clearErrors={clearErrors}
+										selectedDate={selectedDate}
+										setSelectedDate={setSelectedDate}
+									/>
+									<TimeList
+										register={register}
+										setValue={setValue}
+										errors={errors}
+										clearErrors={clearErrors}
+										avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
+										isSubmitting={isSubmitting}
+									/>
+								</CardBody>
+
 								<Box
 									textAlign="right"
 									paddingTop="1rem">
@@ -116,15 +116,16 @@ export default function BookingPage() {
 										colorScheme="teal"
 										size="lg"
 										type="submit"
-										margin="0.5rem"
-										rightIcon={<FaCheckCircle />}>
+										margin="0.5rem">
 										Agendar consulta
+										
+										<FaCheckCircle />
 									</Button>
 								</Box>
 							</>
 						)}
 					</CardBody>
-				</Card>
+				</Card.Title>
 			</Flex>
 		</Container>
 	);

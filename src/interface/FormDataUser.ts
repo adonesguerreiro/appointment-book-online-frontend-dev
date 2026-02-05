@@ -1,9 +1,9 @@
 export interface FormDataUser {
+	avatarUrl?: File | string | null;
+	name: string;
 	email: string;
 	password: string;
-	name: string;
 	newPassword?: string;
 	confirmPassword?: string;
-	avatarUrl?: File | string;
 	blocked?: boolean;
 }

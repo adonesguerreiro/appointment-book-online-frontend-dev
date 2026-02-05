@@ -26,7 +26,7 @@ export const useCustomerSubmit = ({
 					if (createdCustomer.status === 200) {
 						showToast({
 							title: "Cliente registrado com sucesso.",
-							status: "success",
+							type: "success",
 						});
 						fetchCustomer();
 						closeForm();
@@ -35,7 +35,7 @@ export const useCustomerSubmit = ({
 					await updateCustomer(Number(selectedCustomer?.id), data);
 					showToast({
 						title: "Cliente alterado com sucesso.",
-						status: "info",
+						type: "info",
 					});
 					fetchCustomer();
 					closeForm();

@@ -3,8 +3,9 @@ import {
 	isValidCNPJ,
 	isValidMobilePhone,
 } from "@brazilian-utils/brazilian-utils";
+import { FormDataCompany } from "../interface/FormDataCompany";
 
-export const companySchema = yup.object().shape({
+export const companySchema : yup.ObjectSchema<FormDataCompany> = yup.object().shape({
 	name: yup
 		.string()
 		.max(255, "Nome da empresa deve ter no máximo 255 caracteres")

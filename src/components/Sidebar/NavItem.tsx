@@ -16,7 +16,7 @@ export default function NavItem({
 	return (
 		<Box
 			as="a"
-			href={path}
+			ref={path}
 			textDecoration="none"
 			_hover={{ textDecoration: "none" }}
 			_focus={{ boxShadow: "none" }}>

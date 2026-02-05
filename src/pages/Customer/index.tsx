@@ -23,14 +23,14 @@ import { useEditMode } from "../../hooks/useEditMode";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
-		resolver: yupResolver(customerSchema),
+		resolver: yupResolver(customerSchema) ,
 	});
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();
 	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedCustomer, setSelectedCustomer] =
 		useState<FormDataCustomer | null>(null);
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open, onOpen, onClose } = useDisclosure();
 
 	const { customers, totalPages, loading, fetchCustomer } =
 		useCustomer(currentPage);
@@ -141,7 +141,7 @@ export default function CustomerPage() {
 
 				{selectedCustomer && (
 					<ModalDelete
-						isOpen={isOpen}
+						isOpen={open}
 						onClose={onClose}
 						title="cliente"
 						itemName={selectedCustomer.customerName}

@@ -13,14 +13,13 @@ export default function RegisterButton({
 	return (
 		<Box
 			padding="0.625rem"
-			marginLeft={{ base: "auto", md: "100%" , lg: "100%" }}>
+			marginLeft={{ base: "auto", md: "100%", lg: "100%" }}>
 			<Button
 				colorScheme="teal"
 				position="initial"
 				size="lg"
-				rightIcon={<FaPlus />}
 				onClick={onNewClick}>
-				{buttonText}
+				{buttonText} <FaPlus />
 			</Button>
 		</Box>
 	);

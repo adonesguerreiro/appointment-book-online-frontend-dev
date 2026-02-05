@@ -2,12 +2,9 @@ import {
 	Box,
 	Button,
 	Card,
-	CardBody,
 	Container,
+	Field,
 	Flex,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
 	Input,
 	Spinner,
 } from "@chakra-ui/react";
@@ -54,8 +51,8 @@ export default function UserPage() {
 				gap="10"
 				padding="0.625rem">
 				<HeadingComponent title="Usuário" />
-				<Card>
-					<CardBody
+				<Card.Root>
+					<Card.Body
 						width="52.5625rem"
 						height="40.6875rem">
 						<Box
@@ -63,59 +60,56 @@ export default function UserPage() {
 							display="grid"
 							placeItems="center"
 							onSubmit={handleSubmit(handleSubmitUser)}>
-							<FormLabel>Foto de perfil</FormLabel>
+							<Field.Label>Foto de perfil</Field.Label>
 							<CropperComponent />
 
-							<FormControl
+							<Field.Root
 								display="grid"
 								alignItems="center"
 								width="25.0625rem"
 								padding="0.625rem"
-								isInvalid={!!errors}>
-								<FormLabel>Nome</FormLabel>
+								invalid={!!errors}>
+								<Field.Label>Nome</Field.Label>
 								<Input
 									type="name"
 									placeholder="Informe seu nome"
 									id="name"
 									{...register("name")}
-									isInvalid={!!errors.name}
 								/>
 								{errors.name && (
-									<FormErrorMessage>{errors.name.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.name.message}</Field.ErrorText>
 								)}
 
-								<FormLabel>Email</FormLabel>
+								<Field.Label>Email</Field.Label>
 								<Input
 									type="email"
 									placeholder="adones@example.com"
 									id="email"
 									{...register("email")}
-									isInvalid={!!errors.email}
 								/>
 								{errors.email && (
-									<FormErrorMessage>{errors.email.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.email.message}</Field.ErrorText>
 								)}
 
-								<FormLabel>Senha atual</FormLabel>
+								<Field.Label>Senha atual</Field.Label>
 								<Input
 									type="password"
 									placeholder="Senha atual"
 									id="password"
 									{...register("password")}
-									isInvalid={!!errors.password}
 								/>
 								{errors.password && (
-									<FormErrorMessage>{errors.password.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.password.message}</Field.ErrorText>
 								)}
-							</FormControl>
+							</Field.Root>
 
-							<FormControl
+							<Field.Root
 								display="grid"
 								alignItems="center"
 								width="25.0625rem"
 								padding="0.625rem"
-								isInvalid={!!errors.newPassword || !!errors.confirmPassword}>
-								<FormLabel>Nova senha</FormLabel>
+								invalid={!!errors.newPassword || !!errors.confirmPassword}>
+								<Field.Label>Nova senha</Field.Label>
 								<Input
 									type="password"
 									placeholder="Nova senha"
@@ -123,11 +117,11 @@ export default function UserPage() {
 									{...register("newPassword")}
 								/>
 								{errors.newPassword && (
-									<FormErrorMessage>
+									<Field.ErrorText>
 										{errors.newPassword.message}
-									</FormErrorMessage>
+									</Field.ErrorText>
 								)}
-								<FormLabel>Confirmar nova senha</FormLabel>
+								<Field.Label>Confirmar nova senha</Field.Label>
 								<Input
 									type="password"
 									placeholder="Confirmar nova senha"
@@ -135,11 +129,11 @@ export default function UserPage() {
 									{...register("confirmPassword")}
 								/>
 								{errors.confirmPassword && (
-									<FormErrorMessage>
+									<Field.ErrorText>
 										{errors.confirmPassword.message}
-									</FormErrorMessage>
+									</Field.ErrorText>
 								)}
-							</FormControl>
+							</Field.Root>
 
 							<Flex
 								alignItems="center"
@@ -148,28 +142,26 @@ export default function UserPage() {
 									colorScheme="blue"
 									size="lg"
 									type="submit"
-									isDisabled={loading}
-									rightIcon={<MdSave />}>
+									disabled={loading}>
 									{loading ? (
 										<Spinner
 											size="sm"
 											mr="2"
 										/>
 									) : null}
-									{loading ? "Validando dados" : "Salvar"}
+									{loading ? "Validando dados" : "Salvar"} <MdSave />
 								</Button>
 								<Button
 									colorScheme="gray"
 									size="lg"
 									margin="0.625rem"
-									rightIcon={<MdCancel />}
 									onClick={handleCancel}>
-									Cancelar
+									Cancelar <MdCancel />
 								</Button>
 							</Flex>
 						</Box>
-					</CardBody>
-				</Card>
+					</Card.Body>
+				</Card.Root>
 			</Flex>
 		</Container>
 	);

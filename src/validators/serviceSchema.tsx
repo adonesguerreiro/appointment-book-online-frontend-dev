@@ -1,6 +1,7 @@
 import * as yup from "yup";
+import { FormDataService } from "../interface/FormDataService";
 
-export const serviceSchema = yup.object().shape({
+export const serviceSchema: yup.ObjectSchema<FormDataService> = yup.object().shape({
 	id: yup.number().when("$isEditing", {
 		is: true,
 		then: (schema) => schema.required("Id é obrigatório"),

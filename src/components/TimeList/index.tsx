@@ -1,8 +1,8 @@
 import {
 	Box,
 	Button,
+	Field,
 	Flex,
-	FormControl,
 	GridItem,
 	SimpleGrid,
 	Text,
@@ -15,7 +15,7 @@ import {
 } from "react-hook-form";
 import { BookingAppointmentData } from "../../pages/BookAppointment";
 import { useCustomToast } from "../../hooks/useCustomToast";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
 
 interface TimeListProps {
@@ -37,30 +37,30 @@ export default function TimeList({
 }: TimeListProps) {
 	const { showToast } = useCustomToast();
 
-	const [selectedTime, setSelectedTime] = useState<string>();
+	const [selectedTime, setSelectedTime] = useState<string>("");
 
-	useEffect(() => {
-		if (errors.time) {
+	const timeSelected = (item: string) => {
+		if (!item) {
 			showToast({
 				title: "Por favor, selecione um horário disponível.",
-				status: "warning",
+				type: "warning",
 				duration: 1000,
 			});
+
 			clearErrors("time");
 		}
+
 		if (isSubmitting) {
-			setSelectedTime(undefined);
+			setSelectedTime("");
 		}
-	}, [clearErrors, errors.time, isSubmitting, showToast]);
+	};
 
 	return (
 		<Box padding="0.625rem">
-			<FormControl isInvalid={!!errors.time}>
+			<Field.Root invalid={!!errors.time}>
 				<SimpleGrid
-					placeItems="center"
-					columns={3}
-					spacing={3}
-					padding={3}>
+					column={[3, 3, 3]}
+					placeItems="center">
 					{avaliableTimeSlot.length > 0 ? (
 						avaliableTimeSlot.map((avaliableTimeSlot, index) => (
 							<Button
@@ -76,9 +76,10 @@ export default function TimeList({
 								onClick={() => {
 									setValue("time", avaliableTimeSlot.timeSlot);
 									setSelectedTime(avaliableTimeSlot.timeSlot);
+									timeSelected(avaliableTimeSlot.timeSlot);
 								}}
 								value={selectedTime}
-								isDisabled={!avaliableTimeSlot.timeSlot}
+								disabled={!avaliableTimeSlot.timeSlot}
 								id="time"
 								{...register("time")}>
 								{avaliableTimeSlot.timeSlot}
@@ -92,7 +93,7 @@ export default function TimeList({
 						</GridItem>
 					)}
 				</SimpleGrid>
-			</FormControl>
+			</Field.Root>
 		</Box>
 	);
 }

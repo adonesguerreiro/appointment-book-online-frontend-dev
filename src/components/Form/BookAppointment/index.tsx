@@ -5,12 +5,10 @@ import {
 	Text,
 	Card,
 	CardBody,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
 	Grid,
 	Input,
-	Select,
+	Field,
+	NativeSelect,
 } from "@chakra-ui/react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { BookingAppointmentData } from "../../../pages/BookAppointment";
@@ -37,7 +35,7 @@ export default function BookingAppointment({
 				justify="center"
 				align="center"
 				padding="1rem">
-				<Avatar
+				<Avatar.Image
 					src={
 						typeof user?.avatarUrl === "string"
 							? user?.avatarUrl
@@ -45,21 +43,21 @@ export default function BookingAppointment({
 							? URL.createObjectURL(user?.avatarUrl)
 							: undefined
 					}
-					size="xl"
+					sizes="xl"
 				/>
 				<Box ml="3">
 					<Text fontWeight="bold">{user?.name}</Text>
 				</Box>
 			</Flex>
-			<Card
+			<Card.Root
 				padding={4}
 				marginBottom={5}
 				width="25rem"
 				mx="auto">
 				<CardBody>
-					<FormControl isInvalid={!!errors.customerName}>
+					<Field.Root invalid={!!errors.customerName}>
 						<Grid>
-							<FormLabel>Nome</FormLabel>
+							<Field.Label>Nome</Field.Label>
 							<Input
 								type="text"
 								placeholder="Nome do cliente"
@@ -67,15 +65,13 @@ export default function BookingAppointment({
 								{...register("customerName")}
 							/>
 							{errors.customerName && (
-								<FormErrorMessage>
-									{errors.customerName.message}
-								</FormErrorMessage>
+								<Field.ErrorText>{errors.customerName.message}</Field.ErrorText>
 							)}
 						</Grid>
-					</FormControl>
-					<FormControl isInvalid={!!errors.customerPhone}>
+					</Field.Root>
+					<Field.Root invalid={!!errors.customerPhone}>
 						<Grid>
-							<FormLabel>Celular</FormLabel>
+							<Field.Label>Celular</Field.Label>
 							<Input
 								as={InputMask}
 								mask="(99) 99999-9999"
@@ -85,18 +81,16 @@ export default function BookingAppointment({
 								{...register("customerPhone")}
 							/>
 							{errors.customerPhone && (
-								<FormErrorMessage>
-									{errors.customerPhone.message}
-								</FormErrorMessage>
+								<Field.ErrorText>{errors.customerPhone.message}</Field.ErrorText>
 							)}
 						</Grid>
-					</FormControl>
-					<FormControl isInvalid={!!errors.serviceId}>
+					</Field.Root>
+					<Field.Root invalid={!!errors.serviceId}>
 						<Grid>
-							<FormLabel>Serviço</FormLabel>
-							<Select
-								placeholder="Selecione o serviço"
+							<Field.Label>Serviço</Field.Label>
+							<NativeSelect.Root
 								{...register("serviceId")}>
+									<NativeSelect.Field 	placeholder="Selecione o serviço">
 								{services.length > 0 ? (
 									services.map((service) => (
 										<option
@@ -105,17 +99,19 @@ export default function BookingAppointment({
 											{service.serviceName}
 										</option>
 									))
+
 								) : (
 									<option value="0">Nenhum serviço encontrado</option>
 								)}
-							</Select>
+								</NativeSelect.Field>
+							</NativeSelect.Root>
 							{errors.serviceId && (
-								<FormErrorMessage>{errors.serviceId.message}</FormErrorMessage>
+								<Field.ErrorText>{errors.serviceId.message}</Field.ErrorText>
 							)}
 						</Grid>
-					</FormControl>
+					</Field.Root>
 				</CardBody>
-			</Card>
+			</Card.Root>
 		</>
 	);
 }

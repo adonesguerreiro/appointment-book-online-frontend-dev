@@ -21,6 +21,7 @@ import { useShowForm } from "../../hooks/useShowForm";
 import { useEditMode } from "../../hooks/useEditMode";
 
 export default function SchedulePage() {
+
 	const { reset } = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
 	});
@@ -30,7 +31,7 @@ export default function SchedulePage() {
 		useSchedules(currentPage);
 	const { timeSlots, setTimeSlots, fetchDataTimeSlot } = useTimeSlots();
 	const { isEditing, startEditing, stopEditing } = useEditMode();
-	const { isOpen, onClose } = useDisclosure();
+	const { open, onClose } = useDisclosure();
 	const [selectedDate, setSelectedDate] = useState<string>();
 	const [selectedSchedule, setSelectedSchedule] =
 		useState<FormDataSchedule | null>();
@@ -159,7 +160,7 @@ export default function SchedulePage() {
 				)}
 				{selectedSchedule && (
 					<ModalDelete
-						isOpen={isOpen}
+						isOpen={open}
 						onClose={onClose}
 						title="agendamento"
 						description="Deseja excluir a agenda do dia "

@@ -1,26 +1,23 @@
 import {
 	Card,
-	CardHeader,
 	Heading,
 	CardBody,
 	Box,
 	Text,
 	Flex,
-	FormControl,
-	FormLabel,
 	Input,
 	Button,
-	FormErrorMessage,
 	Container,
 	Spinner,
 	Link,
+	Field,
 } from "@chakra-ui/react";
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { auth, refreshToken } from "../../services/api";
+import { auth } from "../../services/api";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
 import { useHandleError } from "../../hooks/useHandleError";
@@ -46,13 +43,18 @@ export default function LoginPage() {
 	const onSubmit = async (data: FormDataLogin) => {
 		try {
 			setLoading(true);
-			await auth(data);
-			await refreshToken();
-			await refreshUser();
+			const response = await auth(data);
+			localStorage.setItem("token", response.data.token);
+			localStorage.setItem("refreshToken", response.data.refreshToken);
+			const refresh = await refreshUser();
+			console.log("User refreshed:", refresh);
+			// await auth(data);
+			// await refreshToken();
+			// await refreshUser();
 
 			showToast({
 				title: "Autenticado com sucesso!",
-				status: "success",
+				type: "success",
 			});
 
 			navigate("/");
@@ -71,8 +73,8 @@ export default function LoginPage() {
 				align="center"
 				justify="center"
 				height="90vh">
-				<Card>
-					<CardHeader
+				<Card.Root>
+					<Card.Header
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
@@ -89,7 +91,7 @@ export default function LoginPage() {
 								Por favor, entre com suas credenciais
 							</Text>
 						</Box>
-					</CardHeader>
+					</Card.Header>
 
 					<CardBody
 						width="52.5625rem"
@@ -98,55 +100,50 @@ export default function LoginPage() {
 							display="grid"
 							placeItems="center">
 							<form onSubmit={handleSubmit(onSubmit)}>
-								<FormControl
+								<Field.Root
 									display="grid"
 									alignItems="center"
 									width="25.0625rem"
 									padding="0.625rem"
 									gap="0.625rem"
-									isInvalid={!!errors}>
-									<FormLabel>Email</FormLabel>
+									invalid={!!errors}>
+									<Field.Label>Email</Field.Label>
 									<Input
 										type="email"
 										placeholder="Insira seu email"
 										id="email"
 										{...register("email")}
-										isInvalid={!!errors.email}
 									/>
 									{errors.email && (
-										<FormErrorMessage>{errors.email.message}</FormErrorMessage>
+										<Field.ErrorText>{errors.email.message}</Field.ErrorText>
 									)}
 
-									<FormLabel>Senha</FormLabel>
+									<Field.Label>Senha</Field.Label>
 									<Input
 										type="password"
 										placeholder="Insira sua senha"
 										id="password"
-										isInvalid={!!errors.password}
 										{...register("password")}
 									/>
 									{errors.password && (
-										<FormErrorMessage>
-											{errors.password.message}
-										</FormErrorMessage>
+										<Field.ErrorText>{errors.password.message}</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 								<Flex
 									justifyContent="space-between"
 									alignItems="center">
 									<Button
 										colorScheme="teal"
 										size="lg"
-										rightIcon={<MdArrowForward />}
 										type="submit"
-										isDisabled={loading}>
+										disabled={loading}>
 										{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
 										) : null}
-										{loading ? "Autenticando" : "Entrar"}
+										{loading ? "Autenticando" : "Entrar"} <MdArrowForward />
 									</Button>
 									<Box>
 										<Link href="/forgot-password">Esqueceu a senha?</Link>
@@ -155,7 +152,7 @@ export default function LoginPage() {
 							</form>
 						</Box>
 					</CardBody>
-				</Card>
+				</Card.Root>
 			</Flex>
 		</Container>
 	);

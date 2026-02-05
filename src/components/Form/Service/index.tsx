@@ -1,14 +1,11 @@
 import {
 	Flex,
 	Card,
-	CardBody,
 	Box,
 	Grid,
-	FormControl,
-	FormLabel,
 	Input,
-	FormErrorMessage,
 	Button,
+	Field,
 } from "@chakra-ui/react";
 import { CurrencyInput } from "react-currency-mask";
 import { Controller, useForm } from "react-hook-form";
@@ -56,8 +53,8 @@ export default function ServiceForm({
 	}, [selectedService, reset]);
 
 	return (
-		<Card>
-			<CardBody
+		<Card.Root>
+			<Card.Body
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
@@ -65,9 +62,9 @@ export default function ServiceForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.serviceName}>
+						<Field.Root invalid={!!errors.serviceName}>
 							<Grid>
-								<FormLabel>Nome</FormLabel>
+								<Field.Label>Nome</Field.Label>
 								<Input
 									type="text"
 									placeholder="Nome do serviço"
@@ -75,16 +72,16 @@ export default function ServiceForm({
 									{...register("serviceName")}
 								/>
 								{errors.serviceName && (
-									<FormErrorMessage>
+									<Field.ErrorText>
 										{errors.serviceName.message}
-									</FormErrorMessage>
+									</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.duration}>
+						<Field.Root invalid={!!errors.duration}>
 							<Grid>
-								<FormLabel>Duração do serviço (minutos)</FormLabel>
+								<Field.Label>Duração do serviço (minutos)</Field.Label>
 								<Input
 									as={InputMask}
 									mask="99:99"
@@ -95,14 +92,14 @@ export default function ServiceForm({
 									{...register("duration")}
 								/>
 								{errors.duration && (
-									<FormErrorMessage>{errors.duration.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.duration.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.price}>
+						<Field.Root invalid={!!errors.price}>
 							<Grid>
-								<FormLabel>Preço</FormLabel>
+								<Field.Label>Preço</Field.Label>
 								<Controller
 									name="price"
 									control={control}
@@ -126,10 +123,10 @@ export default function ServiceForm({
 								/>
 
 								{errors.price && (
-									<FormErrorMessage>{errors.price.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.price.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 					</Grid>
 					<Flex justifyContent="flex-end">
 						{!isEditing ? (
@@ -137,18 +134,16 @@ export default function ServiceForm({
 								colorScheme="green"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<LuPlus />}>
-								Cadastrar
+								margin="0.625rem">
+								Cadastrar <LuPlus />
 							</Button>
 						) : (
 							<Button
 								colorScheme="blue"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<TbEditCircle />}>
-								Editar
+								margin="0.625rem">
+								Editar <TbEditCircle />
 							</Button>
 						)}
 
@@ -156,13 +151,12 @@ export default function ServiceForm({
 							colorScheme="gray"
 							size="lg"
 							margin="0.625rem"
-							rightIcon={<MdCancel />}
 							onClick={onCancel}>
-							Cancelar
+							Cancelar <MdCancel />
 						</Button>
 					</Flex>
 				</Box>
-			</CardBody>
-		</Card>
+			</Card.Body>
+		</Card.Root>
 	);
 }

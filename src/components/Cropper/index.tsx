@@ -2,12 +2,8 @@ import {
 	Avatar,
 	Box,
 	Button,
+	Dialog,
 	Input,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalOverlay,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
@@ -27,7 +23,7 @@ export default function CropperComponent() {
 
 	const { setProfilePhoto } = useProfilePhoto();
 	const { avatar, setAvatar } = useAvatar();
-	const { isOpen, onClose, onOpen } = useDisclosure();
+	const { open, onClose, onOpen } = useDisclosure();
 
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
 	const [zoom, setZoom] = useState(1);
@@ -37,7 +33,7 @@ export default function CropperComponent() {
 		(_croppedArea: Area, croppedAreaPixels: Area) => {
 			setCroppedAreaPixels(croppedAreaPixels);
 		},
-		[]
+		[],
 	);
 
 	const showCroppedImage = useCallback(() => {
@@ -64,7 +60,7 @@ export default function CropperComponent() {
 				0,
 				0,
 				croppedAreaPixels.width,
-				croppedAreaPixels.height
+				croppedAreaPixels.height,
 			);
 
 			canvas.toBlob((blob) => {
@@ -83,12 +79,12 @@ export default function CropperComponent() {
 			position="relative"
 			width="100%"
 			height="100%">
-			<Avatar
-				size="xl"
+			<Avatar.Image
+				sizes="xl"
 				id="avatar"
-				name={getValues("name") || ""}
 				src={(avatar as string) || (getValues("avatarUrl") as string)}
 			/>
+			<Avatar.Fallback name={getValues("name") || ""} />
 			<Input
 				id="avatarUrl"
 				type="file"
@@ -114,12 +110,12 @@ export default function CropperComponent() {
 				}}
 			/>
 
-			<Modal
-				isOpen={isOpen}
-				onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalBody style={{ position: "relative", height: 400 }}>
+			<Dialog.Root
+				open={open}
+				onOpenChange={onClose}>
+				<Dialog.Backdrop />
+				<Dialog.Content>
+					<Dialog.Body style={{ position: "relative", height: 400 }}>
 						{avatar && (
 							<Box
 								position="relative"
@@ -136,16 +132,16 @@ export default function CropperComponent() {
 								/>
 							</Box>
 						)}
-					</ModalBody>
-					<ModalFooter>
+					</Dialog.Body>
+					<Dialog.Footer>
 						<Button
 							onClick={showCroppedImage}
 							colorScheme="blue">
 							Confirmar
 						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+					</Dialog.Footer>
+				</Dialog.Content>
+			</Dialog.Root>
 		</Box>
 	);
 }

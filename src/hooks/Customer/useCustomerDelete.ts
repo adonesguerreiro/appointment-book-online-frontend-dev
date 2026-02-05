@@ -34,7 +34,7 @@ export const useCustomerDelete = ({
 				onClose();
 				showToast({
 					title: "Cliente excluído com sucesso.",
-					status: "success",
+					type: "success",
 				});
 				closeForm();
 				setSelectedCustomer(null);

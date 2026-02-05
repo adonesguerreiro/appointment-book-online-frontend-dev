@@ -28,7 +28,7 @@ export default function ServicePage() {
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();
 	const { isEditing, startEditing, stopEditing } = useEditMode();
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { open, onOpen, onClose } = useDisclosure();
 	const [selectedService, setSelectedService] =
 		useState<FormDataService | null>();
 
@@ -143,7 +143,7 @@ export default function ServicePage() {
 
 				{selectedService && (
 					<ModalDelete
-						isOpen={isOpen}
+						isOpen={open}
 						onClose={onClose}
 						title="serviço"
 						itemName={selectedService.serviceName}

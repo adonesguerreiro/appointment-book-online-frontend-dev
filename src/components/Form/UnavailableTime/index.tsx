@@ -2,13 +2,10 @@ import {
 	Box,
 	Button,
 	Card,
-	CardBody,
 	Flex,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
 	Grid,
 	Input,
+	Field,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
@@ -57,8 +54,8 @@ export default function UnavailableTimeForm({
 	}, [selectedUnavailableTime, reset]);
 
 	return (
-		<Card>
-			<CardBody
+		<Card.Root>
+			<Card.Body
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
@@ -66,10 +63,10 @@ export default function UnavailableTimeForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.date}>
+						<Field.Root invalid={!!errors.date}>
 							<Grid>
 								<Flex alignItems="center">
-									<FormLabel>Data</FormLabel>
+									<Field.Label>Data</Field.Label>
 								</Flex>
 
 								<Controller
@@ -79,7 +76,7 @@ export default function UnavailableTimeForm({
 										<DatePicker
 											id="date"
 											selected={field.value ? new Date(field.value) : null}
-											onChange={(date) => field.onChange(date?.toISOString())}
+											onChange={(date: Date | null) => field.onChange(date?.toISOString())}
 											customInput={
 												<Input
 													as={InputMask}
@@ -94,14 +91,14 @@ export default function UnavailableTimeForm({
 								/>
 
 								{errors.date && (
-									<FormErrorMessage>{errors.date.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.date.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.startTime}>
+						<Field.Root invalid={!!errors.startTime}>
 							<Grid>
-								<FormLabel>Horário de início</FormLabel>
+								<Field.Label>Horário de início</Field.Label>
 								<Input
 									as={InputMask}
 									mask="99:99"
@@ -112,16 +109,16 @@ export default function UnavailableTimeForm({
 									{...register("startTime")}
 								/>
 								{errors.startTime && (
-									<FormErrorMessage>
+									<Field.ErrorText>
 										{errors.startTime.message}
-									</FormErrorMessage>
+									</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.endTime}>
+						<Field.Root invalid={!!errors.endTime}>
 							<Grid>
-								<FormLabel>Horário final</FormLabel>
+								<Field.Label>Horário final</Field.Label>
 								<Input
 									as={InputMask}
 									mask="99:99"
@@ -132,10 +129,10 @@ export default function UnavailableTimeForm({
 									{...register("endTime")}
 								/>
 								{errors.endTime && (
-									<FormErrorMessage>{errors.endTime.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.endTime.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 					</Grid>
 
 					<Flex justifyContent="flex-end">
@@ -145,8 +142,8 @@ export default function UnavailableTimeForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<LuPlus />}>
-								Cadastrar
+								>
+								Cadastrar <LuPlus />
 							</Button>
 						) : (
 							<Button
@@ -154,8 +151,8 @@ export default function UnavailableTimeForm({
 								size="lg"
 								type="submit"
 								margin="0.625rem"
-								rightIcon={<TbEditCircle />}>
-								Editar
+								>
+								Editar <TbEditCircle />
 							</Button>
 						)}
 
@@ -163,13 +160,12 @@ export default function UnavailableTimeForm({
 							colorScheme="gray"
 							size="lg"
 							margin="0.625rem"
-							rightIcon={<MdCancel />}
 							onClick={onCancel}>
-							Cancelar
+							Cancelar <MdCancel />
 						</Button>
 					</Flex>
 				</Box>
-			</CardBody>
-		</Card>
+			</Card.Body>
+		</Card.Root>
 	);
 }

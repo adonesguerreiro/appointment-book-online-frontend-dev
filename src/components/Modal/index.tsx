@@ -1,14 +1,4 @@
-import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalFooter,
-	ModalBody,
-	ModalCloseButton,
-	Button,
-	Text,
-} from "@chakra-ui/react";
+import { Dialog, Button, Text } from "@chakra-ui/react";
 
 interface ModalDeleteProps {
 	isOpen: boolean;
@@ -29,14 +19,16 @@ export default function ModalDelete({
 }: ModalDeleteProps) {
 	return (
 		<>
-			<Modal
-				isOpen={isOpen}
-				onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>Excluir {title}</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
+			<Dialog.Root
+				open={isOpen}
+				onOpenChange={onClose}>
+				<Dialog.Backdrop />
+				<Dialog.Content>
+					<Dialog.Header>
+						<Dialog.Title>Excluir {title}</Dialog.Title>
+					</Dialog.Header>
+					<Dialog.CloseTrigger />
+					<Dialog.Body>
 						{description}
 						<Text
 							as="span"
@@ -44,9 +36,9 @@ export default function ModalDelete({
 							{itemName}
 						</Text>
 						?
-					</ModalBody>
+					</Dialog.Body>
 
-					<ModalFooter>
+					<Dialog.Footer>
 						<Button
 							colorScheme="red"
 							mr={3}
@@ -59,9 +51,9 @@ export default function ModalDelete({
 							onClick={onClose}>
 							Cancelar
 						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+					</Dialog.Footer>
+				</Dialog.Content>
+			</Dialog.Root>
 		</>
 	);
 }

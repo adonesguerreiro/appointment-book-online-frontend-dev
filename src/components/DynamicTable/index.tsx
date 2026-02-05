@@ -1,11 +1,5 @@
 import {
 	Table,
-	Thead,
-	Tbody,
-	Tr,
-	Th,
-	Td,
-	TableContainer,
 	Flex,
 	Box,
 } from "@chakra-ui/react";
@@ -35,14 +29,13 @@ export default function DynamicTable<T extends object>({
 				alignItems={{ base: "flex-start", md: "center", lg: "center" }}
 				justifyContent={{ base: "flex-start", md: "center", lg: "center" }}>
 				<Box width="full">
-					<TableContainer>
-						<Table
-							variant="striped"
+					<Table.ScrollArea>
+						<Table.Root
 							colorScheme="gray">
-							<Thead>
-								<Tr>
+							<Table.Header>
+								<Table.Row>
 									{columns.map((column) => (
-										<Th
+										<Table.ColumnHeader
 											key={column.key as string}
 											display={
 												column.hideOnMobile
@@ -50,16 +43,16 @@ export default function DynamicTable<T extends object>({
 													: "table-cell"
 											}>
 											{column.label}
-										</Th>
+										</Table.ColumnHeader>
 									))}
-									{actions && <Th>Ações</Th>}
-								</Tr>
-							</Thead>
-							<Tbody>
+									{actions && <Table.ColumnHeader>Ações</Table.ColumnHeader>}
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
 								{data.map((row, index) => (
-									<Tr key={index}>
+									<Table.Row key={index}>
 										{columns.map((column) => (
-											<Td
+											<Table.Cell
 												key={column.key as string}
 												display={
 													column.hideOnMobile
@@ -69,14 +62,14 @@ export default function DynamicTable<T extends object>({
 												{column.render
 													? column.render(row[column.key] as string, row)
 													: (row[column.key] as string)}
-											</Td>
+											</Table.Cell>
 										))}
-										{actions && <Td>{actions(row)}</Td>}
-									</Tr>
+										{actions && <Table.Cell>{actions(row)}</Table.Cell>}
+									</Table.Row>
 								))}
-							</Tbody>
-						</Table>
-					</TableContainer>
+							</Table.Body>
+						</Table.Root>
+					</Table.ScrollArea>
 				</Box>
 			</Flex>
 		</>

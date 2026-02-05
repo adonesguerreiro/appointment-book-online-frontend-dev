@@ -2,12 +2,9 @@ import {
 	Box,
 	Button,
 	Card,
-	CardBody,
 	Container,
 	Flex,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
+	Field,
 	Grid,
 	Heading,
 	Input,
@@ -51,6 +48,8 @@ export default function CompanyPage() {
 		fetchDataCompany();
 	}, [fetchDataCompany]);
 
+
+
 	return (
 		<Container>
 			<Flex
@@ -66,17 +65,17 @@ export default function CompanyPage() {
 					fontWeight="semibold">
 					Empresa
 				</Heading>
-				<Card>
-					<CardBody
+				<Card.Root>
+					<Card.Body
 						width="60.5625rem"
 						height="40.6875rem">
 						<Box
 							as="form"
 							onSubmit={handleSubmit(handleSubmitCompany)}>
 							<Flex gap="0.625rem">
-								<FormControl isInvalid={!!errors.name}>
+								<Field.Root invalid={!!errors.name}>
 									<Grid>
-										<FormLabel>Nome</FormLabel>
+										<Field.Label>Nome</Field.Label>
 										<Input
 											type="text"
 											placeholder="Informe seu nome"
@@ -84,14 +83,14 @@ export default function CompanyPage() {
 											{...register("name")}
 										/>
 										{errors.name && (
-											<FormErrorMessage>{errors.name.message}</FormErrorMessage>
+											<Field.ErrorText>{errors.name.message}</Field.ErrorText>
 										)}
 									</Grid>
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.mobile}>
+								<Field.Root invalid={!!errors.mobile}>
 									<Grid>
-										<FormLabel>Celular</FormLabel>
+										<Field.Label>Celular</Field.Label>
 										<Input
 											as={InputMask}
 											mask="(99) 99999-9999"
@@ -101,16 +100,14 @@ export default function CompanyPage() {
 											{...register("mobile")}
 										/>
 										{errors.mobile && (
-											<FormErrorMessage>
-												{errors.mobile.message}
-											</FormErrorMessage>
+											<Field.ErrorText>{errors.mobile.message}</Field.ErrorText>
 										)}
 									</Grid>
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.email}>
+								<Field.Root invalid={!!errors.email}>
 									<Grid>
-										<FormLabel flex="1">E-mail</FormLabel>
+										<Field.Label flex="1">E-mail</Field.Label>
 										<Input
 											flex="2"
 											type="email"
@@ -119,15 +116,13 @@ export default function CompanyPage() {
 											{...register("email")}
 										/>
 										{errors.email && (
-											<FormErrorMessage>
-												{errors.email.message}
-											</FormErrorMessage>
+											<Field.ErrorText>{errors.email.message}</Field.ErrorText>
 										)}
 									</Grid>
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.cnpj}>
-									<FormLabel>CNPJ</FormLabel>
+								<Field.Root invalid={!!errors.cnpj}>
+									<Field.Label>CNPJ</Field.Label>
 									<Input
 										as={InputMask}
 										mask="99.999.999/9999-99"
@@ -137,9 +132,9 @@ export default function CompanyPage() {
 										{...register("cnpj")}
 									/>
 									{errors.cnpj && (
-										<FormErrorMessage>{errors.cnpj.message}</FormErrorMessage>
+										<Field.ErrorText>{errors.cnpj.message}</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 							</Flex>
 
 							<Heading
@@ -153,9 +148,9 @@ export default function CompanyPage() {
 							<Flex
 								gap="0.625rem"
 								padding="0.625rem">
-								<FormControl isInvalid={!!errors.street}>
+								<Field.Root invalid={!!errors.street}>
 									<Grid>
-										<FormLabel>Logradouro</FormLabel>
+										<Field.Label>Logradouro</Field.Label>
 										<Input
 											type="text"
 											placeholder="Informe seu endereço"
@@ -163,16 +158,14 @@ export default function CompanyPage() {
 											{...register("street")}
 										/>
 										{errors.street && (
-											<FormErrorMessage>
-												{errors.street.message}
-											</FormErrorMessage>
+											<Field.ErrorText>{errors.street.message}</Field.ErrorText>
 										)}
 									</Grid>
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.number}>
+								<Field.Root invalid={!!errors.number}>
 									<Grid>
-										<FormLabel>Número</FormLabel>
+										<Field.Label>Número</Field.Label>
 										<Input
 											type="text"
 											placeholder="Nº"
@@ -180,15 +173,13 @@ export default function CompanyPage() {
 											{...register("number")}
 										/>
 										{errors.number && (
-											<FormErrorMessage>
-												{errors.number.message}
-											</FormErrorMessage>
+											<Field.ErrorText>{errors.number.message}</Field.ErrorText>
 										)}
 									</Grid>
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.complement}>
-									<FormLabel>Complemento</FormLabel>
+								<Field.Root invalid={!!errors.complement}>
+									<Field.Label>Complemento</Field.Label>
 									<Input
 										placeholder="Complemento"
 										type="text"
@@ -196,14 +187,14 @@ export default function CompanyPage() {
 										{...register("complement")}
 									/>
 									{errors.complement && (
-										<FormErrorMessage>
+										<Field.ErrorText>
 											{errors.complement.message}
-										</FormErrorMessage>
+										</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.neighborhood}>
-									<FormLabel>Bairro</FormLabel>
+								<Field.Root invalid={!!errors.neighborhood}>
+									<Field.Label>Bairro</Field.Label>
 									<Input
 										placeholder="Bairro"
 										type="text"
@@ -211,18 +202,18 @@ export default function CompanyPage() {
 										{...register("neighborhood")}
 									/>
 									{errors.neighborhood && (
-										<FormErrorMessage>
+										<Field.ErrorText>
 											{errors.neighborhood.message}
-										</FormErrorMessage>
+										</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 							</Flex>
 
 							<Flex
 								gap="0.625rem"
 								padding="0.625rem">
-								<FormControl isInvalid={!!errors.postalCode}>
-									<FormLabel>CEP</FormLabel>
+								<Field.Root invalid={!!errors.postalCode}>
+									<Field.Label>CEP</Field.Label>
 									<Input
 										as={InputMask}
 										mask="99.999-999"
@@ -234,38 +225,38 @@ export default function CompanyPage() {
 										})}
 									/>
 									{errors.postalCode && (
-										<FormErrorMessage>
+										<Field.ErrorText>
 											{errors.postalCode.message}
-										</FormErrorMessage>
+										</Field.ErrorText>
 									)}
-								</FormControl>
-								<FormControl isInvalid={!!errors.city}>
-									<FormLabel>Cidade</FormLabel>
+								</Field.Root>
+								<Field.Root invalid={!!errors.city}>
+									<Field.Label>Cidade</Field.Label>
 									<Input
 										placeholder="Cidade"
 										type="text"
 										id="city"
-										isDisabled
+										disabled
 										{...register("city")}
 									/>
 									{errors.city && (
-										<FormErrorMessage>{errors.city.message}</FormErrorMessage>
+										<Field.ErrorText>{errors.city.message}</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 
-								<FormControl isInvalid={!!errors.state}>
-									<FormLabel>Estado</FormLabel>
+								<Field.Root invalid={!!errors.state}>
+									<Field.Label>Estado</Field.Label>
 									<Input
 										placeholder="Estado"
 										type="text"
 										id="state"
-										isDisabled
+										disabled
 										{...register("state")}
 									/>
 									{errors.state && (
-										<FormErrorMessage>{errors.state.message}</FormErrorMessage>
+										<Field.ErrorText>{errors.state.message}</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 							</Flex>
 							<Flex
 								alignItems="center"
@@ -274,28 +265,26 @@ export default function CompanyPage() {
 									colorScheme="blue"
 									size="lg"
 									type="submit"
-									isDisabled={loading}
-									rightIcon={<MdSave />}>
+									disabled={loading}>
 									{loading ? (
 										<Spinner
 											size="sm"
 											mr="2"
 										/>
 									) : null}
-									{loading ? "Validando dados" : "Salvar"}
+									{loading ? "Validando dados" : "Salvar"} <MdSave />
 								</Button>
 								<Button
 									colorScheme="gray"
 									size="lg"
 									margin="0.625rem"
-									rightIcon={<MdCancel />}
 									onClick={handleCancel}>
-									Cancelar
+									Cancelar <MdCancel />
 								</Button>
 							</Flex>
 						</Box>
-					</CardBody>
-				</Card>
+					</Card.Body>
+				</Card.Root>
 			</Flex>
 		</Container>
 	);

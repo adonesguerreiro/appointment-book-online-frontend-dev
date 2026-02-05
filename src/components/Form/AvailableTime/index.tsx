@@ -3,13 +3,11 @@ import {
 	Button,
 	Card,
 	CardBody,
+	Field,
 	Flex,
-	FormControl,
-	FormErrorMessage,
-	FormLabel,
 	Grid,
 	Input,
-	Select,
+	NativeSelect,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -57,7 +55,7 @@ export default function AvaliableTimeForm({
 	}, [selectedAvaliableTime, reset]);
 
 	return (
-		<Card>
+		<Card.Root>
 			<CardBody
 				width="25.0625rem"
 				height="40.6875rem"
@@ -66,49 +64,51 @@ export default function AvaliableTimeForm({
 					as="form"
 					onSubmit={handleSubmit(onSubmit)}>
 					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.day}>
+						<Field.Root invalid={!!errors.day}>
 							<Grid>
-								<FormLabel>Dia da semana</FormLabel>
-								<Select
+								<Field.Label>Dia da semana</Field.Label>
+								<NativeSelect.Root
 									id="day"
-									placeholder="Selecione um dia da semana"
 									{...register("day")}>
-									<option value="MONDAY">Segunda-feira</option>
-									<option value="TUESDAY">Terça-feira</option>
-									<option value="WEDNESDAY">Quarta-feira</option>
-									<option value="THURSDAY">Quinta-feira</option>
-									<option value="FRIDAY">Sexta-feira</option>
-									<option value="SATURDAY">Sábado</option>
-									<option value="SUNDAY">Domingo</option>
-								</Select>
+									<NativeSelect.Field placeholder="Selecione um dia da semana">
+										<option value="MONDAY">Segunda-feira</option>
+										<option value="TUESDAY">Terça-feira</option>
+										<option value="WEDNESDAY">Quarta-feira</option>
+										<option value="THURSDAY">Quinta-feira</option>
+										<option value="FRIDAY">Sexta-feira</option>
+										<option value="SATURDAY">Sábado</option>
+										<option value="SUNDAY">Domingo</option>
+									</NativeSelect.Field>
+								</NativeSelect.Root>
 
 								{errors.day && (
-									<FormErrorMessage>{errors.day.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.day.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.period}>
+						<Field.Root invalid={!!errors.period}>
 							<Grid>
-								<FormLabel>Período</FormLabel>
-								<Select
+								<Field.Label>Período</Field.Label>
+								<NativeSelect.Root
 									id="period"
-									placeholder="Selecione um período"
 									{...register("period")}>
-									<option value="MORNING">Manhã</option>
-									<option value="AFTERNOON">Tarde</option>
-									<option value="EVENING">Noite</option>
-								</Select>
+									<NativeSelect.Field placeholder="Selecione um período">
+										<option value="MORNING">Manhã</option>
+										<option value="AFTERNOON">Tarde</option>
+										<option value="EVENING">Noite</option>
+									</NativeSelect.Field>
+								</NativeSelect.Root>
 
 								{errors.period && (
-									<FormErrorMessage>{errors.period.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.period.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.startTime}>
+						<Field.Root invalid={!!errors.startTime}>
 							<Grid>
-								<FormLabel>Horário de início</FormLabel>
+								<Field.Label>Horário de início</Field.Label>
 								<Input
 									as={InputMask}
 									mask="99:99"
@@ -119,16 +119,14 @@ export default function AvaliableTimeForm({
 									{...register("startTime")}
 								/>
 								{errors.startTime && (
-									<FormErrorMessage>
-										{errors.startTime.message}
-									</FormErrorMessage>
+									<Field.ErrorText>{errors.startTime.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.endTime}>
+						<Field.Root invalid={!!errors.endTime}>
 							<Grid>
-								<FormLabel>Horário final</FormLabel>
+								<Field.Label>Horário final</Field.Label>
 								<Input
 									as={InputMask}
 									mask="99:99"
@@ -139,27 +137,27 @@ export default function AvaliableTimeForm({
 									{...register("endTime")}
 								/>
 								{errors.endTime && (
-									<FormErrorMessage>{errors.endTime.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.endTime.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 
-						<FormControl isInvalid={!!errors.interval}>
+						<Field.Root invalid={!!errors.interval}>
 							<Grid>
-								<FormLabel>Intervalo em minutos</FormLabel>
+								<Field.Label>Intervalo em minutos</Field.Label>
 								<Input
 									placeholder="45"
 									type="text"
 									id="interval"
 									maxLength={5}
-									isDisabled={isEditing}
+									disabled={isEditing}
 									{...register("interval")}
 								/>
 								{errors.interval && (
-									<FormErrorMessage>{errors.interval.message}</FormErrorMessage>
+									<Field.ErrorText>{errors.interval.message}</Field.ErrorText>
 								)}
 							</Grid>
-						</FormControl>
+						</Field.Root>
 					</Grid>
 
 					<Flex justifyContent="flex-end">
@@ -168,18 +166,16 @@ export default function AvaliableTimeForm({
 								colorScheme="green"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<LuPlus />}>
-								Cadastrar
+								margin="0.625rem">
+								Cadastrar <LuPlus />
 							</Button>
 						) : (
 							<Button
 								colorScheme="blue"
 								size="lg"
 								type="submit"
-								margin="0.625rem"
-								rightIcon={<TbEditCircle />}>
-								Editar
+								margin="0.625rem">
+								Editar <TbEditCircle />
 							</Button>
 						)}
 
@@ -187,13 +183,12 @@ export default function AvaliableTimeForm({
 							colorScheme="gray"
 							size="lg"
 							margin="0.625rem"
-							rightIcon={<MdCancel />}
 							onClick={onCancel}>
-							Cancelar
+							Cancelar <MdCancel />
 						</Button>
 					</Flex>
 				</Box>
 			</CardBody>
-		</Card>
+		</Card.Root>
 	);
 }

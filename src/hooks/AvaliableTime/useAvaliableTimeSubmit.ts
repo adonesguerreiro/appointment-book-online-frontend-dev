@@ -24,7 +24,7 @@ export const useAvaliableTimeSubmit = ({
 				if (createdService.status === 200) {
 					showToast({
 						title: "Horário disponível registrado com sucesso.",
-						status: "success",
+						type: "success",
 					});
 					fetchAvaliableTime();
 					closeForm();
@@ -33,7 +33,7 @@ export const useAvaliableTimeSubmit = ({
 				await updateAvaliableTime(Number(selectedAvaliableTime?.id), data);
 				showToast({
 					title: "Horário disponível alterado com sucesso.",
-					status: "info",
+					type: "info",
 				});
 				fetchAvaliableTime();
 				closeForm();

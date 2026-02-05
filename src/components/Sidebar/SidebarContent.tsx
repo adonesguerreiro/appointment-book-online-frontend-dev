@@ -1,9 +1,8 @@
 import {
 	Box,
+	BoxProps,
 	CloseButton,
 	Flex,
-	useColorModeValue,
-	BoxProps,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { IconType } from "react-icons";
@@ -12,6 +11,7 @@ import NavItem from "./NavItem";
 import { MdDashboard, MdEventAvailable, MdEventBusy } from "react-icons/md";
 import { FaClock, FaUser, FaWrench } from "react-icons/fa6";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import {	useColorModeValue } from "../../components/ui/color-mode";
 
 interface SidebarProps extends BoxProps {
 	onClose: () => void;
@@ -45,7 +45,7 @@ const SubMenuTime: Array<LinkItemProps> = [
 ];
 
 export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
-	const { isOpen, onToggle } = useDisclosure();
+	const { open, onToggle } = useDisclosure();
 
 	return (
 		<Box
@@ -97,10 +97,10 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 							gap="1"
 							onClick={onToggle}>
 							{link.name}
-							{isOpen ? <FiChevronUp /> : <FiChevronDown />}
+							{open ? <FiChevronUp /> : <FiChevronDown />}
 						</NavItem>
 
-						{isOpen && (
+						{open && (
 							<>
 								{SubMenuTime.map((subLink) => (
 									<NavItem

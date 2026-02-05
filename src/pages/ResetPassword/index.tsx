@@ -1,17 +1,14 @@
 import {
 	Card,
-	CardHeader,
 	CardBody,
 	Box,
 	Flex,
-	FormControl,
-	FormLabel,
 	Input,
 	Button,
-	FormErrorMessage,
 	Container,
 	Spinner,
 	Badge,
+	Field,
 } from "@chakra-ui/react";
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -62,7 +59,6 @@ export default function ResetPasswordPage() {
 		return;
 	}
 
-
 	const onSubmit = async (data: FormDataResetPassword) => {
 		try {
 			const token = searchParams.get("token");
@@ -76,7 +72,7 @@ export default function ResetPasswordPage() {
 				setLoading(false);
 				showToast({
 					title: "Senha redefinida com sucesso!",
-					status: "success",
+					type: "success",
 				});
 				navigate("/login");
 			}
@@ -86,7 +82,7 @@ export default function ResetPasswordPage() {
 			showToast({
 				title:
 					"Falha ao redefinir a senha, pois seu prazo de redefinição expirou, redirecionando para o login...",
-				status: "error",
+				type: "error",
 			});
 			navigate("/login");
 		}
@@ -104,13 +100,13 @@ export default function ResetPasswordPage() {
 					mb="4">
 					Tempo restante: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
 				</Badge>
-				<Card>
-					<CardHeader
+				<Card.Root>
+					<Card.Header
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
 						<HeadingComponent title="Redefina sua senha" />
-					</CardHeader>
+					</Card.Header>
 
 					<CardBody
 						width="52.5625rem"
@@ -119,13 +115,13 @@ export default function ResetPasswordPage() {
 							display="grid"
 							placeItems="center">
 							<form onSubmit={handleSubmit(onSubmit)}>
-								<FormControl
+								<Field.Root
 									display="grid"
 									alignItems="center"
 									width="25.0625rem"
 									padding="0.625rem"
-									isInvalid={!!errors.newPassword || !!errors.confirmPassword}>
-									<FormLabel>Nova senha</FormLabel>
+									invalid={!!errors.newPassword || !!errors.confirmPassword}>
+									<Field.Label>Nova senha</Field.Label>
 									<Input
 										type="password"
 										placeholder="Nova senha"
@@ -133,11 +129,11 @@ export default function ResetPasswordPage() {
 										{...register("newPassword")}
 									/>
 									{errors.newPassword && (
-										<FormErrorMessage>
+										<Field.ErrorText>
 											{errors.newPassword.message}
-										</FormErrorMessage>
+										</Field.ErrorText>
 									)}
-									<FormLabel>Confirmar nova senha</FormLabel>
+									<Field.Label>Confirmar nova senha</Field.Label>
 									<Input
 										type="password"
 										placeholder="Confirmar nova senha"
@@ -145,33 +141,32 @@ export default function ResetPasswordPage() {
 										{...register("confirmPassword")}
 									/>
 									{errors.confirmPassword && (
-										<FormErrorMessage>
+										<Field.ErrorText>
 											{errors.confirmPassword.message}
-										</FormErrorMessage>
+										</Field.ErrorText>
 									)}
-								</FormControl>
+								</Field.Root>
 								<Flex
 									justifyContent="right"
 									alignItems="center">
 									<Button
 										colorScheme="teal"
 										size="lg"
-										rightIcon={<MdArrowForward />}
 										type="submit"
-										isDisabled={loading}>
+										disabled={loading}>
 										{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
 										) : null}
-										{loading ? "Verificando" : "Enviar"}
+										{loading ? "Verificando" : "Enviar"} <MdArrowForward />
 									</Button>
 								</Flex>
 							</form>
 						</Box>
 					</CardBody>
-				</Card>
+				</Card.Root>
 			</Flex>
 		</Container>
 	);

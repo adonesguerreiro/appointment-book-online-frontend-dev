@@ -28,7 +28,7 @@ export const useUnavaliableTimeSubmit = ({
 					if (createdUnavailableTime.status === 200) {
 						showToast({
 							title: "Horário indisponível registrado com sucesso.",
-							status: "success",
+							type: "success",
 						});
 						fetchUnavaliableTime();
 						closeForm();
@@ -40,7 +40,7 @@ export const useUnavaliableTimeSubmit = ({
 					);
 					showToast({
 						title: "Horário indisponível alterado com sucesso.",
-						status: "info",
+						type: "info",
 					});
 					fetchUnavaliableTime();
 					closeForm();

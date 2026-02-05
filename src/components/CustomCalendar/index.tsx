@@ -1,4 +1,4 @@
-import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { Field, Flex, Input } from "@chakra-ui/react";
 import Calendar from "react-calendar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { BookingAppointmentData } from "../../pages/BookAppointment";
@@ -34,7 +34,7 @@ export default function CustomCalendar({
 		if (errors.calendar) {
 			showToast({
 				title: "Por favor, selecione uma data disponível.",
-				status: "warning",
+				type: "warning",
 				duration: 1000,
 			});
 			clearErrors("calendar");
@@ -49,7 +49,7 @@ export default function CustomCalendar({
 			p={4}
 			maxW="fit-content"
 			mx="auto"
-			sx={{
+			css={{
 				".react-calendar": {
 					border: "none",
 					fontFamily: "inherit",
@@ -73,7 +73,7 @@ export default function CustomCalendar({
 					justifyContent: "center",
 				},
 			}}>
-			<FormControl isInvalid={!!errors.calendar}>
+			<Field.Root invalid={!!errors.calendar}>
 				<Calendar
 					locale="pt-BR"
 					minDate={new Date()}
@@ -93,7 +93,7 @@ export default function CustomCalendar({
 					type="hidden"
 					{...register("calendar")}
 				/>
-			</FormControl>
+			</Field.Root>
 		</Flex>
 	);
 }
