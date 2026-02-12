@@ -1,17 +1,17 @@
 import {
 	Box,
-	BoxProps,
 	CloseButton,
 	Flex,
+	BoxProps,
 	useDisclosure,
 } from "@chakra-ui/react";
+import { useColorModeValue } from "../ui/color-mode";
 import { IconType } from "react-icons";
 import { GrSchedule } from "react-icons/gr";
 import NavItem from "./NavItem";
 import { MdDashboard, MdEventAvailable, MdEventBusy } from "react-icons/md";
 import { FaClock, FaUser, FaWrench } from "react-icons/fa6";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import {	useColorModeValue } from "../../components/ui/color-mode";
 
 interface SidebarProps extends BoxProps {
 	onClose: () => void;
@@ -75,9 +75,10 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 				</Box>
 
 				<CloseButton
-					display={{ base: "flex", md: "none" }}
-					onClick={onClose}
-				/>
+						ml="auto"
+						onClick={onClose}
+						aria-label="Close sidebar"
+					/>
 			</Flex>
 			{LinkItems.map((link) =>
 				link.path ? (
@@ -114,7 +115,7 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 							</>
 						)}
 					</Box>
-				)
+				),
 			)}
 		</Box>
 	);

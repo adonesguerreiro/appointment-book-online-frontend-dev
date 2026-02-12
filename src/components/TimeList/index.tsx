@@ -15,7 +15,7 @@ import {
 } from "react-hook-form";
 import { BookingAppointmentData } from "../../pages/BookAppointment";
 import { useCustomToast } from "../../hooks/useCustomToast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
 
 interface TimeListProps {
@@ -37,30 +37,30 @@ export default function TimeList({
 }: TimeListProps) {
 	const { showToast } = useCustomToast();
 
-	const [selectedTime, setSelectedTime] = useState<string>("");
+	const [selectedTime, setSelectedTime] = useState<string>();
 
-	const timeSelected = (item: string) => {
-		if (!item) {
+	useEffect(() => {
+		if (errors.time) {
 			showToast({
 				title: "Por favor, selecione um horário disponível.",
 				type: "warning",
 				duration: 1000,
 			});
-
-			clearErrors("time");
 		}
 
 		if (isSubmitting) {
-			setSelectedTime("");
+			clearErrors("time");
 		}
-	};
+	}, [clearErrors, errors.time, isSubmitting, showToast]);
 
 	return (
 		<Box padding="0.625rem">
 			<Field.Root invalid={!!errors.time}>
 				<SimpleGrid
-					column={[3, 3, 3]}
-					placeItems="center">
+					placeItems="center"
+					columns={3}
+					gap={3}
+					padding={3}>
 					{avaliableTimeSlot.length > 0 ? (
 						avaliableTimeSlot.map((avaliableTimeSlot, index) => (
 							<Button
@@ -76,7 +76,6 @@ export default function TimeList({
 								onClick={() => {
 									setValue("time", avaliableTimeSlot.timeSlot);
 									setSelectedTime(avaliableTimeSlot.timeSlot);
-									timeSelected(avaliableTimeSlot.timeSlot);
 								}}
 								value={selectedTime}
 								disabled={!avaliableTimeSlot.timeSlot}

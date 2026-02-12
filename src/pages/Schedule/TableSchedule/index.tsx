@@ -14,8 +14,9 @@ export default function TableSchedule({
 	schedules,
 	onEditClick,
 }: TableScheduleProps) {
+
 	return (
-		<DynamicTable
+        <DynamicTable
 			columns={[
 				{
 					key: "customerId",
@@ -42,13 +43,8 @@ export default function TableSchedule({
 			]}
 			data={schedules}
 			actions={(row) => (
-				<Box
-					as={TbEdit}
-					onClick={() => onEditClick(row.id!)}
-					_hover={{ color: "blue", cursor: "pointer" }}
-					fontSize="1.5rem"
-				/>
+				<Box _hover={{ color: "blue", cursor: "pointer" }} asChild><TbEdit onClick={() => onEditClick(row.id!)} fontSize="1.5rem" /></Box>
 			)}
 		/>
-	);
+    );
 }

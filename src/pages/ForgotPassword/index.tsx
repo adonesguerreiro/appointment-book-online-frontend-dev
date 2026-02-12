@@ -57,8 +57,8 @@ export default function ForgotPasswordPage() {
 	};
 
 	return (
-		<Container>
-			<Flex
+        <Container>
+            <Flex
 				direction="column"
 				align="center"
 				justify="center"
@@ -97,34 +97,25 @@ export default function ForgotPasswordPage() {
 									justifyContent="space-between"
 									alignItems="center">
 									<Button
-										colorScheme="teal"
-										size="lg"
-										type="button"
-										onClick={() => {
+                                        colorPalette="teal"
+                                        size="lg"
+                                        type="button"
+                                        onClick={() => {
 											navigate("/login");
-										}}>
-										<MdArrowBack />
-										Login
-									</Button>
-									<Button
-										colorScheme="teal"
-										size="lg"
-										type="submit"
-										disabled={loading}>
-										{loading ? (
+										}}>{<MdArrowBack />}Login
+                                                                            </Button>
+									<Button colorPalette="teal" size="lg" type="submit" disabled={loading}>{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
-										) : null}
-										{loading ? "Verificando" : "Enviar"} <MdArrowForward />
-									</Button>
+										) : null}{loading ? "Verificando" : "Enviar"}{<MdArrowForward />}</Button>
 								</Flex>
 							</form>
 						</Box>
 					</Card.Body>
 				</Card.Root>
 			</Flex>
-		</Container>
-	);
+        </Container>
+    );
 }

@@ -1,5 +1,4 @@
 import { Flex, Field, Card, Box, Grid, Input, Button } from "@chakra-ui/react";
-
 import { useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
@@ -43,79 +42,74 @@ export default function CustomerForm({
 	}, [selectedCustomer, reset]);
 
 	return (
-		<Card.Root>
-			<Card.Body
+        <Card.Root>
+            <Card.Body
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
-				<Box
-					as="form"
-					onSubmit={handleSubmit(onSubmit)}>
-					<Grid gap="0.625rem">
-						<Field.Root invalid={!!errors.customerName}>
-							<Grid>
-								<Field.Label>Nome</Field.Label>
-								<Input
-									type="text"
-									placeholder="Nome do cliente"
-									id="customerName"
-									{...register("customerName")}
-								/>
-								{errors.customerName && (
-									<Field.ErrorText>
-										{errors.customerName.message}
-									</Field.ErrorText>
-								)}
-							</Grid>
-						</Field.Root>
+				<Box asChild><form onSubmit={handleSubmit(onSubmit)}>
+                        <Grid gap="0.625rem">
+                            <Field.Root invalid={!!errors.customerName}>
+                                <Grid>
+                                    <Field.Label>Nome</Field.Label>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nome do cliente"
+                                        id="customerName"
+                                        {...register("customerName")}
+                                    />
+                                    {errors.customerName && (
+                                        <Field.ErrorText>
+                                            {errors.customerName.message}
+                                        </Field.ErrorText>
+                                    )}
+                                </Grid>
+                            </Field.Root>
 
-						<Field.Root invalid={!!errors.mobile}>
-							<Grid>
-								<Field.Label>Celular</Field.Label>
-								<Input
-									as={InputMask}
-									mask="(99) 99999-9999"
-									defaultValue={isEditing ? "mobile" : ""}
-									placeholder="(99) 99999-9999"
-									type="tel"
-									id="mobile"
-									{...register("mobile")}
-								/>
-								{errors.mobile && (
-									<Field.ErrorText>{errors.mobile.message}</Field.ErrorText>
-								)}
-							</Grid>
-						</Field.Root>
-					</Grid>
-					<Flex justifyContent="flex-end">
-						{!isEditing ? (
-							<Button
-								colorScheme="green"
-								size="lg"
-								type="submit"
-								margin="0.625rem">
-								Cadastrar <LuPlus />
-							</Button>
-						) : (
-							<Button
-								colorScheme="blue"
-								size="lg"
-								type="submit"
-								margin="0.625rem">
-								Editar <TbEditCircle />
-							</Button>
-						)}
+                            <Field.Root invalid={!!errors.mobile}>
+                                <Grid>
+                                    <Field.Label>Celular</Field.Label>
+                                    <Input {...register("mobile")} asChild><InputMask
+                                            mask="(99) 99999-9999"
+                                            defaultValue={isEditing ? "mobile" : ""}
+                                            placeholder="(99) 99999-9999"
+                                            type="tel"
+                                            id="mobile" /></Input>
+                                    {errors.mobile && (
+                                        <Field.ErrorText>{errors.mobile.message}</Field.ErrorText>
+                                    )}
+                                </Grid>
+                            </Field.Root>
+                        </Grid>
+                        <Flex justifyContent="flex-end">
+                            {!isEditing ? (
+                                <Button
+                                    colorPalette="green"
+                                    size="lg"
+                                    type="submit"
+                                    margin="0.625rem">
+                                    Cadastrar <LuPlus />
+                                </Button>
+                            ) : (
+                                <Button
+                                    colorPalette="blue"
+                                    size="lg"
+                                    type="submit"
+                                    margin="0.625rem">
+                                    Editar <TbEditCircle />
+                                </Button>
+                            )}
 
-						<Button
-							colorScheme="gray"
-							size="lg"
-							margin="0.625rem"
-							onClick={onCancel}>
-							Cancelar <MdCancel />
-						</Button>
-					</Flex>
-				</Box>
+                            <Button
+                                colorPalette="gray"
+                                size="lg"
+                                margin="0.625rem"
+                                onClick={onCancel}>
+                                Cancelar <MdCancel />
+                            </Button>
+                        </Flex>
+                    </form></Box>
 			</Card.Body>
-		</Card.Root>
-	);
+        </Card.Root>
+    );
 }

@@ -21,7 +21,6 @@ import { useShowForm } from "../../hooks/useShowForm";
 import { useEditMode } from "../../hooks/useEditMode";
 
 export default function SchedulePage() {
-
 	const { reset } = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
 	});

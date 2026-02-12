@@ -16,7 +16,7 @@ export default function TableCustomer({
 	onDeleteClick,
 }: TableCustomerProps) {
 	return (
-		<DynamicTable
+        <DynamicTable
 			columns={[
 				{
 					key: "customerName",
@@ -32,20 +32,10 @@ export default function TableCustomer({
 			data={customers}
 			actions={(row) => (
 				<Flex>
-					<Box
-						as={TbEdit}
-						onClick={() => onEditClick(row.id!)}
-						_hover={{ color: "blue", cursor: "pointer" }}
-						fontSize="1.5rem"
-					/>
-					<Box
-						as={RiDeleteBin5Line}
-						onClick={() => onDeleteClick(row.id!)}
-						_hover={{ color: "red", cursor: "pointer" }}
-						fontSize="1.5rem"
-					/>
+					<Box _hover={{ color: "blue", cursor: "pointer" }} asChild><TbEdit onClick={() => onEditClick(row.id!)} fontSize="1.5rem" /></Box>
+					<Box _hover={{ color: "red", cursor: "pointer" }} asChild><RiDeleteBin5Line onClick={() => onDeleteClick(row.id!)} fontSize="1.5rem" /></Box>
 				</Flex>
 			)}
 		/>
-	);
+    );
 }

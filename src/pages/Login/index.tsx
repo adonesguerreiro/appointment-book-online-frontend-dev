@@ -1,5 +1,6 @@
 import {
 	Card,
+	CardHeader,
 	Heading,
 	CardBody,
 	Box,
@@ -17,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { auth } from "../../services/api";
+import { auth, refreshToken } from "../../services/api";
 import { useLoading } from "../../hooks/useLoading";
 import { useCustomToast } from "../../hooks/useCustomToast";
 import { useHandleError } from "../../hooks/useHandleError";
@@ -43,14 +44,9 @@ export default function LoginPage() {
 	const onSubmit = async (data: FormDataLogin) => {
 		try {
 			setLoading(true);
-			const response = await auth(data);
-			localStorage.setItem("token", response.data.token);
-			localStorage.setItem("refreshToken", response.data.refreshToken);
-			const refresh = await refreshUser();
-			console.log("User refreshed:", refresh);
-			// await auth(data);
-			// await refreshToken();
-			// await refreshUser();
+			await auth(data);
+			await refreshToken();
+			await refreshUser();
 
 			showToast({
 				title: "Autenticado com sucesso!",
@@ -67,31 +63,27 @@ export default function LoginPage() {
 	};
 
 	return (
-		<Container>
-			<Flex
+        <Container>
+            <Flex
 				direction="column"
 				align="center"
 				justify="center"
 				height="90vh">
-				<Card.Root>
-					<Card.Header
+				<Card.Root asChild>
+					<CardHeader
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
 						<Heading
-							as="h1"
 							size="lg"
-							fontWeight="semibold">
-							Seja bem vindo de volta
-						</Heading>
+							fontWeight="semibold"
+							asChild><h1>Seja bem vindo de volta</h1></Heading>
 						<Box>
 							<Text
-								as="h2"
-								fontSize="lg">
-								Por favor, entre com suas credenciais
-							</Text>
+								fontSize="lg"
+								asChild><h2>Por favor, entre com suas credenciais </h2></Text>
 						</Box>
-					</Card.Header>
+					</CardHeader>
 
 					<CardBody
 						width="52.5625rem"
@@ -126,25 +118,20 @@ export default function LoginPage() {
 										{...register("password")}
 									/>
 									{errors.password && (
-										<Field.ErrorText>{errors.password.message}</Field.ErrorText>
+										<Field.ErrorText>
+											{errors.password.message}
+										</Field.ErrorText>
 									)}
 								</Field.Root>
 								<Flex
 									justifyContent="space-between"
 									alignItems="center">
-									<Button
-										colorScheme="teal"
-										size="lg"
-										type="submit"
-										disabled={loading}>
-										{loading ? (
+									<Button colorPalette="teal" size="lg" type="submit" disabled={loading}>{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
-										) : null}
-										{loading ? "Autenticando" : "Entrar"} <MdArrowForward />
-									</Button>
+										) : null}{loading ? "Autenticando" : "Entrar"}{<MdArrowForward />}</Button>
 									<Box>
 										<Link href="/forgot-password">Esqueceu a senha?</Link>
 									</Box>
@@ -154,6 +141,6 @@ export default function LoginPage() {
 					</CardBody>
 				</Card.Root>
 			</Flex>
-		</Container>
-	);
+        </Container>
+    );
 }

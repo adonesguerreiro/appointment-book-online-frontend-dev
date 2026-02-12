@@ -5,11 +5,11 @@ interface SectionHeaderProps {
 }
 export default function SectionHeader({ title }: SectionHeaderProps) {
 	return (
-		<Heading
-			as="h1"
+        <Heading
 			size="lg"
-			fontWeight="semibold">
-			{title}
-		</Heading>
-	);
+			fontWeight="semibold"
+			asChild><h1>
+                {title}
+            </h1></Heading>
+    );
 }

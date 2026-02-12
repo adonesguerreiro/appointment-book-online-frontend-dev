@@ -2,25 +2,17 @@ import {
 	Avatar,
 	Box,
 	Button,
-	Dialog,
 	Input,
 	useDisclosure,
+	Dialog,
 } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import Cropper, { Area } from "react-easy-crop";
-import { useForm } from "react-hook-form";
-import { FormDataUser } from "../../interface/FormDataUser";
 import { useAvatar } from "../../hooks/useAvatar";
 import { useProfilePhoto } from "../../hooks/useProfilePhoto";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchema } from "../../validators/userSchema";
+
 
 export default function CropperComponent() {
-	const { getValues } = useForm<FormDataUser>({
-		resolver: yupResolver(userSchema),
-		mode: "onChange",
-	});
-
 	const { setProfilePhoto } = useProfilePhoto();
 	const { avatar, setAvatar } = useAvatar();
 	const { open, onClose, onOpen } = useDisclosure();
@@ -79,12 +71,10 @@ export default function CropperComponent() {
 			position="relative"
 			width="100%"
 			height="100%">
-			<Avatar.Image
-				sizes="xl"
+			<Avatar.Root
+				size="xl"
 				id="avatar"
-				src={(avatar as string) || (getValues("avatarUrl") as string)}
 			/>
-			<Avatar.Fallback name={getValues("name") || ""} />
 			<Input
 				id="avatarUrl"
 				type="file"
@@ -109,38 +99,39 @@ export default function CropperComponent() {
 					}
 				}}
 			/>
-
 			<Dialog.Root
 				open={open}
 				onOpenChange={onClose}>
 				<Dialog.Backdrop />
-				<Dialog.Content>
-					<Dialog.Body style={{ position: "relative", height: 400 }}>
-						{avatar && (
-							<Box
-								position="relative"
-								width="full"
-								height="25rem">
-								<Cropper
-									image={avatar as string}
-									crop={crop}
-									zoom={zoom}
-									aspect={4 / 3}
-									onCropChange={setCrop}
-									onZoomChange={setZoom}
-									onCropComplete={onCropComplete}
-								/>
-							</Box>
-						)}
-					</Dialog.Body>
-					<Dialog.Footer>
-						<Button
-							onClick={showCroppedImage}
-							colorScheme="blue">
-							Confirmar
-						</Button>
-					</Dialog.Footer>
-				</Dialog.Content>
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Body style={{ position: "relative", height: 400 }}>
+							{avatar && (
+								<Box
+									position="relative"
+									width="full"
+									height="25rem">
+									<Cropper
+										image={avatar as string}
+										crop={crop}
+										zoom={zoom}
+										aspect={4 / 3}
+										onCropChange={setCrop}
+										onZoomChange={setZoom}
+										onCropComplete={onCropComplete}
+									/>
+								</Box>
+							)}
+						</Dialog.Body>
+						<Dialog.Footer>
+							<Button
+								onClick={showCroppedImage}
+								colorPalette="blue">
+								Confirmar
+							</Button>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
 			</Dialog.Root>
 		</Box>
 	);

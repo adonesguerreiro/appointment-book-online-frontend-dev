@@ -1,4 +1,4 @@
-import { Dialog, Button, Text } from "@chakra-ui/react";
+import { Button, Text, Dialog } from "@chakra-ui/react";
 
 interface ModalDeleteProps {
 	isOpen: boolean;
@@ -18,42 +18,40 @@ export default function ModalDelete({
 	description,
 }: ModalDeleteProps) {
 	return (
-		<>
-			<Dialog.Root
+        <>
+            <Dialog.Root
 				open={isOpen}
 				onOpenChange={onClose}>
 				<Dialog.Backdrop />
-				<Dialog.Content>
-					<Dialog.Header>
-						<Dialog.Title>Excluir {title}</Dialog.Title>
-					</Dialog.Header>
-					<Dialog.CloseTrigger />
-					<Dialog.Body>
-						{description}
-						<Text
-							as="span"
-							fontWeight="bold">
-							{itemName}
-						</Text>
-						?
-					</Dialog.Body>
+				<Dialog.Positioner><Dialog.Content>
+                        <Dialog.Header>Excluir {title}</Dialog.Header>
+                        <Dialog.CloseTrigger />
+                        <Dialog.Body>
+                            {description}
+                            <Text
+                                fontWeight="bold"
+                                asChild><span>
+                                    {itemName}
+                                </span></Text>
+                            ?
+                        </Dialog.Body>
 
-					<Dialog.Footer>
-						<Button
-							colorScheme="red"
-							mr={3}
-							onClick={onDelete}>
-							Excluir
-						</Button>
-						<Button
-							colorScheme="gray"
-							mr={3}
-							onClick={onClose}>
-							Cancelar
-						</Button>
-					</Dialog.Footer>
-				</Dialog.Content>
+                        <Dialog.Footer>
+                            <Button
+                                colorPalette="red"
+                                mr={3}
+                                onClick={onDelete}>
+                                Excluir
+                            </Button>
+                            <Button
+                                colorPalette="gray"
+                                mr={3}
+                                onClick={onClose}>
+                                Cancelar
+                            </Button>
+                        </Dialog.Footer>
+                    </Dialog.Content></Dialog.Positioner>
 			</Dialog.Root>
-		</>
-	);
+        </>
+    );
 }

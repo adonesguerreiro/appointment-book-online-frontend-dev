@@ -2,13 +2,10 @@ import {
 	Container,
 	Flex,
 	Card,
-	CardBody,
 	Box,
 	Button,
 	Spinner,
-
 } from "@chakra-ui/react";
-
 import HeadingComponent from "../../components/Heading";
 import "react-calendar/dist/Calendar.css";
 import TimeList from "../../components/TimeList";
@@ -65,67 +62,60 @@ export default function BookingPage() {
 	return loading ? (
 		<Spinner />
 	) : (
-		<Container w={{ base: "85%", md: "90%", lg: "800px" }}>
+		<Container
+		w={{ base: "85%", md: "90%", lg: "800px" }}>
 			<Flex
 				display="flex"
 				direction="column"
 				align="center">
 				<HeadingComponent title="Agendar horário" />
-				<Card.Title
-					as="form"
-					onSubmit={handleSubmit(handleSubmitBooking)}>
-					<CardBody>
-						{companyData?.user.blocked ? (
-							<Flex
-								justify="center"
-								align="center"
-								padding="1rem">
-								<EmptyState />
-							</Flex>
-						) : (
-							<>
-								<BookingAppointment
-									register={register}
-									errors={errors}
-									user={companyData?.user || ({} as FormDataUser)}
-									services={companyData?.services || []}
-								/>
-								<CardBody>
-									<CustomCalendar
-										setValue={setValue}
-										register={register}
-										errors={errors}
-										clearErrors={clearErrors}
-										selectedDate={selectedDate}
-										setSelectedDate={setSelectedDate}
-									/>
-									<TimeList
-										register={register}
-										setValue={setValue}
-										errors={errors}
-										clearErrors={clearErrors}
-										avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
-										isSubmitting={isSubmitting}
-									/>
-								</CardBody>
-
-								<Box
-									textAlign="right"
-									paddingTop="1rem">
-									<Button
-										colorScheme="teal"
-										size="lg"
-										type="submit"
-										margin="0.5rem">
-										Agendar consulta
-										
-										<FaCheckCircle />
-									</Button>
-								</Box>
-							</>
-						)}
-					</CardBody>
-				</Card.Title>
+				<Card.Root asChild><form onSubmit={handleSubmit(handleSubmitBooking)}>
+                        <Card.Body>
+                            {companyData?.user.blocked ? (
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    padding="1rem">
+                                    <EmptyState />
+                                </Flex>
+                            ) : (
+                                <>
+                                    <BookingAppointment
+                                        register={register}
+                                        errors={errors}
+                                        user={companyData?.user || {} as FormDataUser}
+                                        services={companyData?.services || []}
+                                    />
+                                    <Card.Root>
+                                        <Card.Body>
+                                            <CustomCalendar
+                                                setValue={setValue}
+                                                register={register}
+                                                errors={errors}
+                                                clearErrors={clearErrors}
+                                                selectedDate={selectedDate}
+                                                setSelectedDate={setSelectedDate}
+                                            />
+                                            <TimeList
+                                                register={register}
+                                                setValue={setValue}
+                                                errors={errors}
+                                                clearErrors={clearErrors}
+                                                avaliableTimeSlot={companyData?.avaliableTimeSlots || []}
+                                                isSubmitting={isSubmitting}
+                                            />
+                                        </Card.Body>
+                                    </Card.Root>
+                                    <Box
+                                        textAlign="right"
+                                        paddingTop="1rem">
+                                        <Button colorPalette="teal" size="lg" type="submit" margin="0.5rem">Agendar consulta
+                                                                                    {<FaCheckCircle />}</Button>
+                                    </Box>
+                                </>
+                            )}
+                        </Card.Body>
+                    </form></Card.Root>
 			</Flex>
 		</Container>
 	);

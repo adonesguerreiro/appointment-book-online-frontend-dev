@@ -4,7 +4,6 @@ import {
 	Box,
 	Text,
 	Card,
-	CardBody,
 	Grid,
 	Input,
 	Field,
@@ -35,16 +34,7 @@ export default function BookingAppointment({
 				justify="center"
 				align="center"
 				padding="1rem">
-				<Avatar.Image
-					src={
-						typeof user?.avatarUrl === "string"
-							? user?.avatarUrl
-							: user?.avatarUrl
-							? URL.createObjectURL(user?.avatarUrl)
-							: undefined
-					}
-					sizes="xl"
-				/>
+				<Avatar.Root />
 				<Box ml="3">
 					<Text fontWeight="bold">{user?.name}</Text>
 				</Box>
@@ -54,7 +44,7 @@ export default function BookingAppointment({
 				marginBottom={5}
 				width="25rem"
 				mx="auto">
-				<CardBody>
+				<Card.Body>
 					<Field.Root invalid={!!errors.customerName}>
 						<Grid>
 							<Field.Label>Nome</Field.Label>
@@ -73,36 +63,38 @@ export default function BookingAppointment({
 						<Grid>
 							<Field.Label>Celular</Field.Label>
 							<Input
-								as={InputMask}
-								mask="(99) 99999-9999"
-								placeholder="(99) 99999-9999"
-								type="tel"
-								id="customerPhone"
 								{...register("customerPhone")}
-							/>
+								asChild>
+								<InputMask
+									mask="(99) 99999-9999"
+									placeholder="(99) 99999-9999"
+									type="tel"
+									id="customerPhone"
+								/>
+							</Input>
 							{errors.customerPhone && (
-								<Field.ErrorText>{errors.customerPhone.message}</Field.ErrorText>
+								<Field.ErrorText>
+									{errors.customerPhone.message}
+								</Field.ErrorText>
 							)}
 						</Grid>
 					</Field.Root>
 					<Field.Root invalid={!!errors.serviceId}>
 						<Grid>
 							<Field.Label>Serviço</Field.Label>
-							<NativeSelect.Root
-								{...register("serviceId")}>
-									<NativeSelect.Field 	placeholder="Selecione o serviço">
-								{services.length > 0 ? (
-									services.map((service) => (
-										<option
-											key={service.id}
-											value={service.id}>
-											{service.serviceName}
-										</option>
-									))
-
-								) : (
-									<option value="0">Nenhum serviço encontrado</option>
-								)}
+							<NativeSelect.Root {...register("serviceId")}>
+								<NativeSelect.Field placeholder="Selecione o serviço">
+									{services.length > 0 ? (
+										services.map((service) => (
+											<option
+												key={service.id}
+												value={service.id}>
+												{service.serviceName}
+											</option>
+										))
+									) : (
+										<option value="0">Nenhum serviço encontrado</option>
+									)}
 								</NativeSelect.Field>
 							</NativeSelect.Root>
 							{errors.serviceId && (
@@ -110,7 +102,7 @@ export default function BookingAppointment({
 							)}
 						</Grid>
 					</Field.Root>
-				</CardBody>
+				</Card.Body>
 			</Card.Root>
 		</>
 	);

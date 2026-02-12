@@ -1,7 +1,6 @@
 import {
 	Flex,
 	IconButton,
-	Stack,
 	Menu,
 	Avatar,
 	VStack,
@@ -10,6 +9,7 @@ import {
 	Text,
 	Portal,
 	Button,
+	HStack,
 } from "@chakra-ui/react";
 import { useColorModeValue } from "../../components/ui/color-mode";
 import { useEffect, useState } from "react";
@@ -61,7 +61,7 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 	}, [avatar, fetchDataUser]);
 
 	return (
-		<Flex
+        <Flex
 			ml={{ base: 0, md: 60 }}
 			px={{ base: 4, md: 4 }}
 			height="20"
@@ -71,20 +71,19 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 			borderBottomColor={useColorModeValue("gray.200", "gray.700")}
 			justifyContent={{ base: "space-between", md: "flex-end" }}
 			{...rest}>
-			<IconButton
+            <IconButton
 				display={{ base: "flex", md: "none" }}
 				onClick={onOpen}
 				variant="ghost"
 				aria-label="open menu"
 			/>
-			<FiMenu />
-			<Text
+            <FiMenu />
+            <Text
 				display={{ base: "flex", md: "none" }}
 				fontSize="2xl"
 				fontFamily="monospace"
 				fontWeight="bold"></Text>
-
-			<Stack gap={{ base: "0", md: "6" }}>
+            <HStack gap={{ base: "0", md: "6" }}>
 				<IconButton
 					size="lg"
 					variant="ghost"
@@ -93,16 +92,16 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 				<FiBell />
 				<Flex alignItems={"center"}>
 					<Menu.Root>
-						<Menu.Trigger>
+						<Menu.Trigger asChild>
 							<Button
 								py={2}
 								transition="all 0.3s"
 								_focus={{ boxShadow: "none" }}>
-								<Stack>
-									<Avatar.Image
-										sizes={"sm"}
-										src={avatar as string}
-									/>
+								<HStack>
+									<Avatar.Root>
+										<Avatar.Root />
+										<Avatar.Root>{userName?.[0]}</Avatar.Root>
+									</Avatar.Root>
 									<VStack
 										display={{ base: "none", md: "flex" }}
 										alignItems="flex-start"
@@ -114,12 +113,12 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 									<Box display={{ base: "none", md: "flex" }}>
 										<FiChevronDown />
 									</Box>
-								</Stack>
+								</HStack>
 							</Button>
 						</Menu.Trigger>
 						<Portal>
-							<Menu.Positioner>
-								<Menu.Content
+							<Menu.Root>
+								<Menu.Trigger
 									bg={useColorModeValue("white", "gray.900")}
 									borderColor={useColorModeValue("gray.200", "gray.700")}>
 									<Menu.Item
@@ -132,18 +131,18 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 										value="company">
 										Perfil da empresa
 									</Menu.Item>
-									<Menu.Separator />
+									<Menu.Trigger/>
 									<Menu.Item
 										onClick={handleLogout}
 										value="logout">
 										Deslogar
 									</Menu.Item>
-								</Menu.Content>
-							</Menu.Positioner>
+								</Menu.Trigger>
+							</Menu.Root>
 						</Portal>
 					</Menu.Root>
 				</Flex>
-			</Stack>
-		</Flex>
-	);
+			</HStack>
+        </Flex>
+    );
 }

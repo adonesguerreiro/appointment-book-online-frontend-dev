@@ -23,7 +23,7 @@ import { useEditMode } from "../../hooks/useEditMode";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
-		resolver: yupResolver(customerSchema) ,
+		resolver: yupResolver(customerSchema),
 	});
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();

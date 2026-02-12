@@ -53,110 +53,105 @@ export default function ServiceForm({
 	}, [selectedService, reset]);
 
 	return (
-		<Card.Root>
-			<Card.Body
+        <Card.Root>
+            <Card.Body
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
-				<Box
-					as="form"
-					onSubmit={handleSubmit(onSubmit)}>
-					<Grid gap="0.625rem">
-						<Field.Root invalid={!!errors.serviceName}>
-							<Grid>
-								<Field.Label>Nome</Field.Label>
-								<Input
-									type="text"
-									placeholder="Nome do serviço"
-									id="serviceName"
-									{...register("serviceName")}
-								/>
-								{errors.serviceName && (
-									<Field.ErrorText>
-										{errors.serviceName.message}
-									</Field.ErrorText>
-								)}
-							</Grid>
-						</Field.Root>
+				<Box asChild><form onSubmit={handleSubmit(onSubmit)}>
+                        <Grid gap="0.625rem">
+                            <Field.Root invalid={!!errors.serviceName}>
+                                <Grid>
+                                    <Field.Label>Nome</Field.Label>
+                                    <Input
+                                        type="text"
+                                        placeholder="Nome do serviço"
+                                        id="serviceName"
+                                        {...register("serviceName")}
+                                    />
+                                    {errors.serviceName && (
+                                        <Field.ErrorText>
+                                            {errors.serviceName.message}
+                                        </Field.ErrorText>
+                                    )}
+                                </Grid>
+                            </Field.Root>
 
-						<Field.Root invalid={!!errors.duration}>
-							<Grid>
-								<Field.Label>Duração do serviço (minutos)</Field.Label>
-								<Input
-									as={InputMask}
-									mask="99:99"
-									defaultValue={isEditing ? "duration" : ""}
-									placeholder="45:00"
-									type="text"
-									id="duration"
-									{...register("duration")}
-								/>
-								{errors.duration && (
-									<Field.ErrorText>{errors.duration.message}</Field.ErrorText>
-								)}
-							</Grid>
-						</Field.Root>
+                            <Field.Root invalid={!!errors.duration}>
+                                <Grid>
+                                    <Field.Label>Duração do serviço (minutos)</Field.Label>
+                                    <Input {...register("duration")} asChild><InputMask
+                                            mask="99:99"
+                                            defaultValue={isEditing ? "duration" : ""}
+                                            placeholder="45:00"
+                                            type="text"
+                                            id="duration" /></Input>
+                                    {errors.duration && (
+                                        <Field.ErrorText>{errors.duration.message}</Field.ErrorText>
+                                    )}
+                                </Grid>
+                            </Field.Root>
 
-						<Field.Root invalid={!!errors.price}>
-							<Grid>
-								<Field.Label>Preço</Field.Label>
-								<Controller
-									name="price"
-									control={control}
-									render={({ field }) => (
-										<CurrencyInput
-											value={field.value}
-											onChangeValue={(_, value) => {
-												field.onChange(value);
-											}}
-											InputElement={
-												<Input
-													type="text"
-													placeholder="R$ 100,00"
-													id="price"
-													maxLength={15}
-													{...register("price")}
-												/>
-											}
-										/>
-									)}
-								/>
+                            <Field.Root invalid={!!errors.price}>
+                                <Grid>
+                                    <Field.Label>Preço</Field.Label>
+                                    <Controller
+                                        name="price"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <CurrencyInput
+                                                value={field.value}
+                                                onChangeValue={(_, value) => {
+                                                    field.onChange(value);
+                                                }}
+                                                InputElement={
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="R$ 100,00"
+                                                        id="price"
+                                                        maxLength={15}
+                                                        {...register("price")}
+                                                    />
+                                                }
+                                            />
+                                        )}
+                                    />
 
-								{errors.price && (
-									<Field.ErrorText>{errors.price.message}</Field.ErrorText>
-								)}
-							</Grid>
-						</Field.Root>
-					</Grid>
-					<Flex justifyContent="flex-end">
-						{!isEditing ? (
-							<Button
-								colorScheme="green"
-								size="lg"
-								type="submit"
-								margin="0.625rem">
-								Cadastrar <LuPlus />
-							</Button>
-						) : (
-							<Button
-								colorScheme="blue"
-								size="lg"
-								type="submit"
-								margin="0.625rem">
-								Editar <TbEditCircle />
-							</Button>
-						)}
+                                    {errors.price && (
+                                        <Field.ErrorText>{errors.price.message}</Field.ErrorText>
+                                    )}
+                                </Grid>
+                            </Field.Root>
+                        </Grid>
+                        <Flex justifyContent="flex-end">
+                            {!isEditing ? (
+                                <Button
+                                    colorPalette="green"
+                                    size="lg"
+                                    type="submit"
+                                    margin="0.625rem">
+                                    Cadastrar <LuPlus />
+                                </Button>
+                            ) : (
+                                <Button
+                                    colorPalette="blue"
+                                    size="lg"
+                                    type="submit"
+                                    margin="0.625rem">
+                                    Editar <TbEditCircle />
+                                </Button>
+                            )}
 
-						<Button
-							colorScheme="gray"
-							size="lg"
-							margin="0.625rem"
-							onClick={onCancel}>
-							Cancelar <MdCancel />
-						</Button>
-					</Flex>
-				</Box>
+                            <Button
+                                colorPalette="gray"
+                                size="lg"
+                                margin="0.625rem"
+                                onClick={onCancel}>
+                                Cancelar <MdCancel />
+                            </Button>
+                        </Flex>
+                    </form></Box>
 			</Card.Body>
-		</Card.Root>
-	);
+        </Card.Root>
+    );
 }

@@ -23,15 +23,16 @@ export default function DynamicTable<T extends object>({
 	actions,
 }: DynamicTableProps<T>) {
 	return (
-		<>
-			<Flex
+        <>
+            <Flex
 				direction="column"
 				alignItems={{ base: "flex-start", md: "center", lg: "center" }}
 				justifyContent={{ base: "flex-start", md: "center", lg: "center" }}>
 				<Box width="full">
 					<Table.ScrollArea>
 						<Table.Root
-							colorScheme="gray">
+							variant="line"
+							colorPalette="gray">
 							<Table.Header>
 								<Table.Row>
 									{columns.map((column) => (
@@ -72,6 +73,6 @@ export default function DynamicTable<T extends object>({
 					</Table.ScrollArea>
 				</Box>
 			</Flex>
-		</>
-	);
+        </>
+    );
 }
