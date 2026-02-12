@@ -1,12 +1,16 @@
 import {
 	Card,
+	CardHeader,
+	CardBody,
 	Box,
 	Flex,
+	FormControl,
+	FormLabel,
 	Input,
 	Button,
+	FormErrorMessage,
 	Container,
 	Spinner,
-	Field,
 } from "@chakra-ui/react";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -42,7 +46,7 @@ export default function ForgotPasswordPage() {
 				showToast({
 					title:
 						"Solicitação de redefinição de senha enviada com sucesso, verifique o email.",
-					type: "success",
+					status: "success",
 				});
 				navigate("/login");
 			}
@@ -51,71 +55,82 @@ export default function ForgotPasswordPage() {
 			setLoading(false);
 			showToast({
 				title: "Falha ao redefinir senha!",
-				type: "error",
+				status: "error",
 			});
 		}
 	};
 
 	return (
-        <Container>
-            <Flex
+		<Container>
+			<Flex
 				direction="column"
 				align="center"
 				justify="center"
 				height="90vh">
-				<Card.Root>
-					<Card.Header
+				<Card>
+					<CardHeader
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
 						<HeadingComponent title="Informe seu email para recuperar acesso" />
-					</Card.Header>
+					</CardHeader>
 
-					<Card.Body
+					<CardBody
 						width="52.5625rem"
 						height="40.6875rem">
 						<Box
 							display="grid"
 							placeItems="center">
 							<form onSubmit={handleSubmit(onSubmit)}>
-								<Field.Root
+								<FormControl
 									width="25.0625rem"
 									padding="0.625rem"
-									invalid={!!errors}>
-									<Field.Label>Email</Field.Label>
+									isInvalid={!!errors}>
+									<FormLabel>Email</FormLabel>
 									<Input
 										type="email"
 										placeholder="Insira seu email"
 										id="email"
 										{...register("email")}
+										isInvalid={!!errors.email}
 									/>
 									{errors.email && (
-										<Field.ErrorText>{errors.email.message}</Field.ErrorText>
+										<FormErrorMessage>{errors.email.message}</FormErrorMessage>
 									)}
-								</Field.Root>
+								</FormControl>
 								<Flex
 									justifyContent="space-between"
 									alignItems="center">
 									<Button
-                                        colorPalette="teal"
-                                        size="lg"
-                                        type="button"
-                                        onClick={() => {
+										colorScheme="teal"
+										size="lg"
+										leftIcon={<MdArrowBack />}
+										type="button"
+										onClick={() => {
 											navigate("/login");
-										}}>{<MdArrowBack />}Login
-                                                                            </Button>
-									<Button colorPalette="teal" size="lg" type="submit" disabled={loading}>{loading ? (
+										}}>
+										Login
+									</Button>
+									<Button
+										colorScheme="teal"
+										size="lg"
+										rightIcon={<MdArrowForward />}
+										type="submit"
+										isDisabled={loading}>
+										{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
-										) : null}{loading ? "Verificando" : "Enviar"}{<MdArrowForward />}</Button>
+										) : null}
+										{loading ? "Verificando" : "Enviar"}
+									</Button>
 								</Flex>
 							</form>
 						</Box>
-					</Card.Body>
-				</Card.Root>
+					</CardBody>
+				</Card>
 			</Flex>
-        </Container>
-    );
+		</Container>
+	);
 }

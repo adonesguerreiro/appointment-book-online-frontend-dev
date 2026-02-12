@@ -2,11 +2,14 @@ import {
 	Box,
 	Button,
 	Card,
-	Field,
+	CardBody,
 	Flex,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
 	Grid,
 	Input,
-	NativeSelect,
+	Select,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -54,145 +57,143 @@ export default function AvaliableTimeForm({
 	}, [selectedAvaliableTime, reset]);
 
 	return (
-		<Card.Root>
-			<Card.Body
+		<Card>
+			<CardBody
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
-				<Box asChild>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<Grid gap="0.625rem">
-							<Field.Root invalid={!!errors.day}>
-								<Grid>
-									<Field.Label>Dia da semana</Field.Label>
-									<NativeSelect.Root
-										id="day"
-										{...register("day")}>
-										<NativeSelect.Field placeholder="Selecione um dia da semana">
-											<option value="MONDAY">Segunda-feira</option>
-											<option value="TUESDAY">Terça-feira</option>
-											<option value="WEDNESDAY">Quarta-feira</option>
-											<option value="THURSDAY">Quinta-feira</option>
-											<option value="FRIDAY">Sexta-feira</option>
-											<option value="SATURDAY">Sábado</option>
-											<option value="SUNDAY">Domingo</option>
-										</NativeSelect.Field>
-									</NativeSelect.Root>
+				<Box
+					as="form"
+					onSubmit={handleSubmit(onSubmit)}>
+					<Grid gap="0.625rem">
+						<FormControl isInvalid={!!errors.day}>
+							<Grid>
+								<FormLabel>Dia da semana</FormLabel>
+								<Select
+									id="day"
+									placeholder="Selecione um dia da semana"
+									{...register("day")}>
+									<option value="MONDAY">Segunda-feira</option>
+									<option value="TUESDAY">Terça-feira</option>
+									<option value="WEDNESDAY">Quarta-feira</option>
+									<option value="THURSDAY">Quinta-feira</option>
+									<option value="FRIDAY">Sexta-feira</option>
+									<option value="SATURDAY">Sábado</option>
+									<option value="SUNDAY">Domingo</option>
+								</Select>
 
-									{errors.day && (
-										<Field.ErrorText>{errors.day.message}</Field.ErrorText>
-									)}
-								</Grid>
-							</Field.Root>
+								{errors.day && (
+									<FormErrorMessage>{errors.day.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
 
-							<Field.Root invalid={!!errors.period}>
-								<Grid>
-									<Field.Label>Período</Field.Label>
-									<NativeSelect.Root
-										id="period"
-										{...register("period")}>
-										<NativeSelect.Field placeholder="Selecione um período">
-											<option value="MORNING">Manhã</option>
-											<option value="AFTERNOON">Tarde</option>
-											<option value="EVENING">Noite</option>
-										</NativeSelect.Field>
-									</NativeSelect.Root>
+						<FormControl isInvalid={!!errors.period}>
+							<Grid>
+								<FormLabel>Período</FormLabel>
+								<Select
+									id="period"
+									placeholder="Selecione um período"
+									{...register("period")}>
+									<option value="MORNING">Manhã</option>
+									<option value="AFTERNOON">Tarde</option>
+									<option value="EVENING">Noite</option>
+								</Select>
 
-									{errors.period && (
-										<Field.ErrorText>{errors.period.message}</Field.ErrorText>
-									)}
-								</Grid>
-							</Field.Root>
+								{errors.period && (
+									<FormErrorMessage>{errors.period.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
 
-							<Field.Root invalid={!!errors.startTime}>
-								<Grid>
-									<Field.Label>Horário de início</Field.Label>
-									<Input
-										{...register("startTime")}
-										asChild>
-										<InputMask
-											mask="99:99"
-											defaultValue={isEditing ? "startTime" : ""}
-											placeholder="08:00"
-											type="text"
-											id="startTime"
-										/>
-									</Input>
-									{errors.startTime && (
-										<Field.ErrorText>
-											{errors.startTime.message}
-										</Field.ErrorText>
-									)}
-								</Grid>
-							</Field.Root>
+						<FormControl isInvalid={!!errors.startTime}>
+							<Grid>
+								<FormLabel>Horário de início</FormLabel>
+								<Input
+									as={InputMask}
+									mask="99:99"
+									defaultValue={isEditing ? "startTime" : ""}
+									placeholder="08:00"
+									type="text"
+									id="startTime"
+									{...register("startTime")}
+								/>
+								{errors.startTime && (
+									<FormErrorMessage>
+										{errors.startTime.message}
+									</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
 
-							<Field.Root invalid={!!errors.endTime}>
-								<Grid>
-									<Field.Label>Horário final</Field.Label>
-									<Input
-										{...register("endTime")}
-										asChild>
-										<InputMask
-											mask="99:99"
-											defaultValue={isEditing ? "endTime" : ""}
-											placeholder="19:00"
-											type="text"
-											id="endTime"
-										/>
-									</Input>
-									{errors.endTime && (
-										<Field.ErrorText>{errors.endTime.message}</Field.ErrorText>
-									)}
-								</Grid>
-							</Field.Root>
+						<FormControl isInvalid={!!errors.endTime}>
+							<Grid>
+								<FormLabel>Horário final</FormLabel>
+								<Input
+									as={InputMask}
+									mask="99:99"
+									defaultValue={isEditing ? "endTime" : ""}
+									placeholder="19:00"
+									type="text"
+									id="endTime"
+									{...register("endTime")}
+								/>
+								{errors.endTime && (
+									<FormErrorMessage>{errors.endTime.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
 
-							<Field.Root invalid={!!errors.interval}>
-								<Grid>
-									<Field.Label>Intervalo em minutos</Field.Label>
-									<Input
-										placeholder="45"
-										type="text"
-										id="interval"
-										maxLength={5}
-										disabled={isEditing}
-										{...register("interval")}
-									/>
-									{errors.interval && (
-										<Field.ErrorText>{errors.interval.message}</Field.ErrorText>
-									)}
-								</Grid>
-							</Field.Root>
-						</Grid>
-						<Flex justifyContent="flex-end">
-							{!isEditing ? (
-								<Button
-									colorPalette="green"
-									size="lg"
-									type="submit"
-									margin="0.625rem">
-									Cadastrar <LuPlus />
-								</Button>
-							) : (
-								<Button
-									colorPalette="blue"
-									size="lg"
-									type="submit"
-									margin="0.625rem">
-									Editar <TbEditCircle />
-								</Button>
-							)}
+						<FormControl isInvalid={!!errors.interval}>
+							<Grid>
+								<FormLabel>Intervalo em minutos</FormLabel>
+								<Input
+									placeholder="45"
+									type="text"
+									id="interval"
+									maxLength={5}
+									isDisabled={isEditing}
+									{...register("interval")}
+								/>
+								{errors.interval && (
+									<FormErrorMessage>{errors.interval.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
+					</Grid>
 
+					<Flex justifyContent="flex-end">
+						{!isEditing ? (
 							<Button
-								colorPalette="gray"
+								colorScheme="green"
 								size="lg"
+								type="submit"
 								margin="0.625rem"
-								onClick={onCancel}>
-								Cancelar <MdCancel />
+								rightIcon={<LuPlus />}>
+								Cadastrar
 							</Button>
-						</Flex>
-					</form>
+						) : (
+							<Button
+								colorScheme="blue"
+								size="lg"
+								type="submit"
+								margin="0.625rem"
+								rightIcon={<TbEditCircle />}>
+								Editar
+							</Button>
+						)}
+
+						<Button
+							colorScheme="gray"
+							size="lg"
+							margin="0.625rem"
+							rightIcon={<MdCancel />}
+							onClick={onCancel}>
+							Cancelar
+						</Button>
+					</Flex>
 				</Box>
-			</Card.Body>
-		</Card.Root>
+			</CardBody>
+		</Card>
 	);
 }

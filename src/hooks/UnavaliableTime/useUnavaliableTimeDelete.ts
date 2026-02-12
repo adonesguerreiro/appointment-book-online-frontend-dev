@@ -33,7 +33,7 @@ export const useUnavaliableTimeDelete = ({
 				onClose();
 				showToast({
 					title: "Horário indisponível excluído com sucesso.",
-					type: "success",
+					status: "success",
 				});
 				closeForm();
 				setSelectedUnavailableTime(null);

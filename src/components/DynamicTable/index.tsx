@@ -1,5 +1,11 @@
 import {
 	Table,
+	Thead,
+	Tbody,
+	Tr,
+	Th,
+	Td,
+	TableContainer,
 	Flex,
 	Box,
 } from "@chakra-ui/react";
@@ -23,20 +29,20 @@ export default function DynamicTable<T extends object>({
 	actions,
 }: DynamicTableProps<T>) {
 	return (
-        <>
-            <Flex
+		<>
+			<Flex
 				direction="column"
 				alignItems={{ base: "flex-start", md: "center", lg: "center" }}
 				justifyContent={{ base: "flex-start", md: "center", lg: "center" }}>
 				<Box width="full">
-					<Table.ScrollArea>
-						<Table.Root
-							variant="line"
-							colorPalette="gray">
-							<Table.Header>
-								<Table.Row>
+					<TableContainer>
+						<Table
+							variant="striped"
+							colorScheme="gray">
+							<Thead>
+								<Tr>
 									{columns.map((column) => (
-										<Table.ColumnHeader
+										<Th
 											key={column.key as string}
 											display={
 												column.hideOnMobile
@@ -44,16 +50,16 @@ export default function DynamicTable<T extends object>({
 													: "table-cell"
 											}>
 											{column.label}
-										</Table.ColumnHeader>
+										</Th>
 									))}
-									{actions && <Table.ColumnHeader>Ações</Table.ColumnHeader>}
-								</Table.Row>
-							</Table.Header>
-							<Table.Body>
+									{actions && <Th>Ações</Th>}
+								</Tr>
+							</Thead>
+							<Tbody>
 								{data.map((row, index) => (
-									<Table.Row key={index}>
+									<Tr key={index}>
 										{columns.map((column) => (
-											<Table.Cell
+											<Td
 												key={column.key as string}
 												display={
 													column.hideOnMobile
@@ -63,16 +69,16 @@ export default function DynamicTable<T extends object>({
 												{column.render
 													? column.render(row[column.key] as string, row)
 													: (row[column.key] as string)}
-											</Table.Cell>
+											</Td>
 										))}
-										{actions && <Table.Cell>{actions(row)}</Table.Cell>}
-									</Table.Row>
+										{actions && <Td>{actions(row)}</Td>}
+									</Tr>
 								))}
-							</Table.Body>
-						</Table.Root>
-					</Table.ScrollArea>
+							</Tbody>
+						</Table>
+					</TableContainer>
 				</Box>
 			</Flex>
-        </>
-    );
+		</>
+	);
 }

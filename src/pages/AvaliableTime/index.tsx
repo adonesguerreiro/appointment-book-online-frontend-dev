@@ -32,7 +32,7 @@ export default function AvaliableTimePage() {
 	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedAvaliableTime, setSelectAvaliableTime] =
 		useState<FormDataAvailableTime | null>();
-	const { open, onOpen, onClose } = useDisclosure();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { availableTime, totalPages, loading, fetchAvaliableTime } =
 		useAvaliableTime(currentPage);
@@ -146,7 +146,7 @@ export default function AvaliableTimePage() {
 				)}
 				{selectedAvaliableTime && (
 					<ModalDelete
-						isOpen={open}
+						isOpen={isOpen}
 						onClose={onClose}
 						title="horário disponível"
 						itemName={dayMapping[selectedAvaliableTime?.day]}

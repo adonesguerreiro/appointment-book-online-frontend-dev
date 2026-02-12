@@ -14,27 +14,27 @@ export default function Pagination({
 	totalPages,
 }: PaginationProps) {
 	return (
-        <Flex
+		<Flex
 			justifyContent="center"
 			alignItems="center"
 			gap={2}>
-            <Button
+			<Button
 				fontSize={{ base: "0.875rem", md: "1rem" }}
 				onClick={handlePrev}
-				disabled={currentPage === 1}
-				colorPalette="orange">
+				isDisabled={currentPage === 1}
+				colorScheme="orange">
 				Anterior
 			</Button>
-            <Text fontSize={{ base: "0.875rem", md: "1rem" }}>
+			<Text fontSize={{ base: "0.875rem", md: "1rem" }}>
 				Página {currentPage} de {totalPages}
 			</Text>
-            <Button
+			<Button
 				fontSize={{ base: "0.875rem", md: "1rem" }}
 				onClick={handleNext}
-				disabled={currentPage === totalPages}
-				colorPalette="orange">
+				isDisabled={currentPage === totalPages}
+				colorScheme="orange">
 				Próximo
 			</Button>
-        </Flex>
-    );
+		</Flex>
+	);
 }

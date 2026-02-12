@@ -21,7 +21,7 @@ import ResetPasswordPage from "./pages/ResetPassword";
 import BookingPage from "./pages/BookAppointment";
 import { useAuth } from "./context/AuthContext";
 
-function ProtectedRoute({ element }: { element: JSX.Element }) {
+function ProtectedRoute({ element }: { element: React.ReactElement }) {
 	const { user, loading } = useAuth();
 
 	if (loading) {

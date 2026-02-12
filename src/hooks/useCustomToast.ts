@@ -1,33 +1,31 @@
-import { createToaster } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 export function useCustomToast() {
+	const toast = useToast();
+
 	const showToast = ({
 		title,
-		type,
+		status,
 		duration = 3000,
-		placement = "top-end",
+		position = "top-right",
 	}: {
 		title: string;
-		type: "info" | "warning" | "success" | "error" | "loading";
+		status: "info" | "warning" | "success" | "error" | "loading";
 		duration?: number;
-		placement?:
-			| "top-end"
-			| "top-start"
-			| "bottom-end"
-			| "bottom-start"
+		position?:
 			| "top"
-			| "bottom";
+			| "top-right"
+			| "top-left"
+			| "bottom"
+			| "bottom-right"
+			| "bottom-left";
 	}) => {
-		const toaster = createToaster({
-			duration,
-			placement,
-		});
-
-		toaster.create({
+		toast({
 			title,
-			type,
-			closable: true,
+			status,
 			duration,
+			isClosable: true,
+			position,
 		});
 	};
 

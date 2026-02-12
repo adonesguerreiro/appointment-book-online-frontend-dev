@@ -58,8 +58,8 @@ export default function TableAvaliable({
 			}))}
 			actions={(row) => (
 				<Flex>
-					<Box _hover={{ color: "blue", cursor: "pointer" }} asChild><TbEdit onClick={() => onEditClick(row.id!)} fontSize="1.5rem" /></Box>
-					<Box _hover={{ color: "red", cursor: "pointer" }} asChild><RiDeleteBin5Line onClick={() => onDeleteClick(row.id!)} fontSize="1.5rem" /></Box>
+					<Box _hover={{ color: "blue", cursor: "pointer" }} ><TbEdit onClick={() => onEditClick(row.id!)} fontSize="1.5rem" /></Box>
+					<Box _hover={{ color: "red", cursor: "pointer" }} ><RiDeleteBin5Line onClick={() => onDeleteClick(row.id!)} fontSize="1.5rem" /></Box>
 				</Flex>
 			)}
 		/>

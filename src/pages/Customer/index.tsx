@@ -30,7 +30,7 @@ export default function CustomerPage() {
 	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedCustomer, setSelectedCustomer] =
 		useState<FormDataCustomer | null>(null);
-	const { open, onOpen, onClose } = useDisclosure();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { customers, totalPages, loading, fetchCustomer } =
 		useCustomer(currentPage);
@@ -141,7 +141,7 @@ export default function CustomerPage() {
 
 				{selectedCustomer && (
 					<ModalDelete
-						isOpen={open}
+						isOpen={isOpen}
 						onClose={onClose}
 						title="cliente"
 						itemName={selectedCustomer.customerName}

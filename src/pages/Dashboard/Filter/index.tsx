@@ -2,9 +2,10 @@ import {
 	Box,
 	Button,
 	Flex,
-	Field,
+	FormControl,
+	FormErrorMessage,
 	Grid,
-	NativeSelect,
+	Select,
 } from "@chakra-ui/react";
 import { monthsOfYear } from "../../../utils/monthsOfYear";
 import { FaFilter } from "react-icons/fa";
@@ -14,7 +15,6 @@ import {
 	UseFormRegister,
 } from "react-hook-form";
 import { FormDataDashboard } from "../../../interface/FormDataDashboard";
-import { year } from "../../../utils/year";
 
 interface FilterDashBoardProps {
 	register: UseFormRegister<FormDataDashboard>;
@@ -25,59 +25,68 @@ interface FilterDashBoardProps {
 
 export default function FilterDashBoard({
 	register,
+/**
+ * Component that filters the dashboard data
+ * @param {register } Function to register fields
+ * @param { handleSubmit } Function to handle form submission
+ * @param { handleSubmitPieChart } Function to submit the pie chart data
+ * @param { errors } Field errors
+ * @returns {JSX.Element} The filter form component
+ */
 	handleSubmit,
 	handleSubmitPieChart,
 	errors,
 }: FilterDashBoardProps) {
 	console.log("Errors:", errors);
 	return (
-        <Flex gap="0.625rem" justify="center" padding="0.625rem" asChild><form onSubmit={handleSubmit(handleSubmitPieChart)}>
-                    <Field.Root invalid={!!errors.month}>
-                        <NativeSelect.Root
-                            id="month"
-                            {...register("month")}>
-                            <NativeSelect.Field placeholder="Selecione o mês">
-                                {monthsOfYear.map((month) => (
-                                    <option
-                                        key={month.value}
-                                        value={month.value}>
-                                        {month.label}
-                                    </option>
-                                ))}
-                            </NativeSelect.Field>
-                        </NativeSelect.Root>
-                        {errors.month && (
-                            <Field.ErrorText>{errors.month.message}</Field.ErrorText>
-                        )}
-                    </Field.Root>
-                    <Field.Root invalid={!!errors.year}>
-                        <NativeSelect.Root
-                            id="year"
-                            {...register("year")}>
-                            <NativeSelect.Field placeholder="Selecione o ano"></NativeSelect.Field>
-                            {year.map((year) => (
-                                <option
-                                    key={year.value}
-                                    value={year.value}>
-                                    {year.label}
-                                </option>
-                            ))}
-                        </NativeSelect.Root>
-                        {errors.year && (
-                            <Field.ErrorText>{errors.year.message}</Field.ErrorText>
-                        )}
-                    </Field.Root>
-                    <Grid>
-                        <Box>
-                            <Button
-                                colorPalette="teal"
-                                size="lg"
-                                type="submit">
-                                <FaFilter />
-                                Filtrar
-                            </Button>
-                        </Box>
-                    </Grid>
-                </form></Flex>
-    );
+		<Flex
+			gap="0.625rem"
+			justify="center"
+			padding="0.625rem"
+			as="form"
+			onSubmit={handleSubmit(handleSubmitPieChart)}>
+			<FormControl isInvalid={!!errors.month}>
+				<Select
+					id="month"
+					placeholder="Selecione o mês"
+					{...register("month")}>
+					{monthsOfYear.map((month) => (
+						<option
+							key={month.value}
+							value={month.value}>
+							{month.label}
+						</option>
+					))}
+				</Select>
+				{errors.month && (
+					<FormErrorMessage>{errors.month.message}</FormErrorMessage>
+				)}
+			</FormControl>
+
+			<FormControl isInvalid={!!errors.year}>
+				<Select
+					id="year"
+					placeholder="Selecione o ano"
+					{...register("year")}>
+					<option value="2024">2024</option>
+					<option value="2025">2025</option>
+				</Select>
+				{errors.year && (
+					<FormErrorMessage>{errors.year.message}</FormErrorMessage>
+				)}
+			</FormControl>
+
+			<Grid>
+				<Box>
+					<Button
+						colorScheme="teal"
+						size="lg"
+						type="submit"
+						rightIcon={<FaFilter />}>
+						Filtrar
+					</Button>
+				</Box>
+			</Grid>
+		</Flex>
+	);
 }

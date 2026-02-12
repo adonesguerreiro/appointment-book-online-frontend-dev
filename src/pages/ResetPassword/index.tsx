@@ -1,13 +1,17 @@
 import {
 	Card,
+	CardHeader,
+	CardBody,
 	Box,
 	Flex,
+	FormControl,
+	FormLabel,
 	Input,
 	Button,
+	FormErrorMessage,
 	Container,
 	Spinner,
 	Badge,
-	Field,
 } from "@chakra-ui/react";
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -20,7 +24,6 @@ import { resetPasswordSchema } from "../../validators/resetPasswordSchema";
 import { FormDataResetPassword } from "../../interface/FormDataResetPassword";
 import { resetPassword } from "../../services/api";
 import { useEffect, useState } from "react";
-import React from "react";
 
 export default function ResetPasswordPage() {
 	const { showToast } = useCustomToast();
@@ -73,7 +76,7 @@ export default function ResetPasswordPage() {
 				setLoading(false);
 				showToast({
 					title: "Senha redefinida com sucesso!",
-					type: "success",
+					status: "success",
 				});
 				navigate("/login");
 			}
@@ -83,46 +86,46 @@ export default function ResetPasswordPage() {
 			showToast({
 				title:
 					"Falha ao redefinir a senha, pois seu prazo de redefinição expirou, redirecionando para o login...",
-				type: "error",
+				status: "error",
 			});
 			navigate("/login");
 		}
 	};
 
 	return (
-        <Container>
-            <Flex
+		<Container>
+			<Flex
 				direction="column"
 				align="center"
 				justify="center"
 				height="90vh">
 				<Badge
-					colorPalette={minutes === 0 ? "red" : "green"}
+					colorScheme={minutes === 0 ? "red" : "green"}
 					mb="4">
 					Tempo restante: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
 				</Badge>
-				<Card.Root>
-					<Card.Header
+				<Card>
+					<CardHeader
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
 						<HeadingComponent title="Redefina sua senha" />
-					</Card.Header>
+					</CardHeader>
 
-					<Card.Body
+					<CardBody
 						width="52.5625rem"
 						height="40.6875rem">
 						<Box
 							display="grid"
 							placeItems="center">
 							<form onSubmit={handleSubmit(onSubmit)}>
-								<Field.Root
+								<FormControl
 									display="grid"
 									alignItems="center"
 									width="25.0625rem"
 									padding="0.625rem"
-									invalid={!!errors.newPassword || !!errors.confirmPassword}>
-									<Field.Label>Nova senha</Field.Label>
+									isInvalid={!!errors.newPassword || !!errors.confirmPassword}>
+									<FormLabel>Nova senha</FormLabel>
 									<Input
 										type="password"
 										placeholder="Nova senha"
@@ -130,11 +133,11 @@ export default function ResetPasswordPage() {
 										{...register("newPassword")}
 									/>
 									{errors.newPassword && (
-										<Field.ErrorText>
+										<FormErrorMessage>
 											{errors.newPassword.message}
-										</Field.ErrorText>
+										</FormErrorMessage>
 									)}
-									<Field.Label>Confirmar nova senha</Field.Label>
+									<FormLabel>Confirmar nova senha</FormLabel>
 									<Input
 										type="password"
 										placeholder="Confirmar nova senha"
@@ -142,26 +145,34 @@ export default function ResetPasswordPage() {
 										{...register("confirmPassword")}
 									/>
 									{errors.confirmPassword && (
-										<Field.ErrorText>
+										<FormErrorMessage>
 											{errors.confirmPassword.message}
-										</Field.ErrorText>
+										</FormErrorMessage>
 									)}
-								</Field.Root>
+								</FormControl>
 								<Flex
 									justifyContent="right"
 									alignItems="center">
-									<Button colorPalette="teal" size="lg" type="submit" disabled={loading}>{loading ? (
+									<Button
+										colorScheme="teal"
+										size="lg"
+										rightIcon={<MdArrowForward />}
+										type="submit"
+										isDisabled={loading}>
+										{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
-										) : null}{loading ? "Verificando" : "Enviar"}{<MdArrowForward />}</Button>
+										) : null}
+										{loading ? "Verificando" : "Enviar"}
+									</Button>
 								</Flex>
 							</form>
 						</Box>
-					</Card.Body>
-				</Card.Root>
+					</CardBody>
+				</Card>
 			</Flex>
-        </Container>
-    );
+		</Container>
+	);
 }

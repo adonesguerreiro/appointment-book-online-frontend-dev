@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { FormDataUser } from "../interface/FormDataUser";
 
 export const userSchema: yup.ObjectSchema<FormDataUser> = yup.object({
-	avatarUrl: yup.mixed<File | string>().nullable().optional(),
+avatarUrl: yup.mixed<File | string>().optional(),
 	name: yup
 		.string()
 		.trim()

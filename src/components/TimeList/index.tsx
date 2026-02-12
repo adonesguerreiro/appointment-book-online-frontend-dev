@@ -1,8 +1,8 @@
 import {
 	Box,
 	Button,
-	Field,
 	Flex,
+	FormControl,
 	GridItem,
 	SimpleGrid,
 	Text,
@@ -43,23 +43,26 @@ export default function TimeList({
 		if (errors.time) {
 			showToast({
 				title: "Por favor, selecione um horário disponível.",
-				type: "warning",
+				status: "warning",
 				duration: 1000,
 			});
-		}
-
-		if (isSubmitting) {
 			clearErrors("time");
+		}
+			if (isSubmitting) {
+			const timer = setTimeout(() => {
+				setSelectedTime("");
+			}, 0);
+			return () => clearTimeout(timer);
 		}
 	}, [clearErrors, errors.time, isSubmitting, showToast]);
 
 	return (
 		<Box padding="0.625rem">
-			<Field.Root invalid={!!errors.time}>
+			<FormControl isInvalid={!!errors.time}>
 				<SimpleGrid
 					placeItems="center"
 					columns={3}
-					gap={3}
+					spacing={3}
 					padding={3}>
 					{avaliableTimeSlot.length > 0 ? (
 						avaliableTimeSlot.map((avaliableTimeSlot, index) => (
@@ -78,7 +81,7 @@ export default function TimeList({
 									setSelectedTime(avaliableTimeSlot.timeSlot);
 								}}
 								value={selectedTime}
-								disabled={!avaliableTimeSlot.timeSlot}
+								isDisabled={!avaliableTimeSlot.timeSlot}
 								id="time"
 								{...register("time")}>
 								{avaliableTimeSlot.timeSlot}
@@ -92,7 +95,7 @@ export default function TimeList({
 						</GridItem>
 					)}
 				</SimpleGrid>
-			</Field.Root>
+			</FormControl>
 		</Box>
 	);
 }

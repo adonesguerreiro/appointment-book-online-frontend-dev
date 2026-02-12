@@ -33,7 +33,7 @@ export const useServiceDelete = ({
 				onClose();
 				showToast({
 					title: "Serviço excluído com sucesso.",
-					type: "success",
+					status: "success",
 				});
 				closeForm();
 				setSelectedService(null);

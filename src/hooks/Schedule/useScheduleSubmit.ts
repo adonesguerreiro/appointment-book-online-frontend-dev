@@ -26,7 +26,7 @@ export const useScheduleSubmit = ({
 					if (createdSchedule.status === 200) {
 						showToast({
 							title: "Agendamento realizado com sucesso",
-							type: "success",
+							status: "success",
 						});
 						fetchSchedules();
 						closeForm();
@@ -35,7 +35,7 @@ export const useScheduleSubmit = ({
 					await updateSchedule(Number(selectedSchedule?.id), data);
 					showToast({
 						title: "Agendamento alterado com sucesso.",
-						type: "info",
+						status: "info",
 					});
 					fetchSchedules();
 					closeForm();

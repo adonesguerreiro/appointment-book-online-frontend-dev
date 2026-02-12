@@ -1,7 +1,8 @@
+import { FormDataCustomer } from "@/interface/FormDataCustomer";
 import { isValidMobilePhone } from "@brazilian-utils/brazilian-utils";
 import * as yup from "yup";
 
-export const customerSchema = yup.object().shape({
+export const customerSchema : yup.ObjectSchema<FormDataCustomer> = yup.object().shape({
 	id: yup.number().required(),
 	customerName: yup
 		.string()

@@ -22,7 +22,7 @@ export const useBookingSubmit = (
 				if (bookingCreated.status === 200) {
 					showToast({
 						title: "Agendamento realizado com sucesso.",
-						type: "success",
+						status: "success",
 					});
 					await fetchBooking();
 					reset({

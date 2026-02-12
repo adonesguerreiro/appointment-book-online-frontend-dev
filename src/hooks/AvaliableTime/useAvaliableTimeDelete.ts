@@ -37,7 +37,7 @@ export const useAvaliableTimeDelete = ({
 				onClose();
 				showToast({
 					title: "Horário disponível excluído com sucesso.",
-					type: "success",
+					status: "success",
 				});
 				closeForm();
 				setSelectAvaliableTime(null);

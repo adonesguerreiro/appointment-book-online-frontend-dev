@@ -1,11 +1,14 @@
 import {
 	Flex,
 	Card,
+	CardBody,
 	Box,
 	Grid,
+	FormControl,
+	FormLabel,
 	Input,
+	FormErrorMessage,
 	Button,
-	Field,
 } from "@chakra-ui/react";
 import { CurrencyInput } from "react-currency-mask";
 import { Controller, useForm } from "react-hook-form";
@@ -53,105 +56,113 @@ export default function ServiceForm({
 	}, [selectedService, reset]);
 
 	return (
-        <Card.Root>
-            <Card.Body
+		<Card>
+			<CardBody
 				width="25.0625rem"
 				height="40.6875rem"
 				padding="0.625rem">
-				<Box asChild><form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid gap="0.625rem">
-                            <Field.Root invalid={!!errors.serviceName}>
-                                <Grid>
-                                    <Field.Label>Nome</Field.Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nome do serviço"
-                                        id="serviceName"
-                                        {...register("serviceName")}
-                                    />
-                                    {errors.serviceName && (
-                                        <Field.ErrorText>
-                                            {errors.serviceName.message}
-                                        </Field.ErrorText>
-                                    )}
-                                </Grid>
-                            </Field.Root>
+				<Box
+					as="form"
+					onSubmit={handleSubmit(onSubmit)}>
+					<Grid gap="0.625rem">
+						<FormControl isInvalid={!!errors.serviceName}>
+							<Grid>
+								<FormLabel>Nome</FormLabel>
+								<Input
+									type="text"
+									placeholder="Nome do serviço"
+									id="serviceName"
+									{...register("serviceName")}
+								/>
+								{errors.serviceName && (
+									<FormErrorMessage>
+										{errors.serviceName.message}
+									</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
 
-                            <Field.Root invalid={!!errors.duration}>
-                                <Grid>
-                                    <Field.Label>Duração do serviço (minutos)</Field.Label>
-                                    <Input {...register("duration")} asChild><InputMask
-                                            mask="99:99"
-                                            defaultValue={isEditing ? "duration" : ""}
-                                            placeholder="45:00"
-                                            type="text"
-                                            id="duration" /></Input>
-                                    {errors.duration && (
-                                        <Field.ErrorText>{errors.duration.message}</Field.ErrorText>
-                                    )}
-                                </Grid>
-                            </Field.Root>
+						<FormControl isInvalid={!!errors.duration}>
+							<Grid>
+								<FormLabel>Duração do serviço (minutos)</FormLabel>
+								<Input
+									as={InputMask}
+									mask="99:99"
+									defaultValue={isEditing ? "duration" : ""}
+									placeholder="45:00"
+									type="text"
+									id="duration"
+									{...register("duration")}
+								/>
+								{errors.duration && (
+									<FormErrorMessage>{errors.duration.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
 
-                            <Field.Root invalid={!!errors.price}>
-                                <Grid>
-                                    <Field.Label>Preço</Field.Label>
-                                    <Controller
-                                        name="price"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <CurrencyInput
-                                                value={field.value}
-                                                onChangeValue={(_, value) => {
-                                                    field.onChange(value);
-                                                }}
-                                                InputElement={
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="R$ 100,00"
-                                                        id="price"
-                                                        maxLength={15}
-                                                        {...register("price")}
-                                                    />
-                                                }
-                                            />
-                                        )}
-                                    />
+						<FormControl isInvalid={!!errors.price}>
+							<Grid>
+								<FormLabel>Preço</FormLabel>
+								<Controller
+									name="price"
+									control={control}
+									render={({ field }) => (
+										<CurrencyInput
+											value={field.value}
+											onChangeValue={(_, value) => {
+												field.onChange(value);
+											}}
+											InputElement={
+												<Input
+													type="text"
+													placeholder="R$ 100,00"
+													id="price"
+													maxLength={15}
+													{...register("price")}
+												/>
+											}
+										/>
+									)}
+								/>
 
-                                    {errors.price && (
-                                        <Field.ErrorText>{errors.price.message}</Field.ErrorText>
-                                    )}
-                                </Grid>
-                            </Field.Root>
-                        </Grid>
-                        <Flex justifyContent="flex-end">
-                            {!isEditing ? (
-                                <Button
-                                    colorPalette="green"
-                                    size="lg"
-                                    type="submit"
-                                    margin="0.625rem">
-                                    Cadastrar <LuPlus />
-                                </Button>
-                            ) : (
-                                <Button
-                                    colorPalette="blue"
-                                    size="lg"
-                                    type="submit"
-                                    margin="0.625rem">
-                                    Editar <TbEditCircle />
-                                </Button>
-                            )}
+								{errors.price && (
+									<FormErrorMessage>{errors.price.message}</FormErrorMessage>
+								)}
+							</Grid>
+						</FormControl>
+					</Grid>
+					<Flex justifyContent="flex-end">
+						{!isEditing ? (
+							<Button
+								colorScheme="green"
+								size="lg"
+								type="submit"
+								margin="0.625rem"
+								rightIcon={<LuPlus />}>
+								Cadastrar
+							</Button>
+						) : (
+							<Button
+								colorScheme="blue"
+								size="lg"
+								type="submit"
+								margin="0.625rem"
+								rightIcon={<TbEditCircle />}>
+								Editar
+							</Button>
+						)}
 
-                            <Button
-                                colorPalette="gray"
-                                size="lg"
-                                margin="0.625rem"
-                                onClick={onCancel}>
-                                Cancelar <MdCancel />
-                            </Button>
-                        </Flex>
-                    </form></Box>
-			</Card.Body>
-        </Card.Root>
-    );
+						<Button
+							colorScheme="gray"
+							size="lg"
+							margin="0.625rem"
+							rightIcon={<MdCancel />}
+							onClick={onCancel}>
+							Cancelar
+						</Button>
+					</Flex>
+				</Box>
+			</CardBody>
+		</Card>
+	);
 }

@@ -27,7 +27,7 @@ export const useServiceSubmit = ({
 					if (createdService.status === 200) {
 						showToast({
 							title: "Serviço registrado com sucesso.",
-							type: "success",
+							status: "success",
 						});
 
 						fetchService();
@@ -37,7 +37,7 @@ export const useServiceSubmit = ({
 					await updateService(Number(selectedService?.id), data);
 					showToast({
 						title: "Serviço alterado com sucesso.",
-						type: "info",
+						status: "info",
 					});
 					fetchService();
 					closeForm();

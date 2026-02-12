@@ -1,4 +1,4 @@
-import { Flex, Field, Input } from "@chakra-ui/react";
+import { Flex, FormControl, Input } from "@chakra-ui/react";
 import Calendar from "react-calendar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { BookingAppointmentData } from "../../pages/BookAppointment";
@@ -34,7 +34,7 @@ export default function CustomCalendar({
 		if (errors.calendar) {
 			showToast({
 				title: "Por favor, selecione uma data disponível.",
-				type: "warning",
+				status: "warning",
 				duration: 1000,
 			});
 			clearErrors("calendar");
@@ -42,41 +42,38 @@ export default function CustomCalendar({
 	}, [clearErrors, errors.calendar, selectedDate, showToast]);
 
 	return (
-        <Flex
+		<Flex
 			borderRadius="lg"
 			boxShadow="md"
 			bg="white"
 			p={4}
 			maxW="fit-content"
 			mx="auto"
-			css={{
-                '& .react-calendar': {
+			sx={{
+				".react-calendar": {
 					border: "none",
 					fontFamily: "inherit",
 				},
-
-                '& .react-calendar__tile--active': {
+				".react-calendar__tile--active": {
 					bg: "teal",
 					color: "white",
 				},
 
-                '& .react-calendar__tile:hover': {
+				".react-calendar__tile:hover": {
 					bg: "gray.200",
 				},
-
-                '& .react=calendar__tile--now': {
+				".react=calendar__tile--now": {
 					bg: "gray.200",
 				},
-
-                '& .react-calendar__navigation button': {
+				".react-calendar__navigation button": {
 					color: "teal",
 					fontWeight: "bold",
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
-				}
-            }}>
-            <Field.Root invalid={!!errors.calendar}>
+				},
+			}}>
+			<FormControl isInvalid={!!errors.calendar}>
 				<Calendar
 					locale="pt-BR"
 					minDate={new Date()}
@@ -96,7 +93,7 @@ export default function CustomCalendar({
 					type="hidden"
 					{...register("calendar")}
 				/>
-			</Field.Root>
-        </Flex>
-    );
+			</FormControl>
+		</Flex>
+	);
 }

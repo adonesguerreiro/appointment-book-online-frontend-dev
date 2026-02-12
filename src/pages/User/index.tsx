@@ -1,12 +1,15 @@
 import {
 	Box,
 	Button,
-    Card,
+	Card,
+	CardBody,
 	Container,
 	Flex,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
 	Input,
 	Spinner,
-    Field,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FormDataUser } from "../../interface/FormDataUser";
@@ -42,8 +45,8 @@ export default function UserPage() {
 	console.log("Erros:", errors);
 
 	return (
-        <Container>
-            <Flex
+		<Container>
+			<Flex
 				display="flex"
 				direction="column"
 				align="center"
@@ -51,99 +54,123 @@ export default function UserPage() {
 				gap="10"
 				padding="0.625rem">
 				<HeadingComponent title="Usuário" />
-				<Card.Root asChild>
-					<Card.Body
+				<Card>
+					<CardBody
 						width="52.5625rem"
 						height="40.6875rem">
-						<Box display="grid" placeItems="center" asChild><form onSubmit={handleSubmit(handleSubmitUser)}>
-                                <Field.Label>Foto de perfil</Field.Label>
-                                <CropperComponent />
-                                <Field.Root
-                                    display="grid"
-                                    alignItems="center"
-                                    width="25.0625rem"
-                                    padding="0.625rem"
-                                    invalid={!!errors}>
-                                    <Field.Label>Nome</Field.Label>
-                                    <Input
-                                        type="name"
-                                        placeholder="Informe seu nome"
-                                        id="name"
-                                        {...register("name")}
-                                    />
-                                    {errors.name && (
-                                        <Field.ErrorText>{errors.name.message}</Field.ErrorText>
-                                    )}
+						<Box
+							as="form"
+							display="grid"
+							placeItems="center"
+							onSubmit={handleSubmit(handleSubmitUser)}>
+							<FormLabel>Foto de perfil</FormLabel>
+							<CropperComponent />
 
-                                    <Field.Label>Email</Field.Label>
-                                    <Input
-                                        type="email"
-                                        placeholder="adones@example.com"
-                                        id="email"
-                                        {...register("email")}
-                                    />
-                                    {errors.email && (
-                                        <Field.ErrorText>{errors.email.message}</Field.ErrorText>
-                                    )}
+							<FormControl
+								display="grid"
+								alignItems="center"
+								width="25.0625rem"
+								padding="0.625rem"
+								isInvalid={!!errors}>
+								<FormLabel>Nome</FormLabel>
+								<Input
+									type="name"
+									placeholder="Informe seu nome"
+									id="name"
+									{...register("name")}
+									isInvalid={!!errors.name}
+								/>
+								{errors.name && (
+									<FormErrorMessage>{errors.name.message}</FormErrorMessage>
+								)}
 
-                                    <Field.Label>Senha atual</Field.Label>
-                                    <Input
-                                        type="password"
-                                        placeholder="Senha atual"
-                                        id="password"
-                                        {...register("password")}
-                                    />
-                                    {errors.password && (
-                                        <Field.ErrorText>{errors.password.message}</Field.ErrorText>
-                                    )}
-                                </Field.Root>
-                                <Field.Root
-                                    display="grid"
-                                    alignItems="center"
-                                    width="25.0625rem"
-                                    padding="0.625rem"
-                                    invalid={!!errors.newPassword || !!errors.confirmPassword}>
-                                    <Field.Label>Nova senha</Field.Label>
-                                    <Input
-                                        type="password"
-                                        placeholder="Nova senha"
-                                        id="newPassword"
-                                        {...register("newPassword")}
-                                    />
-                                    {errors.newPassword && (
-                                        <Field.ErrorText>
-                                            {errors.newPassword.message}
-                                        </Field.ErrorText>
-                                    )}
-                                    <Field.Label>Confirmar nova senha</Field.Label>
-                                    <Input
-                                        type="password"
-                                        placeholder="Confirmar nova senha"
-                                        id="confirmPassword"
-                                        {...register("confirmPassword")}
-                                    />
-                                    {errors.confirmPassword && (
-                                        <Field.ErrorText>
-                                            {errors.confirmPassword.message}
-                                        </Field.ErrorText>
-                                    )}
-                                </Field.Root>
-                                <Flex
-                                    alignItems="center"
-                                    justifyContent="flex-end">
-                                    <Button colorPalette="blue" size="lg" type="submit" disabled={loading}>{loading ? (
-                                            <Spinner
-                                                size="sm"
-                                                mr="2"
-                                            />
-                                        ) : null}{loading ? "Validando dados" : "Salvar"}{<MdSave />}</Button>
-                                    <Button colorPalette="gray" size="lg" margin="0.625rem" onClick={handleCancel}>Cancelar
-                                                                            {<MdCancel />}</Button>
-                                </Flex>
-                            </form></Box>
-					</Card.Body>
-				</Card.Root>
+								<FormLabel>Email</FormLabel>
+								<Input
+									type="email"
+									placeholder="adones@example.com"
+									id="email"
+									{...register("email")}
+									isInvalid={!!errors.email}
+								/>
+								{errors.email && (
+									<FormErrorMessage>{errors.email.message}</FormErrorMessage>
+								)}
+
+								<FormLabel>Senha atual</FormLabel>
+								<Input
+									type="password"
+									placeholder="Senha atual"
+									id="password"
+									{...register("password")}
+									isInvalid={!!errors.password}
+								/>
+								{errors.password && (
+									<FormErrorMessage>{errors.password.message}</FormErrorMessage>
+								)}
+							</FormControl>
+
+							<FormControl
+								display="grid"
+								alignItems="center"
+								width="25.0625rem"
+								padding="0.625rem"
+								isInvalid={!!errors.newPassword || !!errors.confirmPassword}>
+								<FormLabel>Nova senha</FormLabel>
+								<Input
+									type="password"
+									placeholder="Nova senha"
+									id="newPassword"
+									{...register("newPassword")}
+								/>
+								{errors.newPassword && (
+									<FormErrorMessage>
+										{errors.newPassword.message}
+									</FormErrorMessage>
+								)}
+								<FormLabel>Confirmar nova senha</FormLabel>
+								<Input
+									type="password"
+									placeholder="Confirmar nova senha"
+									id="confirmPassword"
+									{...register("confirmPassword")}
+								/>
+								{errors.confirmPassword && (
+									<FormErrorMessage>
+										{errors.confirmPassword.message}
+									</FormErrorMessage>
+								)}
+							</FormControl>
+
+							<Flex
+								alignItems="center"
+								justifyContent="flex-end">
+								<Button
+									colorScheme="blue"
+									size="lg"
+									type="submit"
+									isDisabled={loading}
+									rightIcon={<MdSave />}>
+									{loading ? (
+										<Spinner
+											size="sm"
+											mr="2"
+										/>
+									) : null}
+									{loading ? "Validando dados" : "Salvar"}
+								</Button>
+								<Button
+									colorScheme="gray"
+									size="lg"
+									margin="0.625rem"
+									rightIcon={<MdCancel />}
+									onClick={handleCancel}>
+									Cancelar
+								</Button>
+							</Flex>
+						</Box>
+					</CardBody>
+				</Card>
 			</Flex>
-        </Container>
-    );
+		</Container>
+	);
 }

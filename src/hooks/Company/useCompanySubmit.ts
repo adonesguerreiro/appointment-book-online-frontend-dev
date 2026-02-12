@@ -3,7 +3,7 @@ import { updateCompany, updateAddress } from "../../services/api";
 import { viaCep } from "../../services/viaCep";
 import { useLoading } from "../useLoading";
 import { useCustomToast } from "../useCustomToast";
-import { UseFormSetError, UseFormSetValue, SubmitHandler } from "react-hook-form";
+import { UseFormSetError, UseFormSetValue } from "react-hook-form";
 import { useHandleError } from "../useHandleError";
 import { useCallback } from "react";
 
@@ -23,7 +23,7 @@ export const useCompanySubmit = ({
 
 	const handleError = useHandleError();
 
-	const handleSubmitCompany: SubmitHandler<FormDataCompany> = useCallback(
+	const handleSubmitCompany = useCallback(
 		async (data: FormDataCompany) => {
 			setLoading(true);
 
@@ -55,7 +55,7 @@ export const useCompanySubmit = ({
 				if (updatedCompany.status === 200 && updatedAddress.status === 200) {
 					showToast({
 						title: "Alterado com sucesso!",
-						type: "success",
+						status: "success",
 					});
 				}
 			} catch (error) {

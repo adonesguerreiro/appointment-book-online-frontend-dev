@@ -2,10 +2,10 @@ import {
 	Box,
 	CloseButton,
 	Flex,
+	useColorModeValue,
 	BoxProps,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { useColorModeValue } from "../ui/color-mode";
 import { IconType } from "react-icons";
 import { GrSchedule } from "react-icons/gr";
 import NavItem from "./NavItem";
@@ -45,7 +45,7 @@ const SubMenuTime: Array<LinkItemProps> = [
 ];
 
 export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
-	const { open, onToggle } = useDisclosure();
+	const { isOpen, onToggle } = useDisclosure();
 
 	return (
 		<Box
@@ -75,10 +75,9 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 				</Box>
 
 				<CloseButton
-						ml="auto"
-						onClick={onClose}
-						aria-label="Close sidebar"
-					/>
+					display={{ base: "flex", md: "none" }}
+					onClick={onClose}
+				/>
 			</Flex>
 			{LinkItems.map((link) =>
 				link.path ? (
@@ -98,10 +97,10 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 							gap="1"
 							onClick={onToggle}>
 							{link.name}
-							{open ? <FiChevronUp /> : <FiChevronDown />}
+							{isOpen ? <FiChevronUp /> : <FiChevronDown />}
 						</NavItem>
 
-						{open && (
+						{isOpen && (
 							<>
 								{SubMenuTime.map((subLink) => (
 									<NavItem
@@ -115,7 +114,7 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 							</>
 						)}
 					</Box>
-				),
+				)
 			)}
 		</Box>
 	);

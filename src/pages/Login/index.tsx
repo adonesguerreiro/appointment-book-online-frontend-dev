@@ -6,12 +6,14 @@ import {
 	Box,
 	Text,
 	Flex,
+	FormControl,
+	FormLabel,
 	Input,
 	Button,
+	FormErrorMessage,
 	Container,
 	Spinner,
 	Link,
-	Field,
 } from "@chakra-ui/react";
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -50,7 +52,7 @@ export default function LoginPage() {
 
 			showToast({
 				title: "Autenticado com sucesso!",
-				type: "success",
+				status: "success",
 			});
 
 			navigate("/");
@@ -63,25 +65,29 @@ export default function LoginPage() {
 	};
 
 	return (
-        <Container>
-            <Flex
+		<Container>
+			<Flex
 				direction="column"
 				align="center"
 				justify="center"
 				height="90vh">
-				<Card.Root asChild>
+				<Card>
 					<CardHeader
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
 						<Heading
+							as="h1"
 							size="lg"
-							fontWeight="semibold"
-							asChild><h1>Seja bem vindo de volta</h1></Heading>
+							fontWeight="semibold">
+							Seja bem vindo de volta
+						</Heading>
 						<Box>
 							<Text
-								fontSize="lg"
-								asChild><h2>Por favor, entre com suas credenciais </h2></Text>
+								as="h2"
+								fontSize="lg">
+								Por favor, entre com suas credenciais
+							</Text>
 						</Box>
 					</CardHeader>
 
@@ -92,46 +98,56 @@ export default function LoginPage() {
 							display="grid"
 							placeItems="center">
 							<form onSubmit={handleSubmit(onSubmit)}>
-								<Field.Root
+								<FormControl
 									display="grid"
 									alignItems="center"
 									width="25.0625rem"
 									padding="0.625rem"
 									gap="0.625rem"
-									invalid={!!errors}>
-									<Field.Label>Email</Field.Label>
+									isInvalid={!!errors}>
+									<FormLabel>Email</FormLabel>
 									<Input
 										type="email"
 										placeholder="Insira seu email"
 										id="email"
 										{...register("email")}
+										isInvalid={!!errors.email}
 									/>
 									{errors.email && (
-										<Field.ErrorText>{errors.email.message}</Field.ErrorText>
+										<FormErrorMessage>{errors.email.message}</FormErrorMessage>
 									)}
 
-									<Field.Label>Senha</Field.Label>
+									<FormLabel>Senha</FormLabel>
 									<Input
 										type="password"
 										placeholder="Insira sua senha"
 										id="password"
+										isInvalid={!!errors.password}
 										{...register("password")}
 									/>
 									{errors.password && (
-										<Field.ErrorText>
+										<FormErrorMessage>
 											{errors.password.message}
-										</Field.ErrorText>
+										</FormErrorMessage>
 									)}
-								</Field.Root>
+								</FormControl>
 								<Flex
 									justifyContent="space-between"
 									alignItems="center">
-									<Button colorPalette="teal" size="lg" type="submit" disabled={loading}>{loading ? (
+									<Button
+										colorScheme="teal"
+										size="lg"
+										rightIcon={<MdArrowForward />}
+										type="submit"
+										isDisabled={loading}>
+										{loading ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
-										) : null}{loading ? "Autenticando" : "Entrar"}{<MdArrowForward />}</Button>
+										) : null}
+										{loading ? "Autenticando" : "Entrar"}
+									</Button>
 									<Box>
 										<Link href="/forgot-password">Esqueceu a senha?</Link>
 									</Box>
@@ -139,8 +155,8 @@ export default function LoginPage() {
 							</form>
 						</Box>
 					</CardBody>
-				</Card.Root>
+				</Card>
 			</Flex>
-        </Container>
-    );
+		</Container>
+	);
 }

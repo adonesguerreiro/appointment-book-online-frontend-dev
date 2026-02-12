@@ -32,7 +32,7 @@ export default function UnavaliableTimePage() {
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { fetchUnavaliableTime, unavaliables, totalPages, loading } =
 		useUnavaliableTime(currentPage);
-	const { open, onOpen, onClose } = useDisclosure();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { handleSubmitUnavailableTime } = useUnavaliableTimeSubmit({
 		fetchUnavaliableTime,
@@ -141,7 +141,7 @@ export default function UnavaliableTimePage() {
 				)}
 				{selectedUnavailableTime && (
 					<ModalDelete
-						isOpen={open}
+						isOpen={isOpen}
 						onClose={onClose}
 						title="horário disponível"
 						itemName={new Date(selectedUnavailableTime.date).toLocaleDateString(

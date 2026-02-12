@@ -120,7 +120,9 @@ export const logout = () => {
 };
 
 export const refreshToken = () => {
-	return api.post("/refresh-token");
+	return api.post("/refresh-token", {
+		refreshToken: localStorage.getItem("refreshToken"),
+	});
 };
 
 export const forgotPassword = ({ email }: FormDataForgotPassword) => {

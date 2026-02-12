@@ -32,7 +32,7 @@ export const useUserSubmit = () => {
 			if (updatedUser.status === 200 || updateUploadUser?.status === 200) {
 				showToast({
 					title: "Salvo com sucesso!",
-					type: "success",
+					status: "success",
 				});
 				setLoading(false);
 				navigate("/");

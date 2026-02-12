@@ -11,10 +11,17 @@ export default function RegisterButton({
 	buttonText,
 }: RegisterButtonProps) {
 	return (
-        <Box
+		<Box
 			padding="0.625rem"
 			marginLeft={{ base: "auto", md: "100%" , lg: "100%" }}>
-            <Button colorPalette="teal" position="initial" size="lg" onClick={onNewClick}>{buttonText}{<FaPlus />}</Button>
-        </Box>
-    );
+			<Button
+				colorScheme="teal"
+				position="initial"
+				size="lg"
+				rightIcon={<FaPlus />}
+				onClick={onNewClick}>
+				{buttonText}
+			</Button>
+		</Box>
+	);
 }

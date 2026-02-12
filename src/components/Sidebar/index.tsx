@@ -1,8 +1,8 @@
 import SidebarContent from "./SidebarContent";
 import MobileNav from "./MobileNav";
-import { Box, Drawer, useDisclosure, Portal } from "@chakra-ui/react";
+import { Box, Drawer, DrawerContent, useDisclosure } from "@chakra-ui/react";
 export default function Sidebar() {
-	const { open, onOpen, onClose } = useDisclosure();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (
 		<Box>
@@ -10,20 +10,17 @@ export default function Sidebar() {
 				onClose={() => onClose}
 				display={{ base: "none", md: "block" }}
 			/>
-			<Drawer.Root
-				open={open}
-				placement="start"
-				onOpenChange={() => onClose()}
-				onInteractOutside={onClose}
+			<Drawer
+				isOpen={isOpen}
+				placement="left"
+				onClose={onClose}
+				returnFocusOnClose={false}
+				onOverlayClick={onClose}
 				size="full">
-				<Portal>
-					<Drawer.Positioner>
-						<Drawer.Content>
-							<SidebarContent onClose={onClose} />
-						</Drawer.Content>
-					</Drawer.Positioner>
-				</Portal>
-			</Drawer.Root>
+				<DrawerContent>
+					<SidebarContent onClose={onClose} />
+				</DrawerContent>
+			</Drawer>
 			{/* mobilenav */}
 			<MobileNav onOpen={onOpen} />
 			<Box
