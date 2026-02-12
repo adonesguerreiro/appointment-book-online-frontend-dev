@@ -18,12 +18,12 @@ export default function TableSchedule({
 		<DynamicTable
 			columns={[
 				{
-					key: "customerId",
+					key: "customerName",
 					label: "Cliente",
 					hideOnMobile: false,
 				},
 				{
-					key: "serviceId",
+					key: "serviceName",
 					label: "Serviço",
 					hideOnMobile: true,
 				},
