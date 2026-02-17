@@ -18,7 +18,7 @@ import { TbEditCircle } from "react-icons/tb";
 import { FormDataSchedule } from "../../../interface/FormDataSchedule";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { scheduleSchema } from "../../../validators/scheduleSchema";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { ptBR } from "date-fns/locale";
@@ -63,7 +63,7 @@ export default function ScheduleForm({
 		selectedSchedule ?? ({} as FormDataSchedule)
 	);
 
-	// console.log("Erros:", errors);
+	console.log("Erros:", errors);
 	useEffect(() => {
 		const customerReady =
 			selectedSchedule?.customerId &&

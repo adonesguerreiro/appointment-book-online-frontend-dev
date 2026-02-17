@@ -18,7 +18,7 @@ import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { FormDataUnavailableTime } from "../../../interface/FormDataUnavailableTime";
 import { unavailableTimeSchema } from "../../../validators/unavailableTimeSchema";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { TbEditCircle } from "react-icons/tb";
 import "react-datepicker/dist/react-datepicker.css";
 

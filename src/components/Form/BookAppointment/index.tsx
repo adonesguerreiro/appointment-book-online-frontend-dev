@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { BookingAppointmentData } from "../../../pages/BookAppointment";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { FormDataService } from "../../../interface/FormDataService";
 import { FormDataUser } from "../../../interface/FormDataUser";
 

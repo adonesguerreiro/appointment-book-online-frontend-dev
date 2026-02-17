@@ -10,7 +10,6 @@ import {
 	FormErrorMessage,
 	Button,
 } from "@chakra-ui/react";
-import { CurrencyInput } from "react-currency-mask";
 import { Controller, useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
@@ -18,8 +17,9 @@ import { TbEditCircle } from "react-icons/tb";
 import { FormDataService } from "../../../interface/FormDataService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "../../../validators/serviceSchema";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { useEffect } from "react";
+import { NumericFormat } from "react-number-format";
 
 interface ServiceFormProps {
 	onSubmit: (data: FormDataService) => void;
@@ -104,26 +104,23 @@ export default function ServiceForm({
 							<Grid>
 								<FormLabel>Preço</FormLabel>
 								<Controller
-									name="price"
-									control={control}
-									render={({ field }) => (
-										<CurrencyInput
-											value={field.value}
-											onChangeValue={(_, value) => {
-												field.onChange(value);
-											}}
-											InputElement={
-												<Input
-													type="text"
-													placeholder="R$ 100,00"
-													id="price"
-													maxLength={15}
-													{...register("price")}
-												/>
-											}
-										/>
-									)}
-								/>
+  name="price"
+  control={control}
+  render={({ field }) => (
+    <NumericFormat
+      customInput={Input}
+      thousandSeparator="."
+      decimalSeparator=","
+      prefix="R$ "
+      decimalScale={2}
+      fixedDecimalScale
+      value={field.value}
+      onValueChange={(values) => {
+        field.onChange(values.floatValue);
+      }}
+    />
+  )}
+/>
 
 								{errors.price && (
 									<FormErrorMessage>{errors.price.message}</FormErrorMessage>

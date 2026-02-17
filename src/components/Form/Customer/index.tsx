@@ -17,7 +17,7 @@ import { MdCancel } from "react-icons/md";
 import { TbEditCircle } from "react-icons/tb";
 import { FormDataCustomer } from "../../../interface/FormDataCustomer";
 import { yupResolver } from "@hookform/resolvers/yup";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { useEffect } from "react";
 import { customerSchema } from "../../../validators/customerSchema";
 

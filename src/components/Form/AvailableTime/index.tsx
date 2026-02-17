@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
 import { MdCancel } from "react-icons/md";
 import { FormDataAvailableTime } from "../../../interface/FormDataAvailableTime";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { availableTimeSchema } from "../../../validators/availableTimeSchema";
 import { useEffect } from "react";
 import { TbEditCircle } from "react-icons/tb";

@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { companySchema } from "../../validators/companySchema";
 import { MdCancel, MdSave } from "react-icons/md";
-import InputMask from "react-input-mask";
+import InputMask from "@kerim-keskin/react-input-mask";
 import { FormDataCompany } from "../../interface/FormDataCompany";
 import { viaCep } from "../../services/viaCep";
 import { useEffect, useState } from "react";
