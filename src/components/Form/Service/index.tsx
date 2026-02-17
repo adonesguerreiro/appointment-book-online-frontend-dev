@@ -104,7 +104,7 @@ export default function ServiceForm({
 							<Grid>
 								<FormLabel>Preço</FormLabel>
 								<Controller
-  name="price"
+  	             name="price"
   control={control}
   render={({ field }) => (
     <NumericFormat

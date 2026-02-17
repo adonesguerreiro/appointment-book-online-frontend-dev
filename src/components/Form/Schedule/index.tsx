@@ -204,9 +204,9 @@ export default function ScheduleForm({
 										<option value="">Sem horários disponíveis</option>
 									)}
 								</Select>
-								{errors.avaliableTimeSlot && (
+								{errors.timeSlotAvaliable && (
 									<FormErrorMessage>
-										{errors.avaliableTimeSlot.message}
+										{errors.timeSlotAvaliable.message}
 									</FormErrorMessage>
 								)}
 							</Grid>
