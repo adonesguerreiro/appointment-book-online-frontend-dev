@@ -5,21 +5,21 @@ import {
 	Navigate,
 } from "react-router-dom";
 import "./App.css";
-import LoginPage from "./pages/Login";
-import UserPage from "./pages/User";
-import CompanyPage from "./pages/Company";
-import ServicePage from "./pages/Service";
-import AvailableTimePage from "./pages/AvaliableTime";
-import UnavaliableTimePage from "./pages/UnavaliableTime";
+import LoginPage from "./features/auth/pages/Login";
+import UserPage from "./features/users/page";
+import CompanyPage from "./features/company/pages";
+import ServicePage from "./features/services/pages";
+import AvailableTimePage from "./features/avaliableTime/pages";
+import UnavaliableTimePage from "./features/unavaliableTime/pages";
 import { Box, Skeleton } from "@chakra-ui/react";
 import Sidebar from "./components/Sidebar";
-import SchedulePage from "./pages/Schedule";
-import DashboardPage from "./pages/Dashboard";
-import CustomerPage from "./pages/Customer";
-import ForgotPasswordPage from "./pages/ForgotPassword";
-import ResetPasswordPage from "./pages/ResetPassword";
-import BookingPage from "./pages/BookAppointment";
-import { useAuth } from "./context/AuthContext";
+import SchedulePage from "./features/schedule/pages";
+import DashboardPage from "./features/dashboard/pages";
+import CustomerPage from "./features/customer/pages";
+import ForgotPasswordPage from "./features/auth/pages/ForgotPassword";
+import ResetPasswordPage from "./features/auth/pages/ResetPassword";
+import BookingPage from "./features/booking/pages";
+import { useAuth } from "./features/auth/context/AuthContext";
 
 function ProtectedRoute({ element }: { element: React.ReactElement }) {
 	const { user, loading } = useAuth();

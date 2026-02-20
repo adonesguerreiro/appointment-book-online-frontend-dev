@@ -1,16 +1,16 @@
-import { FormDataForgotPassword } from "./../interface/FormDataForgotPassword";
+import { FormDataForgotPassword } from "../features/auth/interface/FormDataForgotPassword";
 import axios from "axios";
-import { FormDataLogin } from "../interface/FormDataLogin";
-import { FormDataService } from "../interface/FormDataService";
-import { FormDataUser } from "../interface/FormDataUser";
-import { FormDataCompany } from "../interface/FormDataCompany";
-import { FormDataAddress } from "../interface/FormDataAddress";
-import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
-import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
-import { FormDataCustomer } from "../interface/FormDataCustomer";
-import { FormDataSchedule } from "../interface/FormDataSchedule";
-import { FormDataResetPassword } from "../interface/FormDataResetPassword";
-import { BookingAppointmentData } from "../pages/BookAppointment";
+import { FormDataLogin } from "../features/auth/interface/FormDataLogin";
+import { FormDataService } from "../features/services/interface/FormDataService";
+import { FormDataUser } from "../features/users/interface/FormDataUser";
+import { FormDataCompany } from "../features/company/interface/FormDataCompany";
+import { FormDataAddress } from "../features/company/interface/FormDataAddress";
+import { FormDataAvailableTime } from "../features/avaliableTime/interface/FormDataAvailableTime";
+import { FormDataUnavailableTime } from "../features/unavaliableTime/interface/FormDataUnavailableTime";
+import { FormDataCustomer } from "../features/customer/interface/FormDataCustomer";
+import { FormDataSchedule } from "../features/schedule/interface/FormDataSchedule";
+import { FormDataResetPassword } from "../features/auth/interface/FormDataResetPassword";
+import { BookingAppointmentData } from "../features/booking/interface/BookingAppointmentData";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_APP_API_BASE_URL,

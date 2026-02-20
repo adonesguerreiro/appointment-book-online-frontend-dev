@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import App from "./App";
-import { AuthProvider } from "./context/AuthProvider";
+import { AuthProvider } from "./features/auth/context/AuthProvider";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { AvatarProvider } from "./context/AvatarProvider";
-import { ProfilePhotoProvider } from "./context/ProfilePhotoProvider";
+import { AvatarProvider } from "./features/users/context/AvatarProvider";
+import { ProfilePhotoProvider } from "./features/users/context/ProfilePhotoProvider";
 const queryClient = new QueryClient();
 import { ChakraProvider } from '@chakra-ui/react'
 
