@@ -1,6 +1,6 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo, useEffect } from "react";
-import { getCustomers, getCustomerById } from "../../../services/api";
+import { getCustomers, getCustomerById } from "@/features/customer/services/api";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
 
 export const useScheduleCustomerEdit = (selectedSchedule: FormDataSchedule) => {

@@ -13,11 +13,11 @@ import {
 import { useCallback, useState } from "react";
 import Cropper, { Area } from "react-easy-crop";
 import { useForm } from "react-hook-form";
-import { FormDataUser } from "../../features/users/interface/FormDataUser";
-import { useAvatar } from "../../features/users/hooks/useAvatar";
-import { useProfilePhoto } from "../../features/users/hooks/useProfilePhoto";
+import { FormDataUser } from "@/features/users/interface/FormDataUser";
+import { useAvatar } from "@/features/users/hooks/useAvatar";
+import { useProfilePhoto } from "@/features/users/hooks/useProfilePhoto";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchema } from "../../features/users/validators/userSchema";
+import { userSchema } from "@/features/users/validators/userSchema";
 
 export default function CropperComponent() {
 	const { getValues } = useForm<FormDataUser>({

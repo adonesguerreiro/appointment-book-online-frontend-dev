@@ -6,19 +6,19 @@ import TableSchedule from "../components/TableSchedule";
 import { scheduleSchema } from "../validators/scheduleSchema";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
 import ScheduleForm from "../components/Form";
-import ModalDelete from "../../../components/Modal";
-import RegisterButton from "../../../components/RegisterButton";
-import EmptyState from "../../../components/EmptyState";
-import Pagination from "../../../components/Pagination";
+import ModalDelete from "../../../shared/components/Modal";
+import RegisterButton from "../../../shared/components/RegisterButton";
+import EmptyState from "../../../shared/components/EmptyState";
+import Pagination from "../../../shared/components/Pagination";
 import { useSchedules } from "../../schedule/hooks/useSchedule";
-import HeadingComponent from "../../../components/Heading";
+import HeadingComponent from "../../../shared/components/Heading";
 import { useTimeSlots } from "../../schedule/hooks/useTimeSlot";
-import { usePagination } from "../../../hooks/usePagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
 import { useScheduleSubmit } from "../../schedule/hooks/useScheduleSubmit";
 import { useScheduleEdit } from "../../schedule/hooks/useScheduleEdit";
 import { useScheduleCancel } from "../../schedule/hooks/useScheduleCancel";
-import { useShowForm } from "../../../hooks/useShowForm";
-import { useEditMode } from "../../../hooks/useEditMode";
+import { useShowForm } from "../../../shared/hooks/useShowForm";
+import { useEditMode } from "../../../shared/hooks/useEditMode";
 
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({

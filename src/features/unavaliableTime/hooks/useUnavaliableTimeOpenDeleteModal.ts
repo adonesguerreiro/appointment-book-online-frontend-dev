@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { getUnavailableTimeById } from "../../../services/api";
+import { getUnavailableTimeById } from "../services/api";
 import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
 
 interface useUnavaliableTimeOpenModalDeleteProps {

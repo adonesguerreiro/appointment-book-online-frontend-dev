@@ -14,7 +14,7 @@ import {
 	UseFormSetValue,
 } from "react-hook-form";
 import { BookingAppointmentData } from "../../interface/BookingAppointmentData";
-import { useCustomToast } from "../../../../hooks/useCustomToast";
+import { useCustomToast } from "../../../../shared/hooks/useCustomToast";
 import { useEffect, useState } from "react";
 import { AvaliableTimeSlot } from "../../../schedule/interface/AvailableTimeSlot";
 

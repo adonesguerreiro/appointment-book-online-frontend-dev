@@ -16,13 +16,13 @@ import {
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useLoading } from "../../../../hooks/useLoading";
-import { useCustomToast } from "../../../../hooks/useCustomToast";
-import HeadingComponent from "../../../../components/Heading";
+import { useLoading } from "../../../../shared/hooks/useLoading";
+import { useCustomToast } from "../../../../shared/hooks/useCustomToast";
+import HeadingComponent from "../../../../shared/components/Heading";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPasswordSchema } from "../../validators/resetPasswordSchema";
 import { FormDataResetPassword } from "../../interface/FormDataResetPassword";
-import { resetPassword } from "../../../../services/api";
+import { resetPassword } from "../../services/auth";
 import { useEffect, useState } from "react";
 
 export default function ResetPasswordPage() {

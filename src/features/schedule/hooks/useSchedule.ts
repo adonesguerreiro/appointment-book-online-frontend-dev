@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
-import { getSchedules } from "../../../services/api";
+import { getSchedules } from "../services/api";
 import { handleAuthError } from "../../../utils/handleAuthError";
-import { useLoading } from "../../../hooks/useLoading";
+import { useLoading } from "../../../shared/hooks/useLoading";
 
 export const useSchedules = (currentPage: number) => {
 	const [schedules, setSchedules] = useState<FormDataSchedule[]>([]);

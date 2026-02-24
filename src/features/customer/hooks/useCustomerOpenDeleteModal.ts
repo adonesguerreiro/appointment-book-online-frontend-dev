@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { getCustomerById } from "../../../services/api";
+import { getCustomerById } from "../services/api";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
 
 interface useCustomerOpenDeleteModal {

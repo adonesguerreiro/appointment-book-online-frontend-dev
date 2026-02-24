@@ -3,7 +3,7 @@ import { FormDataSchedule } from "../../../schedule/interface/FormDataSchedule";
 import { formatDate } from "../../../../utils/formatDate";
 import { statusMapping } from "../../../../utils/statusMapping";
 import { TbEdit } from "react-icons/tb";
-import DynamicTable from "../../../../components/DynamicTable";
+import DynamicTable from "../../../../shared/components/DynamicTable";
 
 interface TableScheduleProps {
 	schedules: FormDataSchedule[];

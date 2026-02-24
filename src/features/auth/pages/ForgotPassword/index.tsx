@@ -15,10 +15,10 @@ import {
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forgotPassword } from "../../../../services/api";
-import { useLoading } from "../../../../hooks/useLoading";
-import { useCustomToast } from "../../../../hooks/useCustomToast";
-import HeadingComponent from "../../../../components/Heading";
+import { forgotPassword } from "../../services/auth";
+import { useLoading } from "../../../../shared/hooks/useLoading";
+import { useCustomToast } from "../../../../shared/hooks/useCustomToast";
+import HeadingComponent from "../../../../shared/components/Heading";
 import { useNavigate } from "react-router-dom";
 import { forgotPasswordSchema } from "../../validators/forgotPasswordSchema";
 import { FormDataForgotPassword } from "../../interface/FormDataForgotPassword";

@@ -1,12 +1,12 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
 import { usePieChart } from "../hooks/usePieChart";
 import PieChartDashboard from "../components/PieChart";
-import SectionHeader from "../../../components/SectionHeader";
+import SectionHeader from "../../../shared/components/SectionHeader";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { dashboardSchema } from "../validators/dashboardSchema";
 import { FormDataDashboard } from "../interface/FormDataDashboard";
 import { useForm } from "react-hook-form";
-import EmptyState from "../../../components/EmptyState";
+import EmptyState from "../../../shared/components/EmptyState";
 import FilterDashBoard from "../components/Filter";
 import { usePieCharSubmit } from "../hooks/usePieChartSubmit";
 

@@ -1,5 +1,5 @@
 import { FormDataSchedule } from "../interface/FormDataSchedule";
-import { getScheduleById } from "../../../services/api";
+import { getScheduleById } from "../services/api";
 
 interface useScheduleSubmitEditProps {
 	setSelectedSchedule: (schedule: FormDataSchedule | null) => void;

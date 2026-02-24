@@ -1,5 +1,5 @@
 import { FormDataCustomer } from "../interface/FormDataCustomer";
-import { getCustomerById } from "../../../services/api";
+import { getCustomerById } from "../services/api";
 
 interface useCustomerEditProps {
 	setSelectedCustomer: (schedule: FormDataCustomer | null) => void;

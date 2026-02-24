@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { FormDataService } from "../interface/FormDataService";
-import { getServicesById } from "../../../services/api";
+import { getServicesById } from "../services/api";
 
 interface useServiceEditProps {
 	setSelectedService: (unavailableTime: FormDataService) => void;

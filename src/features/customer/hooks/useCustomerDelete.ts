@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
-import { deleteCustomer } from "../../../services/api";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { deleteCustomer } from "../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 
 interface useCustomerDeleteProps {
 	onClose: () => void;

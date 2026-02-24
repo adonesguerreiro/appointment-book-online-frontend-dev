@@ -5,22 +5,22 @@ import { availableTimeSchema } from "../validators/availableTimeSchema";
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
 import { useCallback, useEffect, useState } from "react";
 import TableAvaliable from "../components/TableAvaliable";
-import SectionHeader from "../../../components/SectionHeader";
+import SectionHeader from "../../../shared/components/SectionHeader";
 import AvailableTime from "../components/AvailableTime";
-import RegisterButton from "../../../components/RegisterButton";
-import EmptyState from "../../../components/EmptyState";
-import Pagination from "../../../components/Pagination";
+import RegisterButton from "../../../shared/components/RegisterButton";
+import EmptyState from "../../../shared/components/EmptyState";
+import Pagination from "../../../shared/components/Pagination";
 import { useAvaliableTime } from "../hooks/useAvaliableTime";
-import { usePagination } from "../../../hooks/usePagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
 import { useAvaliableTimeSubmit } from "../hooks/useAvaliableTimeSubmit";
 import { useAvaliableTimeEdit } from "../hooks/useAvaliableTimeEdit";
 import { useAvaliableTimeCancel } from "../hooks/useAvaliableTimeCancel";
-import ModalDelete from "../../../components/Modal";
+import ModalDelete from "../../../shared/components/Modal";
 import { useAvaliableTimeDelete } from "../hooks/useAvaliableTimeDelete";
 import { useAvaliableTimeOpenModalDelete } from "../hooks/useAvaliableTimeOpenDeleteModal";
 import { dayMapping } from "../../../utils/dayMapping";
-import { useShowForm } from "../../../hooks/useShowForm";
-import { useEditMode } from "../../../hooks/useEditMode";
+import { useShowForm } from "../../../shared/hooks/useShowForm";
+import { useEditMode } from "../../../shared/hooks/useEditMode";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({

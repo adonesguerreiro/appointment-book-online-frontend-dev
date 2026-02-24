@@ -1,4 +1,4 @@
-import { getCompany } from "../../../services/api";
+import { getCompany } from "../services/api";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { UseFormReset } from "react-hook-form";
 import { FormDataCompany } from "../interface/FormDataCompany";

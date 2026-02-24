@@ -18,10 +18,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useAvatar } from "../../features/users/hooks/useAvatar";
-import { useUser } from "../../features/users/hooks/useUser";
-import { FormDataUser } from "../../features/users/interface/FormDataUser";
-import { logout } from "../../services/api";
+import { useAvatar } from "@/features/users/hooks/useAvatar";
+import { useUser } from "@/features/users/hooks/useUser";
+import { FormDataUser } from "@/features/users/interface/FormDataUser";
+import { logout } from "@/features/auth/services/auth";
 
 interface MobileProps extends FlexProps {
 	onOpen: () => void;

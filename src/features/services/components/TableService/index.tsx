@@ -1,10 +1,10 @@
 import { Flex, Box } from "@chakra-ui/react";
-import { FormDataService } from "../../../../features/services/interface/FormDataService";
+import { FormDataService } from "@/features/services/interface/FormDataService";
 import { currencyFormat } from "../../../../utils/currencyFormat";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { formatMinutesInHours } from "../../../../utils/formatMinutesInHours";
-import DynamicTable from "../../../../components/DynamicTable";
+import DynamicTable from "../../../../shared/components/DynamicTable";
 
 interface TableServiceProps {
 	services: FormDataService[];

@@ -20,10 +20,10 @@ import { useForm } from "react-hook-form";
 import { FormDataLogin } from "../../interface/FormDataLogin";
 import { loginSchema } from "../../validators/loginSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { auth, refreshToken } from "../../../../services/api";
-import { useLoading } from "../../../../hooks/useLoading";
-import { useCustomToast } from "../../../../hooks/useCustomToast";
-import { useHandleError } from "../../../../hooks/useHandleError";
+import { auth, refreshToken } from "../../services/auth";
+import { useLoading } from "../../../../shared/hooks/useLoading";
+import { useCustomToast } from "../../../../shared/hooks/useCustomToast";
+import { useHandleError } from "../../../../shared/hooks/useHandleError";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 

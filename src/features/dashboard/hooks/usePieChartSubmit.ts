@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { FormDataDashboard } from "../interface/FormDataDashboard";
-import { getDashboard } from "../../../services/api";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { getDashboard } from "../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 
 interface UsePieCharSubmit {
 	fetchDataPieChart: (month: string, year: string) => Promise<void>;

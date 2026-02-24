@@ -1,10 +1,10 @@
 import { FormDataCompany } from "../interface/FormDataCompany";
-import { updateCompany, updateAddress } from "../../../services/api";
+import { updateCompany, updateAddress } from "../services/api";
 import { viaCep } from "../../../services/viaCep";
-import { useLoading } from "../../../hooks/useLoading";
-import { useCustomToast } from "../../../hooks/useCustomToast";
+import { useLoading } from "../../../shared/hooks/useLoading";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
 import { UseFormSetError, UseFormSetValue } from "react-hook-form";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 import { useCallback } from "react";
 
 interface useCompanySubmitProps {

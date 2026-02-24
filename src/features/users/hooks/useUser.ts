@@ -1,6 +1,6 @@
 import { FormDataUser } from "../interface/FormDataUser";
 import { useCallback } from "react";
-import { getUserById } from "../../../services/api";
+import { getUserById } from "../services/api";
 import { UseFormReset } from "react-hook-form";
 import { useAvatar } from "./useAvatar";
 

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useLoading } from "../../../hooks/useLoading";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { updateUpload, updateUser } from "../../../services/api";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { useLoading } from "../../../shared/hooks/useLoading";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { updateUpload, updateUser } from "../services/api";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 import { FormDataUser } from "../interface/FormDataUser";
 import { useProfilePhoto } from "./useProfilePhoto";
 

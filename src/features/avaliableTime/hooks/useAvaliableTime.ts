@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAvaliableTimes } from "../../../services/api";
+import { getAvaliableTimes } from "../services/api";
 import { handleAuthError } from "../../../utils/handleAuthError";
-import { useLoading } from "../../../hooks/useLoading";
+import { useLoading } from "../../../shared/hooks/useLoading";
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
 
 export const useAvaliableTime = (currentPage: number) => {

@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormDataService } from "../interface/FormDataService";
-import { getServices } from "../../../services/api";
+import { getServices } from "../services/api";
 import { handleAuthError } from "../../../utils/handleAuthError";
-import { useLoading } from "../../../hooks/useLoading";
+import { useLoading } from "../../../shared/hooks/useLoading";
 
 export const useService = (currentPage: number) => {
 	const [totalPages, setTotalPages] = useState(0);

@@ -3,7 +3,7 @@ import { FormDataAvailableTime } from "../../interface/FormDataAvailableTime";
 import { dayMapping } from "../../../../utils/dayMapping";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import DynamicTable from "../../../../components/DynamicTable";
+import DynamicTable from "../../../../shared/components/DynamicTable";
 
 interface TableAvailableProps {
 	availables: FormDataAvailableTime[];

@@ -1,7 +1,7 @@
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
-import { createAvaliableTime, updateAvaliableTime } from "../../../services/api";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { createAvaliableTime, updateAvaliableTime } from "../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 
 interface useAvaliableTimeSubmitProps {
 	selectedAvaliableTime?: FormDataAvailableTime | null;

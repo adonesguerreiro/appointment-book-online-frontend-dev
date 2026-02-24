@@ -19,9 +19,9 @@ import { MdCancel, MdSave } from "react-icons/md";
 import { useEffect } from "react";
 import { useUser } from "../hooks/useUser";
 import { useUserSubmit } from "../hooks/useUserSubmit";
-import HeadingComponent from "../../../components/Heading";
+import HeadingComponent from "../../../shared/components/Heading";
 import { useUserCancel } from "../hooks/useUserCancel";
-import CropperComponent from "../../../components/Cropper";
+import CropperComponent from "../../../shared/components/Cropper";
 
 export default function UserPage() {
 	const {

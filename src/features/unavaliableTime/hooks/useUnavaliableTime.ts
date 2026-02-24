@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { getUnavailableTimes } from "../../../services/api";
-import { useLoading } from "../../../hooks/useLoading";
+import { getUnavailableTimes } from "../services/api";
+import { useLoading } from "../../../shared/hooks/useLoading";
 import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
 import { useNavigate } from "react-router-dom";
 import { handleAuthError } from "../../../utils/handleAuthError";

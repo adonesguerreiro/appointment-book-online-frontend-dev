@@ -2,7 +2,7 @@ import { Flex, Box } from "@chakra-ui/react";
 import { FormDataCustomer } from "../../interface/FormDataCustomer";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import DynamicTable from "../../../../components/DynamicTable";
+import DynamicTable from "../../../../shared/components/DynamicTable";
 
 interface TableCustomerProps {
 	customers: FormDataCustomer[];
@@ -30,7 +30,7 @@ export default function TableCustomer({
 				},
 			]}
 			data={customers}
-			actions={(row) => (
+			actions={(row: FormDataCustomer) => (
 				<Flex>
 					<Box _hover={{ color: "blue", cursor: "pointer" }} ><TbEdit onClick={() => onEditClick(row.id!)} fontSize="1.5rem" /></Box>
 					<Box _hover={{ color: "red", cursor: "pointer" }} ><RiDeleteBin5Line onClick={() => onDeleteClick(row.id!)} fontSize="1.5rem" /></Box>

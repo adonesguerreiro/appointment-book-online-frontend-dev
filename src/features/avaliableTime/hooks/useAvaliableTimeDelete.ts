@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { deleteAvaliableTime } from "../../../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { deleteAvaliableTime } from "../services/api";
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 
 interface useAvaliableTimeDeleteProps {
 	onClose: () => void;

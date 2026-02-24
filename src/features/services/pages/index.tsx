@@ -5,21 +5,21 @@ import { serviceSchema } from "../validators/serviceSchema";
 import { FormDataService } from "../interface/FormDataService";
 import TableService from "../components/TableService";
 import { useCallback, useEffect, useState } from "react";
-import SectionHeader from "../../../components/SectionHeader";
-import ServiceForm from "../../../features/services/components/Form";
-import ModalDelete from "../../../components/Modal";
-import RegisterButton from "../../../components/RegisterButton";
-import EmptyState from "../../../components/EmptyState";
-import Pagination from "../../../components/Pagination";
+import SectionHeader from "../../../shared/components/SectionHeader";
+import ServiceForm from "@/features/services/components/Form";
+import ModalDelete from "../../../shared/components/Modal";
+import RegisterButton from "../../../shared/components/RegisterButton";
+import EmptyState from "../../../shared/components/EmptyState";
+import Pagination from "../../../shared/components/Pagination";
 import { useService } from "../hooks/useService";
 import { useServiceSubmit } from "../hooks/useServiceSubmit";
 import { useServiceEdit } from "../hooks/useServiceEdit";
 import { useServiceOpenDeleteModal } from "../hooks/useServiceOpenDeleteModal";
-import { usePagination } from "../../../hooks/usePagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
 import { useServiceDelete } from "../hooks/useServiceDelete";
 import { useServiceCancel } from "../hooks/useServiceCancel";
-import { useShowForm } from "../../../hooks/useShowForm";
-import { useEditMode } from "../../../hooks/useEditMode";
+import { useShowForm } from "../../../shared/hooks/useShowForm";
+import { useEditMode } from "../../../shared/hooks/useEditMode";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({

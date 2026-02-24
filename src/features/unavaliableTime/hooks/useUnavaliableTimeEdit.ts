@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
-import { getUnavailableTimeById } from "../../../services/api";
+import { getUnavailableTimeById } from "../services/api";
 
 interface useUnavaliableTimeProps {
 	setSelectedUnavailableTime: (

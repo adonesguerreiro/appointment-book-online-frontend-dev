@@ -12,7 +12,7 @@ import ServicePage from "./features/services/pages";
 import AvailableTimePage from "./features/avaliableTime/pages";
 import UnavaliableTimePage from "./features/unavaliableTime/pages";
 import { Box, Skeleton } from "@chakra-ui/react";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./shared/components/Sidebar";
 import SchedulePage from "./features/schedule/pages";
 import DashboardPage from "./features/dashboard/pages";
 import CustomerPage from "./features/customer/pages";

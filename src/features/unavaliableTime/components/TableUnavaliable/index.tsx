@@ -2,7 +2,7 @@ import { Flex, Box } from "@chakra-ui/react";
 import { FormDataUnavailableTime } from "../../interface/FormDataUnavailableTime";
 import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import DynamicTable from "../../../../components/DynamicTable";
+import DynamicTable from "../../../../shared/components/DynamicTable";
 
 interface TableUnavailableTimeProps {
 	unavaliables: FormDataUnavailableTime[];

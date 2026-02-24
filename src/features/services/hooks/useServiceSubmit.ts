@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { FormDataService } from "../interface/FormDataService";
-import { createService, updateService } from "../../../services/api";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { useHandleError } from "../../../hooks/useHandleError";
+import { createService, updateService } from "../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 
 
 interface useServiceSubmitProps {

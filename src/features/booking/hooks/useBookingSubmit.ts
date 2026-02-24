@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { UseFormReset } from "react-hook-form";
 import { BookingAppointmentData } from "../interface/BookingAppointmentData";
-import { publicBookAppointment } from "../../../services/api";
-import { useCustomToast } from "../../../hooks/useCustomToast";
+import { publicBookAppointment } from "../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
 import { useParams } from "react-router-dom";
 
 export const useBookingSubmit = (

@@ -3,9 +3,9 @@ import { FormDataUnavailableTime } from "../interface/FormDataUnavailableTime";
 import {
 	createUnavailableTime,
 	updateUnavailableTime,
-} from "../../../services/api";
-import { useCustomToast } from "../../../hooks/useCustomToast";
-import { useHandleError } from "../../../hooks/useHandleError";
+} from "../services/api";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
 
 interface useUnavaliableTimeSubmitProps {
 	selectedUnavailableTime: FormDataUnavailableTime | null;

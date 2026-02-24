@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { getAvaliableTimesSlots } from "../../../services/api";
+import { getAvaliableTimesSlots } from "@/features/avaliableTime/services/api";
 import { handleAuthError } from "../../../utils/handleAuthError";
 import { useNavigate } from "react-router-dom";
 

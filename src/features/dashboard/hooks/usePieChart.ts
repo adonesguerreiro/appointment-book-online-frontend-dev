@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { getDashboard } from "../../../services/api";
+import { getDashboard } from "../services/api";
 import { statusMapping } from "../../../utils/statusMapping";
 
 

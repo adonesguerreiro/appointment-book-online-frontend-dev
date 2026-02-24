@@ -1,5 +1,5 @@
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
-import { getAvaliableTimeById } from "../../../services/api";
+import { getAvaliableTimeById } from "../services/api";
 
 interface useAvaliableTimeEditProps {
 	setSelectAvaliableTime: (avaliableTime: FormDataAvailableTime) => void;

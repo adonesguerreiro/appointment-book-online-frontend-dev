@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
-import { getCustomers } from "../../../services/api";
+import { getCustomers } from "../services/api";
 import { handleAuthError } from "../../../utils/handleAuthError";
-import { useLoading } from "../../../hooks/useLoading";
+import { useLoading } from "../../../shared/hooks/useLoading";
 
 export const useCustomer = (currentPage: number) => {
 	const [customers, setCustomers] = useState<FormDataCustomer[]>([]);

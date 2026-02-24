@@ -5,21 +5,21 @@ import { customerSchema } from "../validators/customerSchema";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
 import TableCustomer from "../components/TableCustomer";
 import { useCallback, useEffect, useState } from "react";
-import SectionHeader from "../../../components/SectionHeader";
+import SectionHeader from "../../../shared/components/SectionHeader";
 import CustomerForm from "../components/Form";
-import ModalDelete from "../../../components/Modal";
-import RegisterButton from "../../../components/RegisterButton";
-import EmptyState from "../../../components/EmptyState";
-import Pagination from "../../../components/Pagination";
+import ModalDelete from "../../../shared/components/Modal";
+import RegisterButton from "../../../shared/components/RegisterButton";
+import EmptyState from "../../../shared/components/EmptyState";
+import Pagination from "../../../shared/components/Pagination";
 import { useCustomer } from "../hooks/useCustomer";
 import { useCustomerSubmit } from "../hooks/useCustomerSubmit";
 import { useCustomerEdit } from "../hooks/useCustomerEdit";
 import { useCustomerOpenDeleteModal } from "../hooks/useCustomerOpenDeleteModal";
-import { usePagination } from "../../../hooks/usePagination";
+import { usePagination } from "../../../shared/hooks/usePagination";
 import { useCustomerDelete } from "../hooks/useCustomerDelete";
 import { useCustomerCancel } from "../hooks/useCustomerCancel";
-import { useShowForm } from "../../../hooks/useShowForm";
-import { useEditMode } from "../../../hooks/useEditMode";
+import { useShowForm } from "../../../shared/hooks/useShowForm";
+import { useEditMode } from "../../../shared/hooks/useEditMode";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({

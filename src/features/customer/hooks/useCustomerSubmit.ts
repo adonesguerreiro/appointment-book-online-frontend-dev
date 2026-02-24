@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { FormDataCustomer } from "../interface/FormDataCustomer";
-import { createCustomer, updateCustomer } from "../../../services/api";
-import { useHandleError } from "../../../hooks/useHandleError";
-import { useCustomToast } from "../../../hooks/useCustomToast";
+import { createCustomer, updateCustomer } from "../services/api";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
 
 interface useCustomerSubmitProps {
 	selectedCustomer: FormDataCustomer | null;

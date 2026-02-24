@@ -7,10 +7,10 @@ import {
 	Button,
 	Spinner,
 } from "@chakra-ui/react";
-import HeadingComponent from "../../../components/Heading";
+import HeadingComponent from "../../../shared/components/Heading";
 import "react-calendar/dist/Calendar.css";
 import TimeList from "../components/TimeList";
-import CustomCalendar from "../../../components/CustomCalendar";
+import CustomCalendar from "../../../shared/components/CustomCalendar";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
@@ -20,7 +20,7 @@ import { useEffect } from "react";
 import { FormDataUser } from "../../users/interface/FormDataUser";
 import { useBooking } from "../hooks/useBooking";
 import { useBookingSubmit } from "../hooks/useBookingSubmit";
-import EmptyState from "../../../components/EmptyState";
+import EmptyState from "../../../shared/components/EmptyState";
 import { BookingAppointmentData } from "../interface/BookingAppointmentData";
 
 export default function BookingPage() {

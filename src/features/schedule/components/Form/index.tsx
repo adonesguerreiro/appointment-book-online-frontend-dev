@@ -25,7 +25,7 @@ import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../interface/TimeSlot";
 import { extractTimeFromDate } from "../../../../utils/extractTimeFromDate";
 import { useScheduleServiceEdit } from "../../../schedule/hooks/useScheduleServiceEdit";
-import { useScheduleCustomerEdit } from "../../../schedule/hooks/useScheduleCustomerEdit";
+import { useScheduleCustomerEdit } from "../../hooks/useScheduleCustomerEdit";
 
 interface ScheduleFormProps {
 	onSubmit: (data: FormDataSchedule) => void;

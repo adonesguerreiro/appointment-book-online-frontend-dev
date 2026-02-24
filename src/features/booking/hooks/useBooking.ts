@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import { PublicCompany } from "../interface/PublicCompany";
-import { publicGetCompany } from "../../../services/api";
+import { publicGetCompany } from "../services/api";
 import { useParams } from "react-router-dom";
-import { useLoading } from "../../../hooks/useLoading";
+import { useLoading } from "../../../shared/hooks/useLoading";
 
 export const useBooking = () => {
 	const [companyData, setCompanyData] = useState<PublicCompany | null>(null);

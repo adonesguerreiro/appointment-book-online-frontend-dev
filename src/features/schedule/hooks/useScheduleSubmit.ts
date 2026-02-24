@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
-import { createSchedule, updateSchedule } from "../../../services/api";
-import { useHandleError } from "../../../hooks/useHandleError";
-import { useCustomToast } from "../../../hooks/useCustomToast";
+import { createSchedule, updateSchedule } from "../services/api";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
 
 interface useScheduleSubmitProps {
 	selectedSchedule?: FormDataSchedule | null;

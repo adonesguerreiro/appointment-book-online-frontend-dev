@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { FormDataService } from "../interface/FormDataService";
-import { getServicesById } from "../../../services/api";
+import { getServicesById } from "../services/api";
 
 interface useServiceOpenModalDeleteProps {
 	setSelectedService: (selectedService: FormDataService) => void;

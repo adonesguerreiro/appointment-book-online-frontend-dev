@@ -1,7 +1,7 @@
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import Calendar from "react-calendar";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { BookingAppointmentData } from "../../../features/booking/interface/BookingAppointmentData";
+import { BookingAppointmentData } from "@/features/booking/interface/BookingAppointmentData";
 import {
 	FieldErrors,
 	UseFormClearErrors,
