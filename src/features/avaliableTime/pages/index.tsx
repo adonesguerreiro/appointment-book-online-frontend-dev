@@ -10,17 +10,17 @@ import AvailableTime from "../components/AvailableTime";
 import RegisterButton from "../../../shared/components/RegisterButton";
 import EmptyState from "../../../shared/components/EmptyState";
 import Pagination from "../../../shared/components/Pagination";
-import { useAvaliableTime } from "../hooks/useAvaliableTime";
 import { usePagination } from "../../../shared/hooks/usePagination";
-import { useAvaliableTimeSubmit } from "../hooks/useAvaliableTimeSubmit";
-import { useAvaliableTimeEdit } from "../hooks/useAvaliableTimeEdit";
-import { useAvaliableTimeCancel } from "../hooks/useAvaliableTimeCancel";
 import ModalDelete from "../../../shared/components/Modal";
-import { useAvaliableTimeDelete } from "../hooks/useAvaliableTimeDelete";
-import { useAvaliableTimeOpenModalDelete } from "../hooks/useAvaliableTimeOpenDeleteModal";
 import { dayMapping } from "../../../utils/dayMapping";
 import { useShowForm } from "../../../shared/hooks/useShowForm";
 import { useEditMode } from "../../../shared/hooks/useEditMode";
+import { createAvaliableTime, deleteAvaliableTime, getAvaliableTimeById, getAvaliableTimes, updateAvaliableTime } from "../services/api";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
+import { useHandleError } from "@/shared/hooks/useHandleError";
+import { useLoading } from "@/shared/hooks/useLoading";
+import { useNavigate } from "react-router-dom";
+import { handleAuthError } from "@/utils/handleAuthError";
 
 export default function AvaliableTimePage() {
 	const { reset } = useForm<FormDataAvailableTime>({
@@ -33,41 +33,125 @@ export default function AvaliableTimePage() {
 	const [selectedAvaliableTime, setSelectAvaliableTime] =
 		useState<FormDataAvailableTime | null>();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { showToast } = useCustomToast();
+	const  handleError = useHandleError();
+	const [availableTime, setAvailableTime] = useState<FormDataAvailableTime[]>(
+		[]
+	);
+	const [totalPages, setTotalPages] = useState(0);
+	const navigate = useNavigate();
+	const { loading, startLoading, stopLoading } = useLoading();
 
-	const { availableTime, totalPages, loading, fetchAvaliableTime } =
-		useAvaliableTime(currentPage);
+	const fetchAvaliableTime = useCallback(async () => {
+			startLoading();
+			try {
+				const avaliableTimeData = await getAvaliableTimes(currentPage);
+				setAvailableTime(avaliableTimeData.data.avaliableTimes);
+				setTotalPages(avaliableTimeData.data.totalPages);
+			} catch (error) {
+				handleAuthError(error, navigate);
+				console.error("Erro ao buscar dados", error);
+			} finally {
+				stopLoading();
+			}
+		}, [startLoading, currentPage, navigate, stopLoading]);
 
-	const { handleSubmitAvaliableTime } = useAvaliableTimeSubmit({
-		selectedAvaliableTime,
-		fetchAvaliableTime,
-		closeForm,
-	});
+			const handleSubmitAvaliableTime = useCallback( async (data: FormDataAvailableTime) => {
+				try {
+					if (!selectedAvaliableTime) {
+						const createdService = await createAvaliableTime(data);
+						if (createdService.status === 200) {
+							showToast({
+								title: "Horário disponível registrado com sucesso.",
+								status: "success",
+							});
+							fetchAvaliableTime();
+							closeForm();
+						}
+					} else {
+						await updateAvaliableTime(Number(selectedAvaliableTime?.id), data);
+						showToast({
+							title: "Horário disponível alterado com sucesso.",
+							status: "info",
+						});
+						fetchAvaliableTime();
+						closeForm();
+					}
+				} catch (error) {
+					console.error("Erro ao salvar dados", error);
+					handleError(error);
+				}
+			}, [closeForm, fetchAvaliableTime, handleError, selectedAvaliableTime, showToast]);
 
-	const { handleEditAvaliableTime } = useAvaliableTimeEdit({
-		setSelectAvaliableTime,
-		openForm,
-		startEditing,
-	});
+		const handleEditAvaliableTime = useCallback(async (avaliableTimeId: number) => {
+			try {
+				startEditing();
+				const avaliableTimeData = await getAvaliableTimeById(avaliableTimeId);
+				setSelectAvaliableTime(avaliableTimeData.data);
+				openForm();
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		}, [openForm, startEditing]);
 
-	const { handleAvaliableTimeOpenDeleteModal } =
-		useAvaliableTimeOpenModalDelete({
-			onOpen,
+	const handleAvaliableTimeOpenDeleteModal = useCallback(
+		async (avaliableTimeId: number) => {
+			try {
+				const avaliableTime = await getAvaliableTimeById(avaliableTimeId);
+				setSelectAvaliableTime(avaliableTime.data);
+				onOpen();
+			} catch (error) {
+				console.error("Erro ao obter os dados do horário disponível", error);
+			}
+		},
+		[onOpen, setSelectAvaliableTime]
+	);
+
+	const handleDeleteAvaliableTime = useCallback(async () => {
+			if (!selectedAvaliableTime || !selectedAvaliableTime.id) {
+				console.error("Horário indisponível selecionado não encontrado.");
+				return;
+			}
+
+			try {
+				const deletedUnavailableTime = await deleteAvaliableTime(
+					selectedAvaliableTime.id
+				);
+				if (deletedUnavailableTime.status === 200) {
+					onClose();
+					showToast({
+						title: "Horário disponível excluído com sucesso.",
+						status: "success",
+					});
+					closeForm();
+					setSelectAvaliableTime(null);
+					fetchAvaliableTime();
+				}
+			} catch (error) {
+				console.error("Erro ao excluir horário disponível", error);
+				onClose();
+				handleError(error);
+			}
+		}, [
+			closeForm,
+			fetchAvaliableTime,
+			handleError,
+			onClose,
+			selectedAvaliableTime,
 			setSelectAvaliableTime,
+			showToast,
+		]);
+
+	const handleCancel = () => {
+		reset({
+			day: "",
+			startTime: "",
+			endTime: "",
+			interval: 0,
 		});
-
-	const { handleDeleteAvaliableTime } = useAvaliableTimeDelete({
-		onClose,
-		fetchAvaliableTime,
-		selectedAvaliableTime,
-		setSelectAvaliableTime,
-		closeForm,
-	});
-
-	const { handleCancel } = useAvaliableTimeCancel({
-		reset,
-		closeForm,
-		stopEditing,
-	});
+		closeForm();
+		stopEditing();
+	};
 
 	useEffect(() => {
 		if (!showForm) {

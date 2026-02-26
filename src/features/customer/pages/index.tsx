@@ -11,60 +11,137 @@ import ModalDelete from "../../../shared/components/Modal";
 import RegisterButton from "../../../shared/components/RegisterButton";
 import EmptyState from "../../../shared/components/EmptyState";
 import Pagination from "../../../shared/components/Pagination";
-import { useCustomer } from "../hooks/useCustomer";
-import { useCustomerSubmit } from "../hooks/useCustomerSubmit";
-import { useCustomerEdit } from "../hooks/useCustomerEdit";
-import { useCustomerOpenDeleteModal } from "../hooks/useCustomerOpenDeleteModal";
 import { usePagination } from "../../../shared/hooks/usePagination";
-import { useCustomerDelete } from "../hooks/useCustomerDelete";
-import { useCustomerCancel } from "../hooks/useCustomerCancel";
 import { useShowForm } from "../../../shared/hooks/useShowForm";
 import { useEditMode } from "../../../shared/hooks/useEditMode";
+import { createCustomer, deleteCustomer, getCustomerById, getCustomers, updateCustomer } from "../services/api";
+import { useHandleError } from "../../../shared/hooks/useHandleError";
+import { useCustomToast } from "../../../shared/hooks/useCustomToast";
+import { useLoading } from "@/shared/hooks/useLoading";
+import { useNavigate } from "react-router-dom";
+import { handleAuthError } from "@/utils/handleAuthError";
 
 export default function CustomerPage() {
 	const { reset } = useForm<FormDataCustomer>({
 		resolver: yupResolver(customerSchema),
 	});
+
+	const [customers, setCustomers] = useState<FormDataCustomer[]>([]);
+	const [totalPages, setTotalPages] = useState(0);
 	const { currentPage, handlePrev, handleNext } = usePagination();
 	const { showForm, openForm, closeForm } = useShowForm();
 	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const [selectedCustomer, setSelectedCustomer] =
 		useState<FormDataCustomer | null>(null);
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { loading, startLoading, stopLoading } = useLoading();
 
-	const { customers, totalPages, loading, fetchCustomer } =
-		useCustomer(currentPage);
+	const navigate = useNavigate();
+	const handleError = useHandleError();
+	const { showToast } = useCustomToast();
 
-	const { handleSubmitCustomer } = useCustomerSubmit({
-		selectedCustomer,
-		fetchCustomer,
-		closeForm,
-	});
+	const fetchCustomer = useCallback(async () => {
+		startLoading();
+		try {
+			const { data } = await getCustomers(currentPage);
+			setCustomers(data.customers);
+			setTotalPages(data.totalPages);
+		} catch (error) {
+			handleAuthError(error, navigate);
+			console.error("Erro ao buscar dados", error);
+		} finally {
+			stopLoading();
+		}
+	}, [startLoading, currentPage, navigate, stopLoading]);
 
-	const { handleEditCustomer } = useCustomerEdit({
-		setSelectedCustomer,
-		openForm,
-		startEditing,
-	});
 
-	const { handleCustomerOpenModalDelete } = useCustomerOpenDeleteModal({
-		setSelectedCustomer,
-		onOpen,
-	});
+	const handleSubmitCustomer = useCallback(
+			async (data: FormDataCustomer) => {
+				try {
+					if (!selectedCustomer) {
+						const createdCustomer = await createCustomer(data);
+						if (createdCustomer.status === 200) {
+							showToast({
+								title: "Cliente registrado com sucesso.",
+								status: "success",
+							});
+							fetchCustomer();
+							closeForm();
+						}
+					} else {
+						await updateCustomer(Number(selectedCustomer?.id), data);
+						showToast({
+							title: "Cliente alterado com sucesso.",
+							status: "info",
+						});
+						fetchCustomer();
+						closeForm();
+					}
+				} catch (error) {
+					console.error("Erro ao salvar dados", error);
+					handleError(error);
+				}
+			},
+			[closeForm, fetchCustomer, selectedCustomer, showToast, handleError]);
 
-	const { handleDeleteCustomer } = useCustomerDelete({
-		onClose,
-		closeForm,
-		fetchCustomer,
-		selectedCustomer,
-		setSelectedCustomer,
-	});
+	const handleEditCustomer = useCallback(async (customerId: number) => {
+			try {
+				startEditing();
+				const customerData = await getCustomerById(customerId);
+				setSelectedCustomer(customerData.data);
+				openForm();
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		},[startEditing, openForm, setSelectedCustomer]);
 
-	const { handleCancel } = useCustomerCancel({
-		reset,
-		closeForm,
-		stopEditing,
-	});
+	const handleCustomerOpenModalDelete = useCallback(
+		async (customerId: number) => {
+			try {
+				const customerData = await getCustomerById(customerId);
+
+				setSelectedCustomer(customerData.data);
+				onOpen();
+			} catch (error) {
+				console.error("Erro ao obter os dados do serviço", error);
+			}
+		},
+		[onOpen, setSelectedCustomer]
+	);
+
+	const handleDeleteCustomer = useCallback(async () => {
+			if (!selectedCustomer || !selectedCustomer.id) {
+				console.error("Cliente selecionado não encontrado.");
+				return;
+			}
+
+			try {
+				const deletedCustomer = await deleteCustomer(selectedCustomer.id);
+				if (deletedCustomer.status === 200) {
+					onClose();
+					showToast({
+						title: "Cliente excluído com sucesso.",
+						status: "success",
+					});
+					closeForm();
+					setSelectedCustomer(null);
+					fetchCustomer();
+				}
+			} catch (error) {
+				console.error("Erro ao excluir cliente", error);
+				onClose();
+				handleError(error);
+			}
+		}, [closeForm, fetchCustomer, handleError, onClose, selectedCustomer, showToast]);
+
+	const handleCancel = () => {
+		reset({
+			customerName: "",
+			mobile: "",
+		});
+		closeForm();
+		stopEditing();
+	};
 
 	useEffect(() => {
 		if (!showForm) {

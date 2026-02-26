@@ -10,15 +10,17 @@ import ModalDelete from "../../../shared/components/Modal";
 import RegisterButton from "../../../shared/components/RegisterButton";
 import EmptyState from "../../../shared/components/EmptyState";
 import Pagination from "../../../shared/components/Pagination";
-import { useSchedules } from "../../schedule/hooks/useSchedule";
 import HeadingComponent from "../../../shared/components/Heading";
-import { useTimeSlots } from "../../schedule/hooks/useTimeSlot";
 import { usePagination } from "../../../shared/hooks/usePagination";
-import { useScheduleSubmit } from "../../schedule/hooks/useScheduleSubmit";
-import { useScheduleEdit } from "../../schedule/hooks/useScheduleEdit";
-import { useScheduleCancel } from "../../schedule/hooks/useScheduleCancel";
 import { useShowForm } from "../../../shared/hooks/useShowForm";
 import { useEditMode } from "../../../shared/hooks/useEditMode";
+import { createSchedule, getScheduleById, getSchedules, updateSchedule } from "../services/api";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
+import { useHandleError } from "@/shared/hooks/useHandleError";
+import { useNavigate } from "react-router-dom";
+import { useLoading } from "@/shared/hooks/useLoading";
+import { handleAuthError } from "@/utils/handleAuthError";
+import { getAvaliableTimesSlots } from "@/features/avaliableTime/services/api";
 
 export default function SchedulePage() {
 	const { reset } = useForm<FormDataSchedule>({
@@ -26,34 +28,105 @@ export default function SchedulePage() {
 	});
 	const { showForm, openForm, closeForm } = useShowForm();
 	const { currentPage, handlePrev, handleNext } = usePagination();
-	const { fetchSchedules, schedules, totalPages, loading } =
-		useSchedules(currentPage);
-	const { timeSlots, setTimeSlots, fetchDataTimeSlot } = useTimeSlots();
+	// const { timeSlots, setTimeSlots, fetchDataTimeSlot } = useTimeSlots();
 	const { isEditing, startEditing, stopEditing } = useEditMode();
 	const { isOpen, onClose } = useDisclosure();
 	const [selectedDate, setSelectedDate] = useState<string>();
 	const [selectedSchedule, setSelectedSchedule] =
 		useState<FormDataSchedule | null>();
+		const handleError = useHandleError();
+		const { showToast } = useCustomToast();
+	const [schedules, setSchedules] = useState<FormDataSchedule[]>([]);
+	const [totalPages, setTotalPages] = useState(0);
+	const navigate = useNavigate();
+	const { loading, startLoading, stopLoading } = useLoading();
+	const [timeSlots, setTimeSlots] = useState([]);
 
-	const { handleSubmitSchedule } = useScheduleSubmit({
-		selectedSchedule,
-		fetchSchedules,
-		closeForm,
-	});
+	const fetchDataTimeSlot = useCallback(
+			async (date: string) => {
+				if (Array.isArray(date)) return;
 
-	const { handleEditSchedule } = useScheduleEdit({
-		setSelectedSchedule,
-		openForm,
-		startEditing,
-	});
+				try {
+					const timeSlots = await getAvaliableTimesSlots(date.split("T")[0]);
+					setTimeSlots(timeSlots.data.avaliableTimes);
+				} catch (error) {
+					handleAuthError(error, navigate);
+					console.error("Erro ao buscar dados", error);
+				}
+			},
+			[navigate, setTimeSlots]
+		);
 
-	const { handleCancel } = useScheduleCancel({
-		reset,
-		setSelectedDate,
-		setSelectedSchedule,
-		closeForm,
-		stopEditing,
-	});
+		const fetchSchedules = useCallback(async () => {
+				startLoading();
+				try {
+					const { data } = await getSchedules(currentPage);
+					setSchedules(data.schedules);
+					setTotalPages(data.totalPages);
+				} catch (error) {
+					handleAuthError(error, navigate);
+					console.error("Erro ao buscar dados", error);
+				} finally {
+					stopLoading();
+				}
+			}, [startLoading, currentPage, navigate, stopLoading]);
+
+		const handleSubmitSchedule = useCallback(
+			async (data: FormDataSchedule) => {
+				try {
+					if (!selectedSchedule) {
+						const createdSchedule = await createSchedule(data);
+						if (createdSchedule.status === 200) {
+							showToast({
+								title: "Agendamento realizado com sucesso",
+								status: "success",
+							});
+							fetchSchedules();
+							closeForm();
+						}
+					} else {
+						await updateSchedule(Number(selectedSchedule?.id), data);
+						showToast({
+							title: "Agendamento alterado com sucesso.",
+							status: "info",
+						});
+						fetchSchedules();
+						closeForm();
+					}
+				} catch (error) {
+					console.error("Erro ao salvar dados", error);
+					handleError(error);
+				}
+			},
+			[selectedSchedule, showToast, fetchSchedules, closeForm, handleError]
+		);
+
+	const handleEditSchedule = useCallback(async (scheduleId: number) => {
+			try {
+				startEditing();
+				const scheduleData = await getScheduleById(scheduleId);
+				setSelectedSchedule(scheduleData.data);
+				openForm();
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		},
+		[openForm, startEditing]
+	);
+
+
+	const handleCancel = () => {
+		reset({
+			customerId: "",
+			serviceId: "",
+			date: "",
+			status: "",
+		});
+		closeForm();
+		stopEditing();
+		setSelectedSchedule(null);
+		setSelectedDate("");
+	};
 
 	useEffect(() => {
 		if (!showForm) {

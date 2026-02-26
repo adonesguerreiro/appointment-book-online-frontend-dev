@@ -20,10 +20,12 @@ import { MdCancel, MdSave } from "react-icons/md";
 import InputMask from "@kerim-keskin/react-input-mask";
 import { FormDataCompany } from "../interface/FormDataCompany";
 import { viaCep } from "../../../services/viaCep";
-import { useEffect, useState } from "react";
-import { useCompany } from "../hooks/useCompany";
-import { useCompanySubmit } from "../hooks/useCompanySubmit";
-import { useCompanyCancel } from "../hooks/useCompanyCancel";
+import { useCallback, useEffect, useState } from "react";
+import { getCompany, updateAddress, updateCompany } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
+import { useHandleError } from "@/shared/hooks/useHandleError";
+import { useLoading } from "@/shared/hooks/useLoading";
 
 export default function CompanyPage() {
 	const {
@@ -38,17 +40,92 @@ export default function CompanyPage() {
 		mode: "onChange",
 	});
 	const [postalCodeData, setPostalCodeData] = useState<string>();
+	const navigate = useNavigate();
+	const { loading, setLoading } = useLoading();
+		const { showToast } = useCustomToast();
 
-	const { fetchDataCompany } = useCompany({ reset, setPostalCodeData });
-	const { handleSubmitCompany, loading } = useCompanySubmit({
-		setValue,
-		postalCodeData: postalCodeData || "",
-		setError,
-	});
-	const { handleCancel } = useCompanyCancel({ reset });
+		const handleError = useHandleError();
+
+		const fetchDataCompany = useCallback(async () => {
+			try {
+				const { data } = await getCompany();
+				reset({
+					name: data.name,
+					email: data.email,
+					mobile: data.mobile,
+					cnpj: data.cnpj,
+					street: data.addresses.street,
+					number: data.addresses.number,
+					complement: data.addresses.complement,
+					neighborhood: data.addresses.neighborhood,
+					city: data.addresses.city,
+					state: data.addresses.state,
+					postalCode: data.addresses.postalCode,
+				});
+				setPostalCodeData(data.addresses.postalCode);
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			}
+		}, [reset, setPostalCodeData]);
+
+	const handleSubmitCompany = useCallback(
+			async (data: FormDataCompany) => {
+				setLoading(true);
+
+				try {
+					if (postalCodeData !== data.postalCode) {
+						const existingCep = await viaCep(data.postalCode);
+
+						if (existingCep === "CEP inválido") {
+							setValue("city", "");
+							setValue("state", "");
+							setValue("postalCode", "");
+							setError("postalCode", {
+								type: "manual",
+								message: existingCep,
+							});
+							return;
+						}
+
+						data.city = existingCep.localidade;
+						data.state = existingCep.uf;
+						setValue("city", existingCep.localidade);
+						setValue("state", existingCep.uf);
+					}
+
+					const updatedCompany = await updateCompany(data);
+					const addressCompanyId =
+						updatedCompany.data.companyUpdated.addresses[0].id;
+					const updatedAddress = await updateAddress(addressCompanyId, data);
+					if (updatedCompany.status === 200 && updatedAddress.status === 200) {
+						showToast({
+							title: "Alterado com sucesso!",
+							status: "success",
+						});
+					}
+				} catch (error) {
+					console.error("Erro ao salvar dados", error);
+					handleError(error);
+					setLoading(false);
+					return;
+				} finally {
+					setLoading(false);
+				}
+			},
+			[handleError, postalCodeData, setError, setLoading, setValue, showToast]
+		);
+
+		const handleCancel = () => {
+			reset();
+			navigate("/");
+		};
+
 
 	useEffect(() => {
-		fetchDataCompany();
+	const loadCompany = async () => {
+    await fetchDataCompany();
+  };
+  loadCompany();
 	}, [fetchDataCompany]);
 
 	return (

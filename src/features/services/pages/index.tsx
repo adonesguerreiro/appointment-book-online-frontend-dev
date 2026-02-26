@@ -11,15 +11,15 @@ import ModalDelete from "../../../shared/components/Modal";
 import RegisterButton from "../../../shared/components/RegisterButton";
 import EmptyState from "../../../shared/components/EmptyState";
 import Pagination from "../../../shared/components/Pagination";
-import { useService } from "../hooks/useService";
-import { useServiceSubmit } from "../hooks/useServiceSubmit";
-import { useServiceEdit } from "../hooks/useServiceEdit";
-import { useServiceOpenDeleteModal } from "../hooks/useServiceOpenDeleteModal";
 import { usePagination } from "../../../shared/hooks/usePagination";
-import { useServiceDelete } from "../hooks/useServiceDelete";
-import { useServiceCancel } from "../hooks/useServiceCancel";
 import { useShowForm } from "../../../shared/hooks/useShowForm";
 import { useEditMode } from "../../../shared/hooks/useEditMode";
+import { useLoading } from "@/shared/hooks/useLoading";
+import { handleAuthError } from "@/utils/handleAuthError";
+import { useNavigate } from "react-router-dom";
+import { createService, deleteService, getServices, getServicesById, updateService } from "../services/api";
+import { useHandleError } from "@/shared/hooks/useHandleError";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
 
 export default function ServicePage() {
 	const { reset } = useForm<FormDataService>({
@@ -31,40 +31,131 @@ export default function ServicePage() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [selectedService, setSelectedService] =
 		useState<FormDataService | null>();
+	const [totalPages, setTotalPages] = useState(0);
+	const [services, setServices] = useState<FormDataService[]>([]);
+	const navigate = useNavigate();
+	const { loading, startLoading, stopLoading } = useLoading();
+	const handleError = useHandleError();
+	const { showToast } = useCustomToast();
 
-	const { fetchService, services, totalPages, loading } =
-		useService(currentPage);
+	const fetchService = useCallback(async () => {
+		startLoading();
 
-	const { handleSubmitService } = useServiceSubmit({
-		fetchService,
-		closeForm,
-		selectedService,
-	});
+		try {
+			const { data } = await getServices(currentPage);
+			setServices(data.services);
+			setTotalPages(data.totalPages);
+		} catch (error) {
+			handleAuthError(error, navigate);
+			console.error("Erro ao buscar dados", error);
+		} finally {
+			stopLoading();
+		}
+	}, [startLoading, currentPage, navigate, stopLoading]);
 
-	const { handleEditService } = useServiceEdit({
-		setSelectedService,
-		openForm,
-		startEditing,
-	});
+	const handleSubmitService = useCallback(
+			async (data: FormDataService) => {
+				try {
+					if (!selectedService) {
+						const createdService = await createService(data);
+						if (createdService.status === 200) {
+							showToast({
+								title: "Serviço registrado com sucesso.",
+								status: "success",
+							});
 
-	const { handleServiceOpenModalDelete } = useServiceOpenDeleteModal({
-		onOpen,
-		setSelectedService,
-	});
+							fetchService();
+							closeForm();
+						}
+					} else {
+						await updateService(Number(selectedService?.id), data);
+						showToast({
+							title: "Serviço alterado com sucesso.",
+							status: "info",
+						});
+						fetchService();
+						closeForm();
+					}
+				} catch (error) {
+					console.error("Erro ao salvar dados", error);
+					handleError(error);
+				}
+			},
+			[closeForm, fetchService, handleError, selectedService, showToast]
+		);
 
-	const { handleDeleteService } = useServiceDelete({
-		onClose,
-		fetchService,
-		selectedService,
-		setSelectedService,
-		closeForm,
-	});
+		const handleEditService = useCallback(
+				async (serviceId: number) => {
+					try {
+						startEditing();
+						const serviceData = await getServicesById(serviceId);
+						setSelectedService(serviceData.data);
+						openForm();
+					} catch (error) {
+						console.error("Erro ao buscar dados", error);
+					}
+				},
+				[openForm, setSelectedService, startEditing]
+			);
 
-	const { handleCancel } = useServiceCancel({
-		reset,
-		closeForm,
-		stopEditing,
-	});
+	const handleServiceOpenModalDelete = useCallback(
+		async (serviceId: number) => {
+			try {
+				const serviceData = await getServicesById(serviceId);
+
+				setSelectedService(serviceData.data);
+				onOpen();
+			} catch (error) {
+				console.error("Erro ao obter os dados do serviço", error);
+			}
+		},
+		[onOpen, setSelectedService]
+	);
+
+	const handleDeleteService = useCallback(async () => {
+			if (!selectedService || !selectedService.id) {
+				console.error("Serviço selecionado não encontrado.");
+				return;
+			}
+
+			try {
+				const deletedService = await deleteService(selectedService.id);
+				if (deletedService.status === 200) {
+					onClose();
+					showToast({
+						title: "Serviço excluído com sucesso.",
+						status: "success",
+					});
+					closeForm();
+					setSelectedService(null);
+					fetchService();
+				}
+			} catch (error) {
+				console.error("Erro ao excluir serviço", error);
+				onClose();
+				handleError(error);
+			}
+		}, [
+			closeForm,
+			fetchService,
+			handleError,
+			onClose,
+			selectedService,
+			setSelectedService,
+			showToast,
+		]);
+
+
+	const handleCancel = () => {
+		reset({
+			serviceName: "",
+			duration: "",
+			price: 0,
+		});
+		closeForm();
+		stopEditing();
+	};
+
 
 	useEffect(() => {
 		if (!showForm) {

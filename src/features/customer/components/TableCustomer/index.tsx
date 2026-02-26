@@ -15,20 +15,23 @@ export default function TableCustomer({
 	onEditClick,
 	onDeleteClick,
 }: TableCustomerProps) {
+
+	const columnsCustomer = [
+		{
+			key: "customerName",
+			label: "Nome",
+			hideOnMobile: false,
+		},
+		{
+			key: "mobile",
+			label: "Celular",
+			hideOnMobile: true,
+		},
+	];
+
 	return (
         <DynamicTable
-			columns={[
-				{
-					key: "customerName",
-					label: "Nome",
-					hideOnMobile: false,
-				},
-				{
-					key: "mobile",
-					label: "Celular",
-					hideOnMobile: true,
-				},
-			]}
+			columns={columnsCustomer.map(col => ({ ...col, key: col.key as keyof FormDataCustomer }))}
 			data={customers}
 			actions={(row: FormDataCustomer) => (
 				<Flex>

@@ -16,12 +16,16 @@ import { FormDataUser } from "../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchema } from "../validators/userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
-import { useEffect } from "react";
-import { useUser } from "../hooks/useUser";
-import { useUserSubmit } from "../hooks/useUserSubmit";
+import { useCallback, useEffect } from "react";
 import HeadingComponent from "../../../shared/components/Heading";
-import { useUserCancel } from "../hooks/useUserCancel";
 import CropperComponent from "../../../shared/components/Cropper";
+import { useAvatar } from "../hooks/useAvatar";
+import { getUserById, updateUpload, updateUser } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
+import { useHandleError } from "@/shared/hooks/useHandleError";
+import { useLoading } from "@/shared/hooks/useLoading";
+import { useProfilePhoto } from "../hooks/useProfilePhoto";
 
 export default function UserPage() {
 	const {
@@ -34,15 +38,72 @@ export default function UserPage() {
 		mode: "onChange",
 	});
 
-	const { fetchDataUser } = useUser({ reset });
-	const { handleCancel } = useUserCancel();
-	const { handleSubmitUser, loading } = useUserSubmit();
+const { setInitialAvatar } = useAvatar();
+		const navigate = useNavigate();
+			const handleError = useHandleError();
+		const { showToast } = useCustomToast();
+		const { loading, setLoading } = useLoading();
+		const { profilePhoto } = useProfilePhoto();
+
+	const fetchDataUser = useCallback(async () => {
+		try {
+			const { data } = await getUserById();
+			reset({
+				avatarUrl: data.avatarUrl,
+				name: data.name,
+				email: data.email,
+			});
+			if (data.avatarUrl) {
+				setInitialAvatar(data.avatarUrl);
+			}
+
+			return data;
+		} catch (error) {
+			console.error("Erro ao buscar dados", error);
+		}
+	}, [reset, setInitialAvatar]);
+
+	const handleCancel = () => {
+		reset();
+		navigate("/");
+	};
+
+		const handleSubmitUser = async (data: FormDataUser) => {
+			setLoading(true);
+			try {
+				const formData = new FormData();
+				formData.append("name", data.name);
+				formData.append("email", data.email);
+				formData.append("password", data.password || "");
+				data.avatarUrl = profilePhoto;
+				if (data.avatarUrl instanceof File) {
+					formData.append("avatarUrl", data.avatarUrl);
+				}
+				console.log([...formData.entries()]);
+
+				const updateUploadUser = await updateUpload(formData);
+				const updatedUser = await updateUser(data);
+
+				if (updatedUser.status === 200 || updateUploadUser?.status === 200) {
+					showToast({
+						title: "Salvo com sucesso!",
+						status: "success",
+					});
+					setLoading(false);
+					navigate("/");
+					return;
+				}
+			} catch (error) {
+				console.error("Erro ao salvar dados", error);
+				handleError(error);
+				setLoading(false);
+				return;
+			}
+		};
 
 	useEffect(() => {
 		fetchDataUser();
 	}, [fetchDataUser]);
-
-	console.log("Erros:", errors);
 
 	return (
 		<Container>

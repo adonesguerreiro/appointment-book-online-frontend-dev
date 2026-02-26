@@ -16,12 +16,15 @@ import { useForm } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { bookAppointmentSchema } from "../validators/bookAppointmentSchema";
 import BookingAppointment from "../components/Form";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormDataUser } from "../../users/interface/FormDataUser";
-import { useBooking } from "../hooks/useBooking";
-import { useBookingSubmit } from "../hooks/useBookingSubmit";
 import EmptyState from "../../../shared/components/EmptyState";
 import { BookingAppointmentData } from "../interface/BookingAppointmentData";
+import { useLoading } from "@/shared/hooks/useLoading";
+import { useParams } from "react-router-dom";
+import { PublicCompany } from "../interface/PublicCompany";
+import { publicBookAppointment, publicGetCompany } from "../services/api";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
 
 export default function BookingPage() {
 	const {
@@ -36,10 +39,61 @@ export default function BookingPage() {
 		mode: "onChange",
 	});
 
-	const { fetchBooking, companyData, selectedDate, setSelectedDate, loading } =
-		useBooking();
+		const [companyData, setCompanyData] = useState<PublicCompany | null>(null);
+		const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+		const { loading, startLoading, stopLoading } = useLoading();
+		const { showToast } = useCustomToast();
+		const { slugCompany } = useParams();
+		const fetchBooking = useCallback(async () => {
+			try {
+				startLoading();
 
-	const { handleSubmitBooking } = useBookingSubmit(reset, fetchBooking);
+				if (selectedDate) {
+					const { data } = await publicGetCompany(slugCompany!, selectedDate);
+					setCompanyData(data.timeSlots);
+				} else {
+					const { data } = await publicGetCompany(slugCompany!);
+					setCompanyData(data.timeSlots);
+				}
+			} catch (error) {
+				console.error("Erro ao buscar dados", error);
+			} finally {
+				stopLoading();
+			}
+		}, [slugCompany, selectedDate, startLoading, stopLoading]);
+
+	const handleSubmitBooking = useCallback(
+		async (bookingData: BookingAppointmentData) => {
+			try {
+				if(!slugCompany){
+					return;
+				}
+
+				const bookingCreated = await publicBookAppointment(
+					bookingData,
+					slugCompany
+				);
+				if (bookingCreated.status === 200) {
+					showToast({
+						title: "Agendamento realizado com sucesso.",
+						status: "success",
+					});
+					await fetchBooking();
+					reset({
+						customerName: "",
+						customerPhone: "",
+						serviceId: "",
+						calendar: new Date(),
+						time: "",
+					});
+				}
+			} catch (error) {
+				console.error("Erro ao agendar horário", error);
+			}
+		},
+		[fetchBooking, reset, showToast, slugCompany]
+	);
+
 
 	useEffect(() => {
 		fetchBooking();

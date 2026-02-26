@@ -1,5 +1,4 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
-import { usePieChart } from "../hooks/usePieChart";
 import PieChartDashboard from "../components/PieChart";
 import SectionHeader from "../../../shared/components/SectionHeader";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,7 +7,11 @@ import { FormDataDashboard } from "../interface/FormDataDashboard";
 import { useForm } from "react-hook-form";
 import EmptyState from "../../../shared/components/EmptyState";
 import FilterDashBoard from "../components/Filter";
-import { usePieCharSubmit } from "../hooks/usePieChartSubmit";
+import { statusMapping } from "@/utils/statusMapping";
+import { useState, useCallback } from "react";
+import { getDashboard } from "../services/api";
+import { useHandleError } from "@/shared/hooks/useHandleError";
+import { useCustomToast } from "@/shared/hooks/useCustomToast";
 
 export default function DashboardPage() {
 	const {
@@ -19,8 +22,57 @@ export default function DashboardPage() {
 		resolver: yupResolver(dashboardSchema),
 	});
 
-	const { fetchDataPieChart, chartData } = usePieChart();
-	const { handleSubmitPieChart } = usePieCharSubmit({ fetchDataPieChart });
+	const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
+			[]
+		);
+
+		const { showToast } = useCustomToast();
+			const handleError = useHandleError();
+
+		const fetchDataPieChart = useCallback(
+			async (month: string, year: string) => {
+
+				try {
+					const { data } = await getDashboard(month, year);
+					if (data.scheduleByStatus.length === 0) return;
+
+					const transformedData = data.scheduleByStatus.map(
+						(item: { status: string; _count: { status: number } }) => ({
+							name: statusMapping[item.status],
+							value: item._count.status,
+						})
+					);
+
+					setChartData(transformedData);
+				} catch (error) {
+					console.error("Erro ao buscar os dados do dashboard:", error);
+				}
+			},
+			[]
+		);
+
+		const handleSubmitPieChart = useCallback(
+			async (data: FormDataDashboard) => {
+				try {
+					const filterScheduleByStatus = await getDashboard(
+						data.month,
+						data.year
+					);
+
+					if (filterScheduleByStatus.status === 200) {
+						showToast({
+							title: "Filtro aplicado com sucesso.",
+							status: "success",
+						});
+					}
+
+					fetchDataPieChart(data.month, data.year);
+				} catch (error) {
+					handleError(error);
+				}
+			},
+			[fetchDataPieChart, handleError, showToast]
+		);
 
 	return (
 		<Container width="auto">
