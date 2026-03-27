@@ -13,17 +13,17 @@ export const useUser = ({ reset }: useUserProps) => {
 
 	const fetchDataUser = useCallback(async () => {
 		try {
-			const { data } = await getUserById();
+			const user = await getUserById();
 			reset({
-				avatarUrl: data.avatarUrl,
-				name: data.name,
-				email: data.email,
+				avatarUrl: user.avatarUrl,
+				name: user.name,
+				email: user.email,
 			});
-			if (data.avatarUrl) {
-				setInitialAvatar(data.avatarUrl);
+			if (user.avatarUrl) {
+				setInitialAvatar(user.avatarUrl);
 			}
 
-			return data;
+			return user;
 		} catch (error) {
 			console.error("Erro ao buscar dados", error);
 		}

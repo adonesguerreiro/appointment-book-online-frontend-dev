@@ -8,26 +8,27 @@ import {
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
+	Grid,
 	Input,
 	Spinner,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { FormDataUser } from "../interface/FormDataUser";
+import { FormDataUser } from "../../interface/FormDataUser";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchema } from "../validators/userSchema";
+import { userSchema } from "../../validators/userSchema";
 import { MdCancel, MdSave } from "react-icons/md";
-import { useCallback, useEffect } from "react";
-import HeadingComponent from "../../../shared/components/Heading";
-import CropperComponent from "../../../shared/components/Cropper";
-import { useAvatar } from "../hooks/useAvatar";
-import { getUserById, updateUpload, updateUser } from "../services/api";
+import { useEffect } from "react";
+import HeadingComponent from "../../../../shared/components/Heading";
+import CropperComponent from "../../../../shared/components/Cropper";
+import { useAvatar } from "../../hooks/useAvatar";
+import { getUserById, updateUpload } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useCustomToast } from "@/shared/hooks/useCustomToast";
 import { useHandleError } from "@/shared/hooks/useHandleError";
-import { useLoading } from "@/shared/hooks/useLoading";
-import { useProfilePhoto } from "../hooks/useProfilePhoto";
+import { useProfilePhoto } from "../../hooks/useProfilePhoto";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-export default function UserPage() {
+export default function UserForm() {
 	const {
 		handleSubmit,
 		register,
@@ -38,72 +39,66 @@ export default function UserPage() {
 		mode: "onChange",
 	});
 
-const { setInitialAvatar } = useAvatar();
-		const navigate = useNavigate();
-			const handleError = useHandleError();
-		const { showToast } = useCustomToast();
-		const { loading, setLoading } = useLoading();
-		const { profilePhoto } = useProfilePhoto();
-
-	const fetchDataUser = useCallback(async () => {
-		try {
-			const { data } = await getUserById();
-			reset({
-				avatarUrl: data.avatarUrl,
-				name: data.name,
-				email: data.email,
-			});
-			if (data.avatarUrl) {
-				setInitialAvatar(data.avatarUrl);
-			}
-
-			return data;
-		} catch (error) {
-			console.error("Erro ao buscar dados", error);
-		}
-	}, [reset, setInitialAvatar]);
+	const { setInitialAvatar } = useAvatar();
+	const navigate = useNavigate();
+	const handleError = useHandleError();
+	const { showToast } = useCustomToast();
+	const { profilePhoto } = useProfilePhoto();
 
 	const handleCancel = () => {
 		reset();
 		navigate("/");
 	};
 
-		const handleSubmitUser = async (data: FormDataUser) => {
-			setLoading(true);
-			try {
-				const formData = new FormData();
-				formData.append("name", data.name);
-				formData.append("email", data.email);
-				formData.append("password", data.password || "");
-				data.avatarUrl = profilePhoto;
-				if (data.avatarUrl instanceof File) {
-					formData.append("avatarUrl", data.avatarUrl);
-				}
-				console.log([...formData.entries()]);
-
-				const updateUploadUser = await updateUpload(formData);
-				const updatedUser = await updateUser(data);
-
-				if (updatedUser.status === 200 || updateUploadUser?.status === 200) {
-					showToast({
-						title: "Salvo com sucesso!",
-						status: "success",
-					});
-					setLoading(false);
-					navigate("/");
-					return;
-				}
-			} catch (error) {
-				console.error("Erro ao salvar dados", error);
-				handleError(error);
-				setLoading(false);
-				return;
-			}
-		};
+	const { data: user } = useQuery({
+		queryKey: ["user"],
+		queryFn: getUserById,
+	});
 
 	useEffect(() => {
-		fetchDataUser();
-	}, [fetchDataUser]);
+		if (user) {
+			reset({
+				avatarUrl: user.avatarUrl,
+				name: user.name,
+				email: user.email,
+			});
+			if (user.avatarUrl) {
+				setInitialAvatar(user.avatarUrl);
+			}
+
+			return user;
+		}
+	}, [reset, setInitialAvatar, user]);
+
+	const mutation = useMutation({
+		mutationFn: async (data: FormDataUser) => {
+			const formData = new FormData();
+			formData.append("name", data.name);
+			formData.append("email", data.email);
+			formData.append("password", data.password || "");
+			data.avatarUrl = profilePhoto;
+			if (data.avatarUrl instanceof File) {
+				formData.append("avatarUrl", data.avatarUrl);
+			}
+			console.log([...formData.entries()]);
+			return updateUpload(formData);
+		},
+		onSuccess: () => {
+			showToast({
+				title: "Alterado com sucesso!",
+				status: "success",
+			});
+			navigate("/");
+		},
+		onError: (error) => {
+			console.error("Erro ao salvar dados", error);
+			handleError(error);
+		},
+	});
+
+	const handleSubmitUser = (data: FormDataUser) => {
+		mutation.mutate(data);
+	};
 
 	return (
 		<Container>
@@ -125,7 +120,9 @@ const { setInitialAvatar } = useAvatar();
 							placeItems="center"
 							onSubmit={handleSubmit(handleSubmitUser)}>
 							<FormLabel>Foto de perfil</FormLabel>
-							<CropperComponent />
+							<Grid>
+								<CropperComponent />
+							</Grid>
 
 							<FormControl
 								display="grid"
@@ -209,15 +206,15 @@ const { setInitialAvatar } = useAvatar();
 									colorScheme="blue"
 									size="lg"
 									type="submit"
-									isDisabled={loading}
+									isDisabled={mutation.isPending}
 									rightIcon={<MdSave />}>
-									{loading ? (
+									{mutation.isPending ? (
 										<Spinner
 											size="sm"
 											mr="2"
 										/>
 									) : null}
-									{loading ? "Validando dados" : "Salvar"}
+									{mutation.isPending ? "Validando dados" : "Salvar"}
 								</Button>
 								<Button
 									colorScheme="gray"

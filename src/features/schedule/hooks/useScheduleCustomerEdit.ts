@@ -1,6 +1,9 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo, useEffect } from "react";
-import { getCustomers, getCustomerById } from "@/features/customer/services/api";
+import {
+	getCustomers,
+	getCustomerById,
+} from "@/features/customer/services/api";
 import { FormDataSchedule } from "../interface/FormDataSchedule";
 
 export const useScheduleCustomerEdit = (selectedSchedule: FormDataSchedule) => {
@@ -21,15 +24,11 @@ export const useScheduleCustomerEdit = (selectedSchedule: FormDataSchedule) => {
 		getNextPageParam: (lastPage, allPages) => {
 			return lastPage.length === 10 ? allPages.length + 1 : undefined;
 		},
-		staleTime: 1000 * 60 * 5,
-		gcTime: 1000 * 60 * 10,
 	});
 
 	const { data: selectedCustomer } = useQuery({
 		queryKey: ["customer", selectedSchedule?.customerId],
 		queryFn: () => getCustomerById(Number(selectedSchedule?.customerId)),
-		staleTime: 1000 * 60 * 5,
-		gcTime: 1000 * 60 * 10,
 		enabled: !!selectedSchedule?.customerId,
 	});
 	const allCustomers = useMemo(() => {

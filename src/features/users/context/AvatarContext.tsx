@@ -7,5 +7,5 @@ interface AvatarContextType {
 }
 
 export const AvatarContext = createContext<AvatarContextType | undefined>(
-	undefined
+	undefined,
 );

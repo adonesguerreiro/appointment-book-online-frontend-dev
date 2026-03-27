@@ -5,4 +5,5 @@ export interface FormDataCompany extends FormDataAddress {
 	email: string;
 	mobile: string;
 	cnpj: string;
+	addresses?: FormDataAddress[];
 }

@@ -15,19 +15,19 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { companySchema } from "../validators/companySchema";
+import { companySchema } from "../../validators/companySchema";
 import { MdCancel, MdSave } from "react-icons/md";
 import InputMask from "@kerim-keskin/react-input-mask";
-import { FormDataCompany } from "../interface/FormDataCompany";
-import { viaCep } from "../../../services/viaCep";
-import { useCallback, useEffect, useState } from "react";
-import { getCompany, updateAddress, updateCompany } from "../services/api";
+import { FormDataCompany } from "../../interface/FormDataCompany";
+import { viaCep } from "../../services/viaCep";
+import { useEffect, useState } from "react";
+import { getCompany, updateCompany } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useCustomToast } from "@/shared/hooks/useCustomToast";
 import { useHandleError } from "@/shared/hooks/useHandleError";
-import { useLoading } from "@/shared/hooks/useLoading";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-export default function CompanyPage() {
+export default function CompanyForm() {
 	const {
 		handleSubmit,
 		register,
@@ -38,95 +38,92 @@ export default function CompanyPage() {
 	} = useForm<FormDataCompany>({
 		resolver: yupResolver(companySchema),
 		mode: "onChange",
+		defaultValues: {
+			name: "",
+			email: "",
+			mobile: "",
+			cnpj: "",
+			street: "",
+			number: "",
+			complement: "",
+			neighborhood: "",
+			city: "",
+			state: "",
+			postalCode: "",
+		},
 	});
 	const [postalCodeData, setPostalCodeData] = useState<string>();
 	const navigate = useNavigate();
-	const { loading, setLoading } = useLoading();
-		const { showToast } = useCustomToast();
+	const { showToast } = useCustomToast();
 
-		const handleError = useHandleError();
+	const handleError = useHandleError();
 
-		const fetchDataCompany = useCallback(async () => {
-			try {
-				const { data } = await getCompany();
-				reset({
-					name: data.name,
-					email: data.email,
-					mobile: data.mobile,
-					cnpj: data.cnpj,
-					street: data.addresses.street,
-					number: data.addresses.number,
-					complement: data.addresses.complement,
-					neighborhood: data.addresses.neighborhood,
-					city: data.addresses.city,
-					state: data.addresses.state,
-					postalCode: data.addresses.postalCode,
-				});
-				setPostalCodeData(data.addresses.postalCode);
-			} catch (error) {
-				console.error("Erro ao buscar dados", error);
-			}
-		}, [reset, setPostalCodeData]);
+	const handleSubmitCompany = (data: FormDataCompany) => {
+		mutation.mutate(data);
+	};
 
-	const handleSubmitCompany = useCallback(
-			async (data: FormDataCompany) => {
-				setLoading(true);
+	const mutation = useMutation({
+		mutationFn: async (data: FormDataCompany) => {
+			if (postalCodeData !== data.postalCode) {
+				const existingCep = await viaCep(data.postalCode);
 
-				try {
-					if (postalCodeData !== data.postalCode) {
-						const existingCep = await viaCep(data.postalCode);
-
-						if (existingCep === "CEP inválido") {
-							setValue("city", "");
-							setValue("state", "");
-							setValue("postalCode", "");
-							setError("postalCode", {
-								type: "manual",
-								message: existingCep,
-							});
-							return;
-						}
-
-						data.city = existingCep.localidade;
-						data.state = existingCep.uf;
-						setValue("city", existingCep.localidade);
-						setValue("state", existingCep.uf);
-					}
-
-					const updatedCompany = await updateCompany(data);
-					const addressCompanyId =
-						updatedCompany.data.companyUpdated.addresses[0].id;
-					const updatedAddress = await updateAddress(addressCompanyId, data);
-					if (updatedCompany.status === 200 && updatedAddress.status === 200) {
-						showToast({
-							title: "Alterado com sucesso!",
-							status: "success",
-						});
-					}
-				} catch (error) {
-					console.error("Erro ao salvar dados", error);
-					handleError(error);
-					setLoading(false);
+				if (existingCep === "CEP inválido") {
+					setValue("city", "");
+					setValue("state", "");
+					setValue("postalCode", "");
+					setError("postalCode", {
+						type: "manual",
+						message: existingCep,
+					});
 					return;
-				} finally {
-					setLoading(false);
 				}
-			},
-			[handleError, postalCodeData, setError, setLoading, setValue, showToast]
-		);
 
-		const handleCancel = () => {
-			reset();
-			navigate("/");
-		};
+				data.city = existingCep.localidade;
+				data.state = existingCep.uf;
+				setValue("city", existingCep.localidade);
+				setValue("state", existingCep.uf);
+			}
 
+			return updateCompany(data);
+		},
+		onSuccess: () => {
+			showToast({
+				title: "Alterado com sucesso!",
+				status: "success",
+			});
+		},
+		onError: (error: unknown) => {
+			console.error("Erro ao salvar dados", error);
+			handleError(error);
+		},
+	});
+
+	const handleCancel = () => {
+		navigate("/");
+	};
+
+	const { data: company } = useQuery({
+		queryKey: ["company"],
+		queryFn: getCompany,
+	});
 
 	useEffect(() => {
-	const loadCompany = async () => {
-    await fetchDataCompany();
-  };
-  loadCompany();
-	}, [fetchDataCompany]);
+		if (company) {
+			reset({
+				name: company.name,
+				email: company.email,
+				mobile: company.mobile,
+				cnpj: company.cnpj,
+				street: company.addresses.street,
+				number: company.addresses.number,
+				complement: company.addresses.complement,
+				neighborhood: company.addresses.neighborhood,
+				city: company.addresses.city,
+				state: company.addresses.state,
+				postalCode: company.addresses.postalCode,
+			});
+		}
+	}, [company, reset, setPostalCodeData]);
 
 	return (
 		<Container>
@@ -308,6 +305,9 @@ export default function CompanyPage() {
 										id="postalCode"
 										{...register("postalCode", {
 											validate: viaCep,
+											onChange: (e) => {
+												setPostalCodeData(e.target.value);
+											},
 										})}
 									/>
 									{errors.postalCode && (
@@ -351,15 +351,15 @@ export default function CompanyPage() {
 									colorScheme="blue"
 									size="lg"
 									type="submit"
-									isDisabled={loading}
+									isDisabled={mutation.isPending}
 									rightIcon={<MdSave />}>
-									{loading ? (
+									{mutation.isPending ? (
 										<Spinner
 											size="sm"
 											mr="2"
 										/>
 									) : null}
-									{loading ? "Validando dados" : "Salvar"}
+									{mutation.isPending ? "Validando dados" : "Salvar"}
 								</Button>
 								<Button
 									colorScheme="gray"

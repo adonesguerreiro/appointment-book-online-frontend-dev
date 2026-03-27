@@ -23,56 +23,52 @@ export default function DashboardPage() {
 	});
 
 	const [chartData, setChartData] = useState<{ name: string; value: number }[]>(
-			[]
-		);
+		[],
+	);
 
-		const { showToast } = useCustomToast();
-			const handleError = useHandleError();
+	const { showToast } = useCustomToast();
+	const handleError = useHandleError();
 
-		const fetchDataPieChart = useCallback(
-			async (month: string, year: string) => {
+	const fetchDataPieChart = useCallback(async (month: string, year: string) => {
+		try {
+			const { data } = await getDashboard(month, year);
+			if (data.scheduleByStatus.length === 0) return;
 
-				try {
-					const { data } = await getDashboard(month, year);
-					if (data.scheduleByStatus.length === 0) return;
+			const transformedData = data.scheduleByStatus.map(
+				(item: { status: string; _count: { status: number } }) => ({
+					name: statusMapping[item.status],
+					value: item._count.status,
+				}),
+			);
 
-					const transformedData = data.scheduleByStatus.map(
-						(item: { status: string; _count: { status: number } }) => ({
-							name: statusMapping[item.status],
-							value: item._count.status,
-						})
-					);
+			setChartData(transformedData);
+		} catch (error) {
+			console.error("Erro ao buscar os dados do dashboard:", error);
+		}
+	}, []);
 
-					setChartData(transformedData);
-				} catch (error) {
-					console.error("Erro ao buscar os dados do dashboard:", error);
+	const handleSubmitPieChart = useCallback(
+		async (data: FormDataDashboard) => {
+			try {
+				const filterScheduleByStatus = await getDashboard(
+					data.month,
+					data.year,
+				);
+
+				if (filterScheduleByStatus.status === 200) {
+					showToast({
+						title: "Filtro aplicado com sucesso.",
+						status: "success",
+					});
 				}
-			},
-			[]
-		);
 
-		const handleSubmitPieChart = useCallback(
-			async (data: FormDataDashboard) => {
-				try {
-					const filterScheduleByStatus = await getDashboard(
-						data.month,
-						data.year
-					);
-
-					if (filterScheduleByStatus.status === 200) {
-						showToast({
-							title: "Filtro aplicado com sucesso.",
-							status: "success",
-						});
-					}
-
-					fetchDataPieChart(data.month, data.year);
-				} catch (error) {
-					handleError(error);
-				}
-			},
-			[fetchDataPieChart, handleError, showToast]
-		);
+				fetchDataPieChart(data.month, data.year);
+			} catch (error) {
+				handleError(error);
+			}
+		},
+		[fetchDataPieChart, handleError, showToast],
+	);
 
 	return (
 		<Container width="auto">

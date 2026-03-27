@@ -9,6 +9,8 @@ import {
 	Input,
 	FormErrorMessage,
 	Button,
+	Container,
+	Spinner,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
@@ -18,8 +20,9 @@ import { FormDataService } from "../../interface/FormDataService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { serviceSchema } from "../../validators/serviceSchema";
 import InputMask from "@kerim-keskin/react-input-mask";
-import { useEffect } from "react";
 import { NumericFormat } from "react-number-format";
+import SectionHeader from "@/shared/components/SectionHeader";
+import { useEffect } from "react";
 
 interface ServiceFormProps {
 	onSubmit: (data: FormDataService) => void;
@@ -27,6 +30,7 @@ interface ServiceFormProps {
 	isEditing: boolean;
 	onEdit: (data: FormDataService) => void;
 	selectedService?: FormDataService | null;
+	isLoading: boolean;
 }
 
 export default function ServiceForm({
@@ -34,132 +38,152 @@ export default function ServiceForm({
 	onCancel,
 	isEditing,
 	selectedService,
+	isLoading,
 }: ServiceFormProps) {
 	const {
 		handleSubmit,
 		register,
-		reset,
 		control,
 		formState: { errors },
+		reset,
 	} = useForm<FormDataService>({
 		resolver: yupResolver(serviceSchema),
+		defaultValues: {
+			serviceName: "",
+			duration: "",
+			price: 0,
+		},
 	});
 
 	useEffect(() => {
 		if (selectedService) {
-			reset({
-				serviceName: selectedService.serviceName,
-				duration: selectedService.duration,
-				price: Number(selectedService.price),
-			});
+			reset(selectedService);
 		}
 	}, [selectedService, reset]);
 
 	return (
-		<Card>
-			<CardBody
-				width="25.0625rem"
-				height="40.6875rem"
+		<Container>
+			<Flex
+				direction="column"
+				align="center"
+				justify="center"
+				gap="10"
 				padding="0.625rem">
-				<Box
-					as="form"
-					onSubmit={handleSubmit(onSubmit)}>
-					<Grid gap="0.625rem">
-						<FormControl isInvalid={!!errors.serviceName}>
-							<Grid>
-								<FormLabel>Nome</FormLabel>
-								<Input
-									type="text"
-									placeholder="Nome do serviço"
-									id="serviceName"
-									{...register("serviceName")}
-								/>
-								{errors.serviceName && (
-									<FormErrorMessage>
-										{errors.serviceName.message}
-									</FormErrorMessage>
-								)}
-							</Grid>
-						</FormControl>
+				<SectionHeader title="Serviço" />
+				{isLoading ? (
+					<Spinner />
+				) : (
+					<Card>
+						<CardBody
+							width="25.0625rem"
+							height="40.6875rem"
+							padding="0.625rem">
+							<Box
+								as="form"
+								onSubmit={handleSubmit(onSubmit)}>
+								<Grid gap="0.625rem">
+									<FormControl isInvalid={!!errors.serviceName}>
+										<Grid>
+											<FormLabel>Nome</FormLabel>
+											<Input
+												type="text"
+												placeholder="Nome do serviço"
+												id="serviceName"
+												{...register("serviceName")}
+											/>
+											{errors.serviceName && (
+												<FormErrorMessage>
+													{errors.serviceName.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
 
-						<FormControl isInvalid={!!errors.duration}>
-							<Grid>
-								<FormLabel>Duração do serviço (minutos)</FormLabel>
-								<Input
-									as={InputMask}
-									mask="99:99"
-									defaultValue={isEditing ? "duration" : ""}
-									placeholder="45:00"
-									type="text"
-									id="duration"
-									{...register("duration")}
-								/>
-								{errors.duration && (
-									<FormErrorMessage>{errors.duration.message}</FormErrorMessage>
-								)}
-							</Grid>
-						</FormControl>
+									<FormControl isInvalid={!!errors.duration}>
+										<Grid>
+											<FormLabel>Duração do serviço (minutos)</FormLabel>
+											<Input
+												as={InputMask}
+												mask="99:99"
+												defaultValue={isEditing ? "duration" : ""}
+												placeholder="45:00"
+												type="text"
+												id="duration"
+												{...register("duration")}
+											/>
+											{errors.duration && (
+												<FormErrorMessage>
+													{errors.duration.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
 
-						<FormControl isInvalid={!!errors.price}>
-							<Grid>
-								<FormLabel>Preço</FormLabel>
-								<Controller
-  	             name="price"
-  control={control}
-  render={({ field }) => (
-    <NumericFormat
-      customInput={Input}
-      thousandSeparator="."
-      decimalSeparator=","
-      prefix="R$ "
-      decimalScale={2}
-      fixedDecimalScale
-      value={field.value}
-      onValueChange={(values) => {
-        field.onChange(values.floatValue);
-      }}
-    />
-  )}
-/>
+									<FormControl isInvalid={!!errors.price}>
+										<Grid>
+											<FormLabel>Preço</FormLabel>
+											<Controller
+												name="price"
+												control={control}
+												render={({ field }) => (
+													<NumericFormat
+														customInput={Input}
+														thousandSeparator="."
+														decimalSeparator=","
+														prefix="R$ "
+														decimalScale={2}
+														fixedDecimalScale
+														value={field.value}
+														onValueChange={(values) => {
+															field.onChange(values.floatValue);
+														}}
+													/>
+												)}
+											/>
 
-								{errors.price && (
-									<FormErrorMessage>{errors.price.message}</FormErrorMessage>
-								)}
-							</Grid>
-						</FormControl>
-					</Grid>
-					<Flex justifyContent="flex-end">
-						{!isEditing ? (
-							<Button
-								colorScheme="green"
-								size="lg"
-								type="submit"
-								margin="0.625rem"
-								rightIcon={<LuPlus />}>
-								Cadastrar
-							</Button>
-						) : (
-							<Button
-								colorScheme="blue"
-								size="lg"
-								type="submit"
-								margin="0.625rem"
-								rightIcon={<TbEditCircle />}>
-								Editar
-							</Button>
-						)}
+											{errors.price && (
+												<FormErrorMessage>
+													{errors.price.message}
+												</FormErrorMessage>
+											)}
+										</Grid>
+									</FormControl>
+								</Grid>
+								<Flex justifyContent="flex-end">
+									{!isEditing ? (
+										<Button
+											colorScheme="green"
+											size="lg"
+											type="submit"
+											margin="0.625rem"
+											rightIcon={<LuPlus />}>
+											Cadastrar
+										</Button>
+									) : (
+										<Button
+											colorScheme="blue"
+											size="lg"
+											type="submit"
+											margin="0.625rem"
+											rightIcon={<TbEditCircle />}>
+											Editar
+										</Button>
+									)}
 
-						<Button
-							colorScheme="gray"
-							size="lg"
-							margin="0.625rem"
-							rightIcon={<MdCancel />}
-							onClick={onCancel}>
-							Cancelar
-						</Button>
-					</Flex>
-				</Box>
-			</CardBody>
-		</Card>
+									<Button
+										colorScheme="gray"
+										size="lg"
+										margin="0.625rem"
+										rightIcon={<MdCancel />}
+										onClick={onCancel}>
+										Cancelar
+									</Button>
+								</Flex>
+							</Box>
+						</CardBody>
+					</Card>
+				)}
+			</Flex>
+		</Container>
 	);
 }

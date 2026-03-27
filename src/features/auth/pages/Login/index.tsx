@@ -140,12 +140,12 @@ export default function LoginPage() {
 										rightIcon={<MdArrowForward />}
 										type="submit"
 										isDisabled={loading}>
-										{loading ? (
+										{loading && (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
-										) : null}
+										)}
 										{loading ? "Autenticando" : "Entrar"}
 									</Button>
 									<Box>

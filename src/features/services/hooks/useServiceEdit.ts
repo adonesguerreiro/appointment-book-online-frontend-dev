@@ -1,30 +1,21 @@
 import { useCallback } from "react";
-import { FormDataService } from "../interface/FormDataService";
 import { getServicesById } from "../services/api";
+import { useEditMode } from "@/shared/hooks/useEditMode";
 
-interface useServiceEditProps {
-	setSelectedService: (unavailableTime: FormDataService) => void;
-	openForm: () => void;
-	startEditing: () => void;
-}
+export const useServiceEdit = () => {
+	const { startEditing } = useEditMode();
 
-export const useServiceEdit = ({
-	setSelectedService,
-	openForm,
-	startEditing,
-}: useServiceEditProps) => {
 	const handleEditService = useCallback(
 		async (serviceId: number) => {
 			try {
 				startEditing();
 				const serviceData = await getServicesById(serviceId);
-				setSelectedService(serviceData.data);
-				openForm();
+				return serviceData.data;
 			} catch (error) {
 				console.error("Erro ao buscar dados", error);
 			}
 		},
-		[openForm, setSelectedService, startEditing]
+		[startEditing],
 	);
 
 	return {

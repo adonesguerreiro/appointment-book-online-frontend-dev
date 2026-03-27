@@ -1,18 +1,13 @@
+import { usePagination } from "@/shared/hooks/usePagination";
 import { Flex, Button, Text } from "@chakra-ui/react";
 
 interface PaginationProps {
-	handlePrev: () => void;
-	handleNext: () => void;
-	currentPage: number;
 	totalPages: number;
 }
 
-export default function Pagination({
-	handlePrev,
-	handleNext,
-	currentPage,
-	totalPages,
-}: PaginationProps) {
+export default function Pagination({ totalPages }: PaginationProps) {
+	const { currentPage, setPage } = usePagination();
+
 	return (
 		<Flex
 			justifyContent="center"
@@ -20,7 +15,7 @@ export default function Pagination({
 			gap={2}>
 			<Button
 				fontSize={{ base: "0.875rem", md: "1rem" }}
-				onClick={handlePrev}
+				onClick={() => setPage(currentPage - 1)}
 				isDisabled={currentPage === 1}
 				colorScheme="orange">
 				Anterior
@@ -30,7 +25,7 @@ export default function Pagination({
 			</Text>
 			<Button
 				fontSize={{ base: "0.875rem", md: "1rem" }}
-				onClick={handleNext}
+				onClick={() => setPage(currentPage + 1)}
 				isDisabled={currentPage === totalPages}
 				colorScheme="orange">
 				Próximo

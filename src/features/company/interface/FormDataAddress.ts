@@ -1,4 +1,4 @@
-export interface FormDataAddress {
+export interface FormDataAddress  {
 	street: string;
 	number: string;
 	complement?: string;

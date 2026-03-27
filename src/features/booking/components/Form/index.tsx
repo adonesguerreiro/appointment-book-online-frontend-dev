@@ -31,6 +31,7 @@ export default function BookingAppointment({
 	user,
 	services,
 }: BookingAppointmentProps) {
+	console.log("user", user);
 	return (
 		<>
 			<Flex
@@ -42,8 +43,8 @@ export default function BookingAppointment({
 						typeof user?.avatarUrl === "string"
 							? user?.avatarUrl
 							: user?.avatarUrl
-							? URL.createObjectURL(user?.avatarUrl)
-							: undefined
+								? URL.createObjectURL(user?.avatarUrl)
+								: undefined
 					}
 					size="xl"
 				/>

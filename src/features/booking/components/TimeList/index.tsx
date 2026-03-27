@@ -48,7 +48,7 @@ export default function TimeList({
 			});
 			clearErrors("time");
 		}
-			if (isSubmitting) {
+		if (isSubmitting) {
 			const timer = setTimeout(() => {
 				setSelectedTime("");
 			}, 0);

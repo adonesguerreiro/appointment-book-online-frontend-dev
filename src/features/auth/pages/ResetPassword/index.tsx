@@ -62,7 +62,6 @@ export default function ResetPasswordPage() {
 		return;
 	}
 
-
 	const onSubmit = async (data: FormDataResetPassword) => {
 		try {
 			const token = searchParams.get("token");

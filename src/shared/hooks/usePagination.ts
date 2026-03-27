@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export const usePagination = () => {
-	const [currentPage, setCurrentPage] = useState(1);
+	const [searchParams, setSearchParams] = useSearchParams();
 
-	const handlePrev = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-	const handleNext = () => setCurrentPage((prev) => prev + 1);
+	const pageParam = Number(searchParams.get("page"));
+	const currentPage = !isNaN(pageParam) && pageParam > 0 ? pageParam : 1;
 
-	return { currentPage, handlePrev, handleNext };
+	const setPage = (page: number) => {
+		if (page === currentPage) return;
+
+		const params = new URLSearchParams(searchParams);
+		params.set("page", String(page));
+		setSearchParams(params);
+	};
+
+	return {
+		currentPage,
+		setPage,
+	};
 };

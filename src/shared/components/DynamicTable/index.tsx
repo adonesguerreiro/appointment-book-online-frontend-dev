@@ -10,7 +10,7 @@ import {
 	Box,
 } from "@chakra-ui/react";
 
-interface ColumnConfig<T> {
+export interface ColumnConfig<T> {
 	label: string;
 	key: keyof T;
 	hideOnMobile?: boolean;
