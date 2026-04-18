@@ -65,8 +65,6 @@ export default function UserForm() {
 			if (user.avatarUrl) {
 				setInitialAvatar(user.avatarUrl);
 			}
-
-			return user;
 		}
 	}, [reset, setInitialAvatar, user]);
 

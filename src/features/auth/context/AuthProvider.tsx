@@ -7,13 +7,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [loading, setLoading] = useState(true);
 
 	const refreshUser = useCallback(async () => {
-		const token = localStorage.getItem("token");
-
-		if (!token) {
-			setUser(null);
-			setLoading(false);
-			return;
-		}
 		try {
 			const res = await authMe();
 			setUser(res.data);

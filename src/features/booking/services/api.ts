@@ -23,6 +23,29 @@ export const publicGetCompany = async (
 	}
 };
 
+export const publicGetService = async (
+	slugCompany: string,
+	currentPage?: number,
+) => {
+	try {
+		const { data } = await publicApi.get(`/public/service/${slugCompany}`, {
+			params: { page: currentPage, limit: 10 },
+		});
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const publicGetUser = async (slugCompany: string) => {
+	try {
+		const { data } = await publicApi.get(`/public/user/${slugCompany}`);
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 export const publicBookAppointment = (
 	bookingData: BookingAppointmentData,
 	slugCompany: string,

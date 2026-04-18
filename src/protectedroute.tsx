@@ -1,5 +1,4 @@
 import { useAuth } from "./features/auth/context/AuthContext";
-import { Skeleton } from "@chakra-ui/react";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({
@@ -9,9 +8,7 @@ export default function ProtectedRoute({
 }) {
 	const { user, loading } = useAuth();
 
-	if (loading) {
-		return <Skeleton height="100vh" />;
-	}
+	if (loading) return null;
 
 	if (!user) {
 		return (

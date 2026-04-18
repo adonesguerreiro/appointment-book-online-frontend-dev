@@ -14,6 +14,7 @@ export const useUser = ({ reset }: useUserProps) => {
 	const fetchDataUser = useCallback(async () => {
 		try {
 			const user = await getUserById();
+			console.log(user);
 			reset({
 				avatarUrl: user.avatarUrl,
 				name: user.name,

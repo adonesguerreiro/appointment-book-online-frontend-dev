@@ -12,12 +12,11 @@ import "react-calendar/dist/Calendar.css";
 import TimeList from "../../components/TimeList";
 import CustomCalendar from "../../../../shared/components/CustomCalendar";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { FaCheckCircle } from "react-icons/fa";
 import { bookAppointmentSchema } from "../../validators/bookAppointmentSchema";
 import BookingAppointment from "../../components/Form";
 import { useState } from "react";
-import { FormDataUser } from "../../../users/interface/FormDataUser";
 import EmptyState from "../../../../shared/components/EmptyState";
 import { BookingAppointmentData } from "../../interface/BookingAppointmentData";
 import { useParams } from "react-router-dom";
@@ -32,6 +31,7 @@ export default function BookingFormPage() {
 		handleSubmit,
 		setValue,
 		reset,
+		control,
 		formState: { errors, isSubmitting },
 		clearErrors,
 	} = useForm<BookingAppointmentData>({
@@ -85,75 +85,104 @@ export default function BookingFormPage() {
 	});
 
 	const handleSubmitBooking = (data: BookingAppointmentData) => {
-		mutation.mutate(data);
+		const phoneUnmasked = data.customerPhone.replace(/\D/g, "");
+		const bookingData = {
+			...data,
+			customerPhone: phoneUnmasked,
+		};
+
+		mutation.mutate(bookingData);
 	};
 
-	return isLoading || isRefetching ? (
-		<Spinner />
-	) : (
+	const name = useWatch({
+		control,
+		name: "customerName",
+	});
+
+	const phone = useWatch({
+		control,
+		name: "customerPhone",
+	});
+
+	const service = useWatch({
+		control,
+		name: "serviceId",
+	});
+
+	const inputsFilled = name && phone !== "(__) _____-____" && service;
+
+	return (
 		<Container w={{ base: "85%", md: "90%", lg: "800px" }}>
 			<Flex
 				display="flex"
 				direction="column"
 				align="center">
 				<HeadingComponent title="Agendar horário" />
-				<Card
-					as="form"
-					onSubmit={handleSubmit(handleSubmitBooking)}>
-					<CardBody>
-						{bookingData?.timeSlots.user.blocked ? (
-							<Flex
-								justify="center"
-								align="center"
-								padding="1rem">
-								<EmptyState />
-							</Flex>
-						) : (
-							<>
-								<BookingAppointment
-									register={register}
-									errors={errors}
-									user={bookingData?.timeSlots.user || ({} as FormDataUser)}
-									services={bookingData?.timeSlots.services || []}
-								/>
-								<Card>
-									<CardBody>
-										<CustomCalendar
-											setValue={setValue}
-											register={register}
-											errors={errors}
-											clearErrors={clearErrors}
-											selectedDate={selectedDate}
-											setSelectedDate={setSelectedDate}
-										/>
-										<TimeList
-											register={register}
-											setValue={setValue}
-											errors={errors}
-											clearErrors={clearErrors}
-											avaliableTimeSlot={
-												bookingData?.timeSlots.avaliableTimeSlots || []
-											}
-											isSubmitting={isSubmitting}
-										/>
-									</CardBody>
-								</Card>
-								<Box
-									textAlign="right"
-									paddingTop="1rem">
-									<Button
-										colorScheme="teal"
-										size="lg"
-										type="submit"
-										margin="0.5rem"
-										rightIcon={<FaCheckCircle />}>
-										Agendar consulta
-									</Button>
-								</Box>
-							</>
-						)}
-					</CardBody>
-				</Card>
+				{isLoading || isRefetching ? (
+					<Spinner />
+				) : (
+					<Card
+						as="form"
+						onSubmit={handleSubmit(handleSubmitBooking)}
+						marginTop={"2rem"}>
+						<CardBody>
+							{bookingData?.timeSlots.user.blocked ? (
+								<Flex
+									justify="center"
+									align="center"
+									padding="1rem">
+									<EmptyState />
+								</Flex>
+							) : (
+								<>
+									<BookingAppointment
+										register={register}
+										errors={errors}
+										control={control}
+									/>
+									{inputsFilled && (
+										<Card>
+											<CardBody>
+												<CustomCalendar
+													setValue={setValue}
+													register={register}
+													errors={errors}
+													clearErrors={clearErrors}
+													selectedDate={selectedDate}
+													setSelectedDate={setSelectedDate}
+												/>
+												<TimeList
+													register={register}
+													setValue={setValue}
+													errors={errors}
+													clearErrors={clearErrors}
+													avaliableTimeSlot={
+														bookingData?.timeSlots.avaliableTimeSlots || []
+													}
+													isSubmitting={isSubmitting}
+												/>
+											</CardBody>
+										</Card>
+									)}
+
+									<Box
+										textAlign="right"
+										paddingTop="1rem">
+										<Button
+											colorScheme="teal"
+											size="lg"
+											type="submit"
+											margin="0.5rem"
+											disabled={!inputsFilled}
+											rightIcon={<FaCheckCircle />}>
+											Agendar consulta
+										</Button>
+									</Box>
+								</>
+							)}
+						</CardBody>
+					</Card>
+				)}
 			</Flex>
 		</Container>
 	);

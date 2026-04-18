@@ -11,6 +11,7 @@ import {
 	useQueryClient,
 } from "@tanstack/react-query";
 import { getServicesById as getServiceById } from "../../services/api";
+import { convertToMinutes } from "@/utils/convertToMinutes";
 
 export default function ServiceFormPage() {
 	const { id } = useParams();
@@ -28,7 +29,15 @@ export default function ServiceFormPage() {
 
 	const mutation = useMutation({
 		mutationFn: (data: FormDataService) => {
-			return !isEditing ? createService(data) : updateService(Number(id), data);
+			const durationUnmasked = convertToMinutes(String(data.duration));
+			const serviceData = {
+				...data,
+				duration: durationUnmasked,
+			};
+
+			return !isEditing
+				? createService(serviceData)
+				: updateService(Number(id), serviceData);
 		},
 		onSuccess: () => {
 			showToast({

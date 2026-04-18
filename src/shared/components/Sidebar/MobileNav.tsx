@@ -14,14 +14,15 @@ import {
 	FlexProps,
 	Text,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAvatar } from "@/features/users/hooks/useAvatar";
-import { useUser } from "@/features/users/hooks/useUser";
 import { FormDataUser } from "@/features/users/interface/FormDataUser";
 import { logout } from "@/features/auth/services/auth";
+import { useQuery } from "@tanstack/react-query";
+import { getUserById } from "@/features/users/services/api";
 
 interface MobileProps extends FlexProps {
 	onOpen: () => void;
@@ -29,13 +30,27 @@ interface MobileProps extends FlexProps {
 
 export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 	const navigate = useNavigate();
-	const { avatar } = useAvatar();
+	const { avatar, setInitialAvatar } = useAvatar();
 
 	const { reset } = useForm<FormDataUser>();
 
-	const { fetchDataUser } = useUser({ reset });
-	const [userName, setUserName] = useState("");
+	const { data: user } = useQuery({
+		queryKey: ["user"],
+		queryFn: getUserById,
+	});
 
+	useEffect(() => {
+		if (user) {
+			reset({
+				avatarUrl: user.avatarUrl,
+				name: user.name,
+				email: user.email,
+			});
+			if (user.avatarUrl) {
+				setInitialAvatar(user.avatarUrl);
+			}
+		}
+	}, [reset, setInitialAvatar, user]);
 	const handleLogout = async () => {
 		await logout();
 		navigate("/login");
@@ -48,19 +63,6 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 	const goToCompany = () => {
 		navigate("/company");
 	};
-
-	useEffect(() => {
-		const listDataUser = async () => {
-			const getUserById = await fetchDataUser();
-			setUserName(getUserById?.name);
-
-			if (!avatar) {
-				fetchDataUser();
-			}
-		};
-
-		listDataUser();
-	}, [avatar, fetchDataUser]);
 
 	return (
 		<Flex
@@ -111,7 +113,7 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 									spacing="1px"
 									ml="2"
 									color="white">
-									<Text fontSize="sm">Olá, {userName.split(" ")[0]}</Text>
+									<Text fontSize="sm">Olá, {user?.name.split(" ")[0]}</Text>
 								</VStack>
 								<Box display={{ base: "none", md: "flex" }}>
 									<FiChevronDown />
