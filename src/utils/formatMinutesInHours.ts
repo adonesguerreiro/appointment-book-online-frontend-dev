@@ -1,7 +1,8 @@
-export const formatMinutesInHours = (time: string) => {
-	const [hours, minutes] = time.split(":").map(Number);
+export const formatMinutesInHours = (minutes: number) => {
+	const hours = Math.floor(minutes / 60);
+	const mins = minutes % 60;
 
-	if (hours && minutes) return `${hours}h ${minutes}min`;
+	if (hours && mins) return `${hours}h ${mins}min`;
 	if (hours) return `${hours}h`;
-	return `${minutes}min`;
+	return `${mins}min`;
 };

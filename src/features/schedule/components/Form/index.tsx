@@ -23,6 +23,7 @@ import { scheduleSchema } from "../../validators/scheduleSchema";
 import InputMask from "@kerim-keskin/react-input-mask";
 import { useEffect } from "react";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { ptBR } from "date-fns/locale";
 import { TimeSlot } from "../../interface/TimeSlot";
 import {
@@ -175,7 +176,7 @@ export default function ScheduleForm({
 				justify="center"
 				gap="10"
 				padding="0.625rem">
-				<SectionHeader title="Horário disponível" />
+				<SectionHeader title="Agenda" />
 				{isLoading ? (
 					<Spinner />
 				) : (
@@ -277,7 +278,12 @@ export default function ScheduleForm({
 									</FormControl>
 
 									<FormControl isInvalid={!!errors.date}>
-										<Grid>
+										<Grid
+											sx={{
+												".react-datepicker-popper": {
+													zIndex: 9999,
+												},
+											}}>
 											<FormLabel>Data</FormLabel>
 											<Controller
 												control={control}
@@ -286,6 +292,7 @@ export default function ScheduleForm({
 													<DatePicker
 														locale={ptBR}
 														id="date"
+														popperClassName="react-datepicker-popper"
 														selected={
 															field.value ? new Date(field.value) : null
 														}
@@ -331,7 +338,7 @@ export default function ScheduleForm({
 													zIndex: 10,
 												}}
 												{...register("timeSlotAvaliable")}>
-												{timeSlots.length > 0 ? (
+												{timeSlots?.length > 0 ? (
 													timeSlots.map((slot, index) =>
 														slot.avaliableTimeSlot.map(
 															(avaliableSlot, subIndex) => (

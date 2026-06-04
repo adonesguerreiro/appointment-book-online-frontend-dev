@@ -107,7 +107,7 @@ export default function TableService() {
 			key: "duration",
 			label: "Duração",
 			hideOnMobile: true,
-			render: (value) => formatMinutesInHours(value as string),
+			render: (value) => formatMinutesInHours(value as number),
 		},
 		{
 			key: "price",

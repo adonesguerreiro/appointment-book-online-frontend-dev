@@ -12,8 +12,8 @@ export function useHandleError() {
 				typeof errors === "string"
 					? errors
 					: Array.isArray(errors)
-					? errors[0].message
-					: "Ocorreu um erro";
+						? errors[0].message
+						: "Ocorreu um erro";
 
 			showToast({
 				title: errorMessage,
@@ -21,6 +21,13 @@ export function useHandleError() {
 			});
 		} else {
 			console.error("Erro desconhecido", error);
+			showToast({
+				title:
+					error instanceof Error
+						? error.message
+						: "Ocorreu um erro desconhecido",
+				status: "warning",
+			});
 		}
 	}
 

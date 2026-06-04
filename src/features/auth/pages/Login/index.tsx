@@ -46,6 +46,7 @@ export default function LoginPage() {
 	const onSubmit = async (data: FormDataLogin) => {
 		try {
 			setLoading(true);
+
 			await auth(data);
 			await refreshToken();
 			await refreshUser();

@@ -3,11 +3,8 @@ import { FormDataForgotPassword } from "../interface/FormDataForgotPassword";
 import { FormDataResetPassword } from "../interface/FormDataResetPassword";
 import { FormDataLogin } from "../interface/FormDataLogin";
 
-export const auth = (auth: FormDataLogin) => {
-	return api.post("/sessions", {
-		email: auth.email,
-		password: auth.password,
-	});
+export const auth = async (auth: FormDataLogin) => {
+	return api.post("/sessions", auth);
 };
 
 export const authMe = () => {
@@ -28,6 +25,12 @@ export const forgotPassword = ({ email }: FormDataForgotPassword) => {
 
 export const resetPassword = (token: string, data: FormDataResetPassword) => {
 	return api.post(`/reset-password?token=${token}`, {
+		newPassword: data.newPassword,
+	});
+};
+
+export const createPassword = (token: string, data: FormDataResetPassword) => {
+	return api.post(`/create-password?token=${token}`, {
 		newPassword: data.newPassword,
 	});
 };

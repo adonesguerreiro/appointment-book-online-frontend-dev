@@ -114,7 +114,7 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
 							</>
 						)}
 					</Box>
-				)
+				),
 			)}
 		</Box>
 	);

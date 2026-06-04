@@ -29,15 +29,7 @@ export default function ServiceFormPage() {
 
 	const mutation = useMutation({
 		mutationFn: (data: FormDataService) => {
-			const durationUnmasked = convertToMinutes(String(data.duration));
-			const serviceData = {
-				...data,
-				duration: durationUnmasked,
-			};
-
-			return !isEditing
-				? createService(serviceData)
-				: updateService(Number(id), serviceData);
+			return !isEditing ? createService(data) : updateService(Number(id), data);
 		},
 		onSuccess: () => {
 			showToast({
@@ -55,7 +47,8 @@ export default function ServiceFormPage() {
 	});
 
 	const handleSubmitService = (data: FormDataService) => {
-		mutation.mutate(data);
+		const durationInMinutes = convertToMinutes(data.duration as string);
+		mutation.mutate({ ...data, duration: durationInMinutes });
 	};
 
 	const { data: selectedService, isLoading } = useQuery({

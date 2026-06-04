@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Spinner } from "@chakra-ui/react";
+import { Box, Container, Flex, Grid, Link, Spinner } from "@chakra-ui/react";
 import { FormDataSchedule } from "../../../schedule/interface/FormDataSchedule";
 import { formatDate } from "../../../../utils/formatDate";
 import { statusMapping } from "../../../../utils/statusMapping";
@@ -15,6 +15,8 @@ import { getSchedules } from "../../services/api";
 import RegisterButton from "@/shared/components/RegisterButton";
 import Pagination from "@/shared/components/Pagination";
 import EmptyState from "@/shared/components/EmptyState";
+import { getUserById } from "@/features/users/services/api";
+import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 export default function TableSchedule() {
 	const { currentPage } = usePagination();
@@ -65,6 +67,11 @@ export default function TableSchedule() {
 		},
 	];
 
+	const { data: user } = useQuery({
+		queryKey: ["user"],
+		queryFn: getUserById,
+	});
+
 	return (
 		<Container>
 			<Flex
@@ -74,14 +81,30 @@ export default function TableSchedule() {
 				gap="10"
 				padding="0.625rem">
 				<SectionHeader title="Agenda" />
+				<Grid
+					templateColumns="1fr auto"
+					alignItems="center"
+					justifyContent="space-between"
+					padding="0.625rem"
+					width="100%">
+					<Link
+						href={`/${user?.company.slugCompany}`}
+						isExternal
+						display="flex"
+						alignItems="center"
+						gap="2"
+						color="teal.500">
+						Minha agenda <LiaExternalLinkAltSolid />
+					</Link>
+					<RegisterButton
+						buttonText="Novo agendamento"
+						onNewClick={handleNewClick}
+					/>
+				</Grid>
 				{isLoading || isRefetching ? (
 					<Spinner />
 				) : schedules?.schedules?.length > 0 ? (
 					<>
-						<RegisterButton
-							buttonText="Novo agendamento"
-							onNewClick={handleNewClick}
-						/>
 						<DynamicTable
 							columns={columnsSchedule}
 							data={schedules?.schedules ?? []}
@@ -98,10 +121,6 @@ export default function TableSchedule() {
 					</>
 				) : (
 					<>
-						<RegisterButton
-							buttonText="Novo agendamento"
-							onNewClick={handleNewClick}
-						/>
 						<EmptyState />
 					</>
 				)}

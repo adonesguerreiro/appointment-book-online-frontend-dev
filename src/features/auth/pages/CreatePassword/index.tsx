@@ -16,18 +16,18 @@ import {
 import { MdArrowForward } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useLoading } from "../../../../shared/hooks/useLoading";
 import { useCustomToast } from "../../../../shared/hooks/useCustomToast";
 import HeadingComponent from "../../../../shared/components/Heading";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPasswordSchema } from "../../validators/resetPasswordSchema";
 import { FormDataResetPassword } from "../../interface/FormDataResetPassword";
-import { resetPassword } from "../../services/auth";
+import { createPassword } from "../../services/auth";
 import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useHandleError } from "@/shared/hooks/useHandleError";
 
 export default function CreatePasswordPage() {
 	const { showToast } = useCustomToast();
-	const { loading, setLoading } = useLoading();
 	const {
 		handleSubmit,
 		register,
@@ -37,7 +37,9 @@ export default function CreatePasswordPage() {
 	});
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-	const [time, setTime] = useState(15 * 60);
+	const [time, setTime] = useState(5 * 60);
+	const handleError = useHandleError();
+	const queryClient = useQueryClient();
 
 	const minutes = Math.floor(time / 60);
 	const seconds = time % 60;
@@ -53,40 +55,36 @@ export default function CreatePasswordPage() {
 			});
 		}, 1000);
 
+		if (time === 0) {
+			navigate("/login");
+		}
+
 		return () => clearInterval(interval);
-	}, []);
+	}, [navigate, time]);
 
-	if (time === 0) {
-		navigate("/login");
-
-		return;
-	}
-
-	const onSubmit = async (data: FormDataResetPassword) => {
-		try {
+	const mutation = useMutation({
+		mutationFn: (data: FormDataResetPassword) => {
 			const token = searchParams.get("token");
 			if (!token) {
 				throw new Error("Token de criação de senha não encontrado.");
 			}
-
-			setLoading(true);
-			await resetPassword(token, data);
-			setLoading(false);
+			return createPassword(token, data);
+		},
+		onSuccess: () => {
 			showToast({
 				title: "Senha criada com sucesso!",
 				status: "success",
 			});
+			queryClient.invalidateQueries({ queryKey: ["services"] });
 			navigate("/login");
-		} catch (error) {
-			console.error("Error creating password:", error);
-			setLoading(false);
-			showToast({
-				title:
-					"Falha ao criar a senha, pois seu prazo de criação expirou, redirecionando para o login...",
-				status: "error",
-			});
-			navigate("/login");
-		}
+		},
+		onError: (error) => {
+			handleError(error);
+		},
+	});
+
+	const onSubmit = (data: FormDataResetPassword) => {
+		mutation.mutate(data);
 	};
 
 	return (
@@ -106,7 +104,7 @@ export default function CreatePasswordPage() {
 						display="grid"
 						gap="0.625rem"
 						fontFamily="Roboto, sans-serif">
-						<HeadingComponent title="Redefina sua senha" />
+						<HeadingComponent title="Criar nova senha" />
 					</CardHeader>
 
 					<CardBody
@@ -155,14 +153,14 @@ export default function CreatePasswordPage() {
 										size="lg"
 										rightIcon={<MdArrowForward />}
 										type="submit"
-										isDisabled={loading}>
-										{loading ? (
+										isDisabled={mutation.isPending}>
+										{mutation.isPending ? (
 											<Spinner
 												size="sm"
 												mr="2"
 											/>
 										) : null}
-										{loading ? "Verificando" : "Enviar"}
+										{mutation.isPending ? "Enviando..." : "Criar senha"}
 									</Button>
 								</Flex>
 							</form>

@@ -23,6 +23,7 @@ import InputMask from "@kerim-keskin/react-input-mask";
 import { NumericFormat } from "react-number-format";
 import SectionHeader from "@/shared/components/SectionHeader";
 import { useEffect } from "react";
+import { minutesToTime } from "@/utils/minutesToTime";
 
 interface ServiceFormProps {
 	onSubmit: (data: FormDataService) => void;
@@ -50,14 +51,18 @@ export default function ServiceForm({
 		resolver: yupResolver(serviceSchema),
 		defaultValues: {
 			serviceName: "",
-			duration: "",
-			price: 0,
 		},
 	});
 
 	useEffect(() => {
 		if (selectedService) {
-			reset(selectedService);
+			const { duration, ...rest } = selectedService;
+			const formattedDuration = minutesToTime(Number(duration));
+			const serviceData = {
+				...rest,
+				duration: formattedDuration,
+			};
+			reset(serviceData);
 		}
 	}, [selectedService, reset]);
 
@@ -101,7 +106,9 @@ export default function ServiceForm({
 
 									<FormControl isInvalid={!!errors.duration}>
 										<Grid>
-											<FormLabel>Duração do serviço (minutos)</FormLabel>
+											<FormLabel>
+												Duração do serviço (horas e minutos)
+											</FormLabel>
 											<Input
 												as={InputMask}
 												mask="99:99"

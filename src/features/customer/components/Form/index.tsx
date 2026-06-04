@@ -55,6 +55,8 @@ export default function CustomerForm({
 		}
 	}, [selectedCustomer, reset]);
 
+	console.log(errors);
+
 	return (
 		<Container>
 			<Flex
@@ -63,7 +65,7 @@ export default function CustomerForm({
 				justify="center"
 				gap="10"
 				padding="0.625rem">
-				<SectionHeader title="Horário disponível" />
+				<SectionHeader title="Clientes" />
 				{isLoading ? (
 					<Spinner />
 				) : (

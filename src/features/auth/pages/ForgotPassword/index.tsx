@@ -35,7 +35,6 @@ export default function ForgotPasswordPage() {
 	});
 
 	const navigate = useNavigate();
-	// console.log("Erros:", errors);
 
 	const onSubmit = async (data: FormDataForgotPassword) => {
 		try {

@@ -44,7 +44,7 @@ export const availableTimeSchema = yup.object().shape({
 			(value) => {
 				const timeRegex = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 				return timeRegex.test(value);
-			}
+			},
 		),
 	endTime: yup
 		.string()
@@ -58,7 +58,7 @@ export const availableTimeSchema = yup.object().shape({
 				if (!startTime) return false;
 
 				return value.replace(":", "") > startTime.replace(":", "");
-			}
+			},
 		)
 		.test(
 			"validateTime",
@@ -66,7 +66,7 @@ export const availableTimeSchema = yup.object().shape({
 			(value) => {
 				const timeRegex = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 				return timeRegex.test(value);
-			}
+			},
 		),
 	interval: yup
 		.number()

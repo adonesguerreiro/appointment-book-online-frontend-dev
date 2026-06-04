@@ -7,6 +7,10 @@ export const loginSchema = yup.object({
 		.required("Email é obrigatório"),
 	password: yup
 		.string()
-		.required("Senha é obrigatório")
-		.min(8, "Senha deve ter no mínimo 8 dígitos"),
+		.min(8, "Senha deve ter no mínimo 8 caracteres")
+		.matches(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+			"Senha deve ter mínimo 8 caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial",
+		)
+		.required("Senha é obrigatória"),
 });
