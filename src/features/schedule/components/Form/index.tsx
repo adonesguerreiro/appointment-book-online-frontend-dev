@@ -25,7 +25,7 @@ import { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ptBR } from "date-fns/locale";
-import { TimeSlot } from "../../interface/TimeSlot";
+import { AvaliableTimeSlot } from "../../interface/AvailableTimeSlot";
 import {
 	getCustomerById,
 	getCustomers,
@@ -46,7 +46,7 @@ interface ScheduleFormProps {
 	onEdit: (data: FormDataSchedule) => void;
 	selectedSchedule?: FormDataSchedule | null;
 	selectedDate: string;
-	timeSlots: TimeSlot[];
+	timeSlots: AvaliableTimeSlot[];
 	onDateChange: (date: string) => void;
 	isLoading: boolean;
 }
@@ -339,17 +339,13 @@ export default function ScheduleForm({
 												}}
 												{...register("timeSlotAvaliable")}>
 												{timeSlots?.length > 0 ? (
-													timeSlots.map((slot, index) =>
-														slot.avaliableTimeSlot.map(
-															(avaliableSlot, subIndex) => (
-																<option
-																	key={`${index}-${subIndex}`}
-																	value={avaliableSlot.timeSlot}>
-																	{avaliableSlot.timeSlot}
-																</option>
-															),
-														),
-													)
+													timeSlots.map((timeSlot) => (
+														<option
+															key={timeSlot?.id}
+															value={timeSlot?.timeSlot}>
+															{timeSlot?.timeSlot}
+														</option>
+													))
 												) : (
 													<option value="">Sem horários disponíveis</option>
 												)}

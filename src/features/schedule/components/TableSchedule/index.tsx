@@ -29,6 +29,7 @@ export default function TableSchedule() {
 	} = useQuery({
 		queryKey: ["schedule", currentPage],
 		queryFn: () => getSchedules(currentPage),
+		refetchInterval: 60000,
 	});
 
 	const handleNewClick = useCallback(() => {

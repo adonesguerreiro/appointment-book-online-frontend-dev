@@ -41,8 +41,8 @@ export default function UnavailableTimeFormPage() {
 					: "Horário indisponível alterado com sucesso.",
 				status: !isEditing ? "success" : "info",
 			});
-			queryClient.invalidateQueries({ queryKey: ["unavailable-time"] });
-			navigate("/unavailable-time");
+			queryClient.invalidateQueries({ queryKey: ["unavaliable-time"] });
+			navigate("/unavaliable-time");
 		},
 		onError: (error) => {
 			handleError(error);

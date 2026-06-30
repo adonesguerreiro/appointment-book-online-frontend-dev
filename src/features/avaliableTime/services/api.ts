@@ -14,7 +14,7 @@ export const getAvaliableTimes = async (currentPage: number) => {
 
 export const getAvaliableTimesSlots = async (date: string) => {
 	try {
-		const { data } = await api.get(`/avaliable-times?date=${date}`);
+		const { data } = await api.get(`/avaliable-times/${date}`);
 		return data;
 	} catch (error) {
 		console.log(error);

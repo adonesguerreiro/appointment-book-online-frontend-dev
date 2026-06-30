@@ -67,12 +67,9 @@ export default function ScheduleFormPage() {
 	const formattedDate = selectedDate?.split("T")[0];
 
 	const { data: timeSlots } = useQuery({
-		queryKey: ["schedule", scheduleId],
-		queryFn: async () => {
-			const timeSlotsData = await getAvaliableTimesSlots(formattedDate!);
-			return timeSlotsData.avaliableTimes;
-		},
-		enabled: !!scheduleId,
+		queryKey: ["time-slots", formattedDate],
+		queryFn: () => getAvaliableTimesSlots(formattedDate!),
+		enabled: !!formattedDate,
 		placeholderData: keepPreviousData,
 	});
 
@@ -83,7 +80,7 @@ export default function ScheduleFormPage() {
 			onCancel={handleCancel}
 			selectedDate={selectedDate ?? ""}
 			selectedSchedule={selectedSchedule}
-			timeSlots={timeSlots}
+			timeSlots={timeSlots?.timeSlots ?? []}
 			isEditing={isEditing}
 			isLoading={isLoading}
 			onDateChange={setSelectedDate}
