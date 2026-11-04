@@ -3,7 +3,7 @@ import { FormDataService } from "@/features/services/interface/FormDataService";
 import { FormDataUser } from "@/features/users/interface/FormDataUser";
 
 export interface PublicCompany {
-	avaliableTimeSlots: AvaliableTimeSlot[];
+	avaliableTimeSlots: AvaliableTimeSlot;
 	services: FormDataService[];
 	user: FormDataUser;
 }

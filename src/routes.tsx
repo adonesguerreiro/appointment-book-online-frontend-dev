@@ -19,6 +19,7 @@ import ProtectedRoute from "./protectedroute";
 import ScheduleListPage from "./features/schedule/pages/ScheduleListPage";
 import ScheduleFormPage from "./features/schedule/pages/ScheduleFormPage";
 import CreatePasswordPage from "./features/auth/pages/CreatePassword";
+import NotFound from "./shared/components/NotFound";
 
 export const router = createBrowserRouter([
 	{
@@ -194,5 +195,9 @@ export const router = createBrowserRouter([
 				),
 			},
 		],
+	},
+	{
+		path: "*",
+		element: <NotFound />,
 	},
 ]);

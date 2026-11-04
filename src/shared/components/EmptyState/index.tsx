@@ -6,18 +6,20 @@ export default function EmptyState() {
 			spacing={4}
 			align="center"
 			justify="center"
-			width="25rem"
-			height="18.75rem"
+			width={{ base: "100%", sm: "25rem" }}
+			maxW="25rem"
+			minH="18.75rem"
 			bg="gray.50"
 			borderRadius="md"
 			borderWidth="1px"
 			borderColor="gray.200"
 			p={6}
-			margin="3.25rem">
+			mx="auto"
+			my={{ base: "1.5rem", sm: "3.25rem" }}>
 			<Image
 				src="/nodata.svg"
 				alt="No data"
-				width="10rem"
+				width={{ base: "7rem", sm: "10rem" }}
 			/>
 			<Text
 				fontSize="lg"

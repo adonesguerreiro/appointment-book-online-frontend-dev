@@ -24,6 +24,7 @@ import { publicBookAppointment, publicGetCompany } from "../../services/api";
 import { useCustomToast } from "@/shared/hooks/useCustomToast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useHandleError } from "@/shared/hooks/useHandleError";
+import NotFound from "@/shared/components/NotFound";
 
 export default function BookingFormPage() {
 	const {
@@ -49,12 +50,14 @@ export default function BookingFormPage() {
 		data: bookingData,
 		isLoading,
 		isRefetching,
+		isError,
 	} = useQuery({
 		queryKey: ["booking", selectedDate],
 		queryFn: () =>
 			slugCompany &&
 			selectedDate &&
 			publicGetCompany(slugCompany, selectedDate),
+		retry: false,
 	});
 
 	const mutation = useMutation({
@@ -111,6 +114,10 @@ export default function BookingFormPage() {
 
 	const inputsFilled = name && phone !== "(__) _____-____" && service;
 
+	if (isError) {
+		return <NotFound />;
+	}
+
 	return (
 		<Container w={{ base: "85%", md: "90%", lg: "800px" }}>
 			<Flex
@@ -126,7 +133,7 @@ export default function BookingFormPage() {
 						onSubmit={handleSubmit(handleSubmitBooking)}
 						marginTop={"2rem"}>
 						<CardBody>
-							{bookingData?.timeSlots.user.blocked ? (
+							{bookingData?.user === "S" ? (
 								<Flex
 									justify="center"
 									align="center"
@@ -156,9 +163,7 @@ export default function BookingFormPage() {
 													setValue={setValue}
 													errors={errors}
 													clearErrors={clearErrors}
-													avaliableTimeSlot={
-														bookingData?.timeSlots.avaliableTimeSlots || []
-													}
+													avaliableTimeSlot={bookingData ?? { slots: [] }}
 													isSubmitting={isSubmitting}
 												/>
 											</CardBody>

@@ -74,6 +74,9 @@ export default function MobileNav({ onOpen, ...rest }: MobileProps) {
 			borderBottomWidth="1px"
 			borderBottomColor={useColorModeValue("gray.200", "gray.700")}
 			justifyContent={{ base: "space-between", md: "flex-end" }}
+			position="sticky"
+			top="0"
+			zIndex="sticky"
 			{...rest}>
 			<IconButton
 				display={{ base: "flex", md: "none" }}

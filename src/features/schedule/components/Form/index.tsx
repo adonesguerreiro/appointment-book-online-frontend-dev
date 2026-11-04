@@ -38,6 +38,8 @@ import {
 import { getServices } from "@/features/services/services/api";
 import SectionHeader from "@/shared/components/SectionHeader";
 import { Select as SelectScroll } from "chakra-react-select";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 interface ScheduleFormProps {
 	onSubmit: (data: FormDataSchedule) => void;
@@ -46,7 +48,7 @@ interface ScheduleFormProps {
 	onEdit: (data: FormDataSchedule) => void;
 	selectedSchedule?: FormDataSchedule | null;
 	selectedDate: string;
-	timeSlots: AvaliableTimeSlot[];
+	timeSlots: AvaliableTimeSlot;
 	onDateChange: (date: string) => void;
 	isLoading: boolean;
 }
@@ -69,6 +71,8 @@ export default function ScheduleForm({
 	} = useForm<FormDataSchedule>({
 		resolver: yupResolver(scheduleSchema),
 	});
+	dayjs.extend(utc);
+	const currentTime = dayjs.utc(selectedSchedule?.date).format("HH:mm");
 
 	const { data: selectedCustomer, isLoading: isLoadingCustomer } = useQuery({
 		queryKey: ["selectedCustomer", selectedSchedule?.customerId],
@@ -165,8 +169,23 @@ export default function ScheduleForm({
 	};
 
 	useEffect(() => {
-		if (isEditing && selectedSchedule) reset(selectedSchedule);
-	}, [isEditing, reset, selectedSchedule]);
+		if (isEditing && selectedSchedule) {
+			reset({
+				...selectedSchedule,
+				timeSlotAvaliable: currentTime,
+			});
+			onDateChange(selectedSchedule.date);
+		}
+	}, [currentTime, isEditing, onDateChange, reset, selectedSchedule]);
+
+	const isEditingOriginalDate =
+		selectedSchedule?.date.split("T")[0] ===
+		dayjs(selectedSchedule?.date).format("YYYY-MM-DD");
+
+	const optionsTimeSlots =
+		isEditingOriginalDate && !timeSlots.slots.includes(currentTime)
+			? [...timeSlots.slots, currentTime].sort()
+			: timeSlots.slots;
 
 	return (
 		<Container>
@@ -338,12 +357,13 @@ export default function ScheduleForm({
 													zIndex: 10,
 												}}
 												{...register("timeSlotAvaliable")}>
-												{timeSlots?.length > 0 ? (
-													timeSlots.map((timeSlot) => (
+												{timeSlots?.slots?.length > 0 ? (
+													optionsTimeSlots.map((time) => (
 														<option
-															key={timeSlot?.id}
-															value={timeSlot?.timeSlot}>
-															{timeSlot?.timeSlot}
+															defaultValue={currentTime ?? ""}
+															key={time}
+															value={time}>
+															{time}
 														</option>
 													))
 												) : (

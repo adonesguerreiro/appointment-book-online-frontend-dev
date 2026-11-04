@@ -1,5 +1,6 @@
 import { api } from "@/shared/services/api";
 import { FormDataAvailableTime } from "../interface/FormDataAvailableTime";
+import * as Sentry from "@sentry/react";
 
 export const getAvaliableTimes = async (currentPage: number) => {
 	try {
@@ -9,15 +10,25 @@ export const getAvaliableTimes = async (currentPage: number) => {
 		return data;
 	} catch (error) {
 		console.log(error);
+		Sentry.captureException(error);
+		throw error;
 	}
 };
 
-export const getAvaliableTimesSlots = async (date: string) => {
+export const getAvaliableTimesSlots = async (
+	date: string,
+	scheduleId?: number,
+) => {
 	try {
-		const { data } = await api.get(`/avaliable-times/${date}`);
+		const url = scheduleId
+			? `/avaliable-times/${date}?excludeScheduleId=${scheduleId}`
+			: `/avaliable-times/${date}`;
+		const { data } = await api.get(url);
 		return data;
 	} catch (error) {
 		console.log(error);
+		Sentry.captureException(error);
+		throw error;
 	}
 };
 
@@ -27,20 +38,42 @@ export const getAvaliableTimeById = async (avaliableTimeId: number) => {
 		return data;
 	} catch (error) {
 		console.log(error);
+		Sentry.captureException(error);
+		throw error;
 	}
 };
 
-export const createAvaliableTime = (avalibleTime: FormDataAvailableTime) => {
-	return api.post("/avaliable-times", avalibleTime);
+export const createAvaliableTime = async (
+	avalibleTime: FormDataAvailableTime,
+) => {
+	try {
+		await api.post("/avaliable-times", avalibleTime);
+	} catch (error) {
+		console.log(error);
+		Sentry.captureException(error);
+		throw error;
+	}
 };
 
-export const updateAvaliableTime = (
+export const updateAvaliableTime = async (
 	avaliableTimeId: number,
 	avalibleTime: FormDataAvailableTime,
 ) => {
-	return api.put(`/avaliable-times/${avaliableTimeId}`, avalibleTime);
+	try {
+		await api.put(`/avaliable-times/${avaliableTimeId}`, avalibleTime);
+	} catch (error) {
+		console.log(error);
+		Sentry.captureException(error);
+		throw error;
+	}
 };
 
-export const deleteAvaliableTime = (avaliableTimeId: number) => {
-	return api.delete(`/avaliable-times/${avaliableTimeId}`);
+export const deleteAvaliableTime = async (avaliableTimeId: number) => {
+	try {
+		await api.delete(`/avaliable-times/${avaliableTimeId}`);
+	} catch (error) {
+		console.log(error);
+		Sentry.captureException(error);
+		throw error;
+	}
 };

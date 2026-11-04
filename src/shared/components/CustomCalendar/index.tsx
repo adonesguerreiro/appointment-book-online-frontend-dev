@@ -62,8 +62,15 @@ export default function CustomCalendar({
 				".react-calendar__tile:hover": {
 					bg: "gray.200",
 				},
-				".react=calendar__tile--now": {
-					bg: "gray.200",
+				".react-calendar__tile--now": {
+					bg: "gray.100",
+				},
+				".react-calendar__tile:disabled": {
+					bg: "transparent",
+					color: "gray.300",
+				},
+				".react-calendar__month-view__days__day--neighboringMonth": {
+					color: "gray.300",
 				},
 				".react-calendar__navigation button": {
 					color: "teal",

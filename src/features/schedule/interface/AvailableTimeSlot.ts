@@ -1,4 +1,3 @@
 export interface AvaliableTimeSlot {
-	id: number;
-	timeSlot: string;
+	slots: string[];
 }

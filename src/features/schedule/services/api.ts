@@ -9,15 +9,18 @@ export const getSchedules = async (currentPage: number) => {
 		return data;
 	} catch (error) {
 		console.log(error);
+		throw error;
 	}
 };
 
 export const getScheduleById = async (scheduleId: number) => {
 	try {
+
 		const { data } = await api.get(`/schedules/${scheduleId}`);
 		return data;
 	} catch (error) {
 		console.log(error);
+		throw error;
 	}
 };
 

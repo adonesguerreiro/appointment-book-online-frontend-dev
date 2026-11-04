@@ -23,7 +23,7 @@ interface TimeListProps {
 	setValue: UseFormSetValue<BookingAppointmentData>;
 	errors: FieldErrors<BookingAppointmentData>;
 	clearErrors: UseFormClearErrors<BookingAppointmentData>;
-	avaliableTimeSlot: AvaliableTimeSlot[];
+	avaliableTimeSlot: AvaliableTimeSlot;
 	isSubmitting: boolean;
 }
 
@@ -64,27 +64,22 @@ export default function TimeList({
 					columns={3}
 					spacing={3}
 					padding={3}>
-					{avaliableTimeSlot.length > 0 ? (
-						avaliableTimeSlot.map((avaliableTimeSlot, index) => (
+					{avaliableTimeSlot?.slots?.length > 0 ? (
+						avaliableTimeSlot.slots.map((time) => (
 							<Button
-								key={index}
+								key={time}
 								width="6rem"
-								bg={
-									selectedTime === avaliableTimeSlot.timeSlot
-										? "blue.500"
-										: "green.500"
-								}
-								color={avaliableTimeSlot.timeSlot ? "white" : "black"}
-								_hover={avaliableTimeSlot.timeSlot ? { bg: "green.600" } : {}}
+								bg={selectedTime === time ? "blue.500" : "green.500"}
+								color="white"
+								_hover={{ bg: "green.600" }}
 								onClick={() => {
-									setValue("time", avaliableTimeSlot.timeSlot);
-									setSelectedTime(avaliableTimeSlot.timeSlot);
+									setValue("time", time);
+									setSelectedTime(time);
 								}}
 								value={selectedTime}
-								isDisabled={!avaliableTimeSlot.timeSlot}
 								id="time"
 								{...register("time")}>
-								{avaliableTimeSlot.timeSlot}
+								{time}
 							</Button>
 						))
 					) : (

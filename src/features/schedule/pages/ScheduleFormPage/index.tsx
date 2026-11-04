@@ -26,9 +26,10 @@ export default function ScheduleFormPage() {
 	const queryClient = useQueryClient();
 
 	const isEditing = !!id;
-	const [selectedDate, setSelectedDate] = useState<string>();
+	const [selectedDate, setSelectedDate] = useState<string | null>();
 
 	const handleCancel = () => {
+		setSelectedDate(null);
 		navigate("/schedule");
 	};
 
@@ -68,7 +69,7 @@ export default function ScheduleFormPage() {
 
 	const { data: timeSlots } = useQuery({
 		queryKey: ["time-slots", formattedDate],
-		queryFn: () => getAvaliableTimesSlots(formattedDate!),
+		queryFn: () => getAvaliableTimesSlots(formattedDate!, scheduleId),
 		enabled: !!formattedDate,
 		placeholderData: keepPreviousData,
 	});
@@ -80,7 +81,7 @@ export default function ScheduleFormPage() {
 			onCancel={handleCancel}
 			selectedDate={selectedDate ?? ""}
 			selectedSchedule={selectedSchedule}
-			timeSlots={timeSlots?.timeSlots ?? []}
+			timeSlots={timeSlots ?? { slots: [] }}
 			isEditing={isEditing}
 			isLoading={isLoading}
 			onDateChange={setSelectedDate}
